@@ -547,6 +547,85 @@ docker架构docker包括三个基本概念
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2022/08/09/mysql%E8%9C%9C%E7%BD%90%E5%8F%8D%E5%88%B6/">
+                
+                <span class="abstract-title-text">Mysql蜜罐反制</span>
+            </a>
+            <div class="abstract-content">
+                Mysql登录分析
+命令行登录Mysql，并抓包，可以看到
+
+
+首先对Mysql版本进行验证
+
+
+接着Request login，传输用户名和密码hash
+
+
+登录成功，返回OK
+
+查询版本号并返回
+
+
+当执行一条语句时，抓包如下，可以看到查询语句明文传输
+ 
+
+
+
+Navicat登录分析
+登录流程和命令行登录差不多，多了几次Query
+ 
+
+
+流程如下
+
+
+
+Mysql特性
+Mysql 默认打开local_infile，如为打开可执行下列命令
+show global variables like&#39;local_infile&#39;;
+set global local_infil...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/09/01">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/08/09</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+        
+        
+            
+        
+        
+        <span class="post-category" data-categories="红蓝攻防"">
+            <i class="fas fa-folder post-category-icon"></i>
+            <span class="post-category-text">
+                红蓝攻防
+            </span>
+        </span>
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="攻防">攻防</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2022/08/06/lab9-1/">
                 
                 <span class="abstract-title-text">恶意代码分析lab9-1</span>
@@ -909,7 +988,18 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
         
         
         
@@ -938,7 +1028,7 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 6
+        Total : 7
         </div>
         <!-- search  -->
         
@@ -962,6 +1052,12 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
         <li class="archive-post-item">
             <span class="archive-post-date">08/09</span>
             <a class="archive-post-title" href="/2022/08/09/docker%E4%BD%BF%E7%94%A8/">docker使用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span>
+            <a class="archive-post-title" href="/2022/08/09/mysql%E8%9C%9C%E7%BD%90%E5%8F%8D%E5%88%B6/">Mysql蜜罐反制</a>
         </li>
     
         
@@ -1029,6 +1125,11 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
                 windows编程
             </span>
         
+            <span class="sidebar-tag-name" data-tags="攻防">
+                <span class="iconfont-archer">&#xe606;</span>
+                攻防
+            </span>
+        
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
@@ -1063,6 +1164,11 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
         <span class="sidebar-category-name" data-categories="编程">
             <span class="iconfont-archer">&#xe60a;</span>
             编程
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="红蓝攻防">
+            <span class="iconfont-archer">&#xe60a;</span>
+            红蓝攻防
         </span>
     
     </div>

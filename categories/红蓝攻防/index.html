@@ -22,7 +22,7 @@
     <meta name="description" content="">
     <meta property="og:type" content="website">
 <meta property="og:title" content="s1eep123のblog">
-<meta property="og:url" content="http://example.com/categories/docker/index.html">
+<meta property="og:url" content="http://example.com/categories/%E7%BA%A2%E8%93%9D%E6%94%BB%E9%98%B2/index.html">
 <meta property="og:site_name" content="s1eep123のblog">
 <meta property="og:locale" content="en_US">
 <meta property="article:author" content="John Doe">
@@ -430,25 +430,44 @@
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2022/08/09/docker%E4%BD%BF%E7%94%A8/">
+            <a class="abstract-title" href="/2022/08/09/mysql%E8%9C%9C%E7%BD%90%E5%8F%8D%E5%88%B6/">
                 
-                <span class="abstract-title-text">docker使用</span>
+                <span class="abstract-title-text">Mysql蜜罐反制</span>
             </a>
             <div class="abstract-content">
-                概述
-Docker 是一个开源的应用容器引擎，基于 Go 语言 并遵从 Apache2.0 协议开源。
-
-Docker 可以让开发者打包他们的应用以及依赖包到一个轻量级、可移植的容器中，然后发布到任何流行的 Linux 机器上，也可以实现虚拟化。
-
-容器是完全使用沙箱机制，相互之间不会有任何接口（类似 iPhone 的 app）,更重要的是容器性能开销极低。
+                Mysql登录分析
+命令行登录Mysql，并抓包，可以看到
 
 
-docker优点
-相比配置各种复杂环境，docker将应用程序和环境配置分开。因此可以快速部署，测试代码，大大减少编写代码和在生产环境中运行代码之间的延迟。
+首先对Mysql版本进行验证
 
-docker架构docker包括三个基本概念
 
-镜像（Image）：...
+接着Request login，传输用户名和密码hash
+
+
+登录成功，返回OK
+
+查询版本号并返回
+
+
+当执行一条语句时，抓包如下，可以看到查询语句明文传输
+ 
+
+
+
+Navicat登录分析
+登录流程和命令行登录差不多，多了几次Query
+ 
+
+
+流程如下
+
+
+
+Mysql特性
+Mysql 默认打开local_infile，如为打开可执行下列命令
+show global variables like&#39;local_infile&#39;;
+set global local_infil...
             </div>
             <!-- read more -->
             
@@ -466,15 +485,15 @@ docker架构docker包括三个基本概念
             
         
         
-        <span class="post-category" data-categories="docker"">
+        <span class="post-category" data-categories="红蓝攻防"">
             <i class="fas fa-folder post-category-icon"></i>
             <span class="post-category-text">
-                docker
+                红蓝攻防
             </span>
         </span>
     
     
-        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="攻防">攻防</a>
     
 </div>
 
