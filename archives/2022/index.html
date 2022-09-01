@@ -429,87 +429,147 @@
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2022/08/31/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0-1/">
+            <a class="abstract-title" href="/2022/09/01/windows%E4%B8%8Bsocket%E9%80%9A%E4%BF%A1/">
                 
-                <span class="abstract-title-text">测试文章</span>
+                <span class="abstract-title-text">[Untitled Post]</span>
             </a>
             <div class="abstract-content">
+                123456789101112131415161718192021222324252627282930313233343536373839404142server.c#include &lt;stdio.h&gt;#include &lt;winsock2.h&gt;#pragma comment (lib, &quot;ws2_32.lib&quot;)  //加载 ws2_32.dll int main()&#123;	//初始化 DLL	WSADATA wsaData;	WSAStartup(MAKEWORD(2, 2), &amp;wsaData); 	//创建套接字	SOCKE...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/08/27">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/09/01</span>
+                </div>
+                <!-- tags -->
                 
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2022/09/01/urldns/">
+                
+                <span class="abstract-title-text">[Untitled Post]</span>
+            </a>
+            <div class="abstract-content">
+                URLDNS链
+概述
+URLDNS 就是ysoserial中一个利用链的名字，但准确来说，这个其实不能称作“利用链”。因为其参数不不是一个可以“利用”的命令，而仅为一个URL，其能触发的结果也不是命令执行，而是一次DNS请求。
+虽然这个“利用链”实际上是不能“利用”的，但因为其如下的优点，非常适合我们在检测反序列化漏洞时使用：
+
+使用Java内置的类构造，对第三方库没有依赖
+在目标没有回显的时候，能够通过DNS请求得知是否存在反序列化漏洞
+
+
+利用链
+12345*   Gadget Chain:*     HashMap.readObject()*       HashMap.putVa...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/08/28">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/09/01</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2022/09/01/shiro/">
+                
+                <span class="abstract-title-text">[Untitled Post]</span>
+            </a>
+            <div class="abstract-content">
+                Shiro环境搭建
+所需环境
+123jdk8u65 Tomcat8shiro 1.2.4
+
+shiro环境直接clone p神的github地址
+
+启动tomcat，即可看到
+
+
+
+Shiro550分析漏洞原理
+勾选 RememberMe 字段，登陆成功的话，返回包 set-Cookie 会有 rememberMe&#x3D;deleteMe 字
+段，还会有 rememberMe 字段，之后的所有请求中 Cookie 都会有 rememberMe 字段，那么就
+可以利用这个 rememberMe 进行反序列化，从而 getshell。
+12345678910111213141516171...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/08/30">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/09/01</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2022/08/06/lab9-1/">
+                
+                <span class="abstract-title-text">恶意代码分析lab9-1</span>
+            </a>
+            <div class="abstract-content">
+                纵观详细分析
+打开程序观察堆栈发现并不是main函数入口点 
+
+利用ida分析main函数地址，并在od中断点   
+
+一步一步跟进调试 
+
+查看参数个数是否为1，继续向下直接call 401000
+ 
+
+代码太长不好截图，直接放代码
+1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283.text:00402410        ...
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2022/09/01">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/08/31</span>
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/08/06</span>
                 </div>
                 <!-- tags -->
                 
                     <div class= abstract-tags >
     
     
-        <a class="post-tag" href="javascript:void(0);" data-tags="java安全">java安全</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="恶意代码">恶意代码</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="二进制">二进制</a>
     
 </div>
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2022/08/31/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/">
-                
-                <span class="abstract-title-text">测试文章</span>
-            </a>
-            <div class="abstract-content">
-                
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2022/08/31">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/08/31</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2022/08/31/hello-world/">
-                
-                <span class="abstract-title-text">Hello World</span>
-            </a>
-            <div class="abstract-content">
-                Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick StartCreate a new post1$ hexo new &quot;My New Post&quot;
-
-More info: Writing
-Run server1$ hexo ...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2022/08/31">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/08/31</span>
-                </div>
-                <!-- tags -->
                 
             </div>
         </article>
@@ -686,7 +746,16 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
         
         
         
@@ -705,7 +774,7 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 4
+        Total : 5
         </div>
         <!-- search  -->
         
@@ -721,20 +790,26 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
             
         
         <li class="archive-post-item">
-            <span class="archive-post-date">08/31</span>
-            <a class="archive-post-title" href="/2022/08/31/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/">测试文章</a>
+            <span class="archive-post-date">09/01</span>
+            <a class="archive-post-title" href="/2022/09/01/windows%E4%B8%8Bsocket%E9%80%9A%E4%BF%A1/">[Untitled Post]</a>
         </li>
     
         
         <li class="archive-post-item">
-            <span class="archive-post-date">08/31</span>
-            <a class="archive-post-title" href="/2022/08/31/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0-1/">测试文章</a>
+            <span class="archive-post-date">09/01</span>
+            <a class="archive-post-title" href="/2022/09/01/shiro/">[Untitled Post]</a>
         </li>
     
         
         <li class="archive-post-item">
-            <span class="archive-post-date">08/31</span>
-            <a class="archive-post-title" href="/2022/08/31/hello-world/">Hello World</a>
+            <span class="archive-post-date">09/01</span>
+            <a class="archive-post-title" href="/2022/09/01/urldns/">[Untitled Post]</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/06</span>
+            <a class="archive-post-title" href="/2022/08/06/lab9-1/">恶意代码分析lab9-1</a>
         </li>
     
         
@@ -754,6 +829,16 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
                 java安全
             </span>
         
+            <span class="sidebar-tag-name" data-tags="恶意代码">
+                <span class="iconfont-archer">&#xe606;</span>
+                恶意代码
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="二进制">
+                <span class="iconfont-archer">&#xe606;</span>
+                二进制
+            </span>
+        
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
@@ -768,6 +853,11 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
         <span class="sidebar-category-name" data-categories="java安全">
             <span class="iconfont-archer">&#xe60a;</span>
             java安全
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="恶意代码">
+            <span class="iconfont-archer">&#xe60a;</span>
+            恶意代码
         </span>
     
     </div>

