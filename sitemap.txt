@@ -1,10 +1,11 @@
+http://example.com/404.html
+http://example.com/about/index.html
 http://example.com/2022/08/09/docker%E4%BD%BF%E7%94%A8/
 http://example.com/2022/07/31/windows%E4%B8%8Bsocket%E9%80%9A%E4%BF%A1/
 http://example.com/2022/08/11/urldns/
 http://example.com/2022/08/06/shiro/
 http://example.com/2022/08/06/lab9-1/
 http://example.com/2022/07/31/fastjson%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86/
-http://example.com/about/index.html
 http://example.com/tags/index.html
 http://example.com/categories/index.html
 http://example.com/
