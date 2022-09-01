@@ -429,6 +429,102 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2022/08/11/urldns/">
+                
+                <span class="abstract-title-text">URLDNS链</span>
+            </a>
+            <div class="abstract-content">
+                URLDNS链
+概述
+URLDNS 就是ysoserial中一个利用链的名字，但准确来说，这个其实不能称作“利用链”。因为其参数不不是一个可以“利用”的命令，而仅为一个URL，其能触发的结果也不是命令执行，而是一次DNS请求。
+虽然这个“利用链”实际上是不能“利用”的，但因为其如下的优点，非常适合我们在检测反序列化漏洞时使用：
+
+使用Java内置的类构造，对第三方库没有依赖
+在目标没有回显的时候，能够通过DNS请求得知是否存在反序列化漏洞
+
+
+利用链
+12345*   Gadget Chain:*     HashMap.readObject()*       HashMap.putVa...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/09/01">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/08/11</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="java安全">java安全</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2022/08/06/shiro/">
+                
+                <span class="abstract-title-text">Shiro反序列化漏洞</span>
+            </a>
+            <div class="abstract-content">
+                Shiro环境搭建
+所需环境
+123jdk8u65 Tomcat8shiro 1.2.4
+
+shiro环境直接clone p神的github地址
+
+启动tomcat，即可看到
+
+
+
+Shiro550分析漏洞原理
+勾选 RememberMe 字段，登陆成功的话，返回包 set-Cookie 会有 rememberMe&#x3D;deleteMe 字
+段，还会有 rememberMe 字段，之后的所有请求中 Cookie 都会有 rememberMe 字段，那么就
+可以利用这个 rememberMe 进行反序列化，从而 getshell。
+12345678910111213141516171...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/09/01">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/08/06</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="java安全">java安全</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="java框架">java框架</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2022/07/31/fastjson%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86/">
                 
                 <span class="abstract-title-text">Fastjson 反序列化漏洞</span>
@@ -637,20 +733,14 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
             
         
         <li class="archive-post-item">
-            <span class="archive-post-date">09/01</span>
-            <a class="archive-post-title" href="/2022/09/01/windows%E4%B8%8Bsocket%E9%80%9A%E4%BF%A1/">[Untitled Post]</a>
+            <span class="archive-post-date">08/11</span>
+            <a class="archive-post-title" href="/2022/08/11/urldns/">URLDNS链</a>
         </li>
     
         
         <li class="archive-post-item">
-            <span class="archive-post-date">09/01</span>
-            <a class="archive-post-title" href="/2022/09/01/shiro/">[Untitled Post]</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">09/01</span>
-            <a class="archive-post-title" href="/2022/09/01/urldns/">[Untitled Post]</a>
+            <span class="archive-post-date">08/06</span>
+            <a class="archive-post-title" href="/2022/08/06/shiro/">Shiro反序列化漏洞</a>
         </li>
     
         
@@ -665,6 +755,12 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
             <a class="archive-post-title" href="/2022/07/31/fastjson%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86/">Fastjson 反序列化漏洞</a>
         </li>
     
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/31</span>
+            <a class="archive-post-title" href="/2022/07/31/windows%E4%B8%8Bsocket%E9%80%9A%E4%BF%A1/">windows下socket通信</a>
+        </li>
+    
     </div>
 </div>
 
@@ -676,6 +772,11 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
                 java安全
             </span>
         
+            <span class="sidebar-tag-name" data-tags="java框架">
+                <span class="iconfont-archer">&#xe606;</span>
+                java框架
+            </span>
+        
             <span class="sidebar-tag-name" data-tags="恶意代码">
                 <span class="iconfont-archer">&#xe606;</span>
                 恶意代码
@@ -684,6 +785,16 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
             <span class="sidebar-tag-name" data-tags="二进制">
                 <span class="iconfont-archer">&#xe606;</span>
                 二进制
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="windows">
+                <span class="iconfont-archer">&#xe606;</span>
+                windows
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="windows编程">
+                <span class="iconfont-archer">&#xe606;</span>
+                windows编程
             </span>
         
     </div>
@@ -705,6 +816,16 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
         <span class="sidebar-category-name" data-categories="恶意代码">
             <span class="iconfont-archer">&#xe60a;</span>
             恶意代码
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="windows逆向">
+            <span class="iconfont-archer">&#xe60a;</span>
+            windows逆向
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="编程">
+            <span class="iconfont-archer">&#xe60a;</span>
+            编程
         </span>
     
     </div>
