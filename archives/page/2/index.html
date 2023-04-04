@@ -22,7 +22,7 @@
     <meta name="description" content="">
     <meta property="og:type" content="website">
 <meta property="og:title" content="s1eep123のblog">
-<meta property="og:url" content="http://example.com/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/index.html">
+<meta property="og:url" content="http://example.com/archives/page/2/index.html">
 <meta property="og:site_name" content="s1eep123のblog">
 <meta property="og:locale" content="en_US">
 <meta property="article:author" content="John Doe">
@@ -430,30 +430,19 @@
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2022/08/06/lab9-1/">
+            <a class="abstract-title" href="/2022/07/31/windows%E4%B8%8Bsocket%E9%80%9A%E4%BF%A1/">
                 
-                <span class="abstract-title-text">恶意代码分析lab9-1</span>
+                <span class="abstract-title-text">windows下socket通信</span>
             </a>
             <div class="abstract-content">
-                纵观详细分析
-打开程序观察堆栈发现并不是main函数入口点 
-
-利用ida分析main函数地址，并在od中断点  
-
-一步一步跟进调试 
-
-查看参数个数是否为1，继续向下直接call 401000
- 
-
-代码太长不好截图，直接放代码
-1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283.text:00402410         ...
+                123456789101112131415161718192021222324252627282930313233343536373839404142server.c#include &lt;stdio.h&gt;#include &lt;winsock2.h&gt;#pragma comment (lib, &quot;ws2_32.lib&quot;)  //加载 ws2_32.dll int main()&#123;	//初始化 DLL	WSADATA wsaData;	WSAStartup(MAKEWORD(2, 2), &amp;wsaData); 	//创建套接字	SOCKE...
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2022/09/01">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/08/06</span>
+                <div class="abstract-date" title="Last updated: 2022/09/08">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/07/31</span>
                 </div>
                 <!-- tags -->
                 
@@ -463,18 +452,22 @@
         
             
         
+            
         
-        <span class="post-category" data-categories="恶意代码"">
+        
+        <span class="post-category" data-categories="windows逆向/编程"">
             <i class="fas fa-folder post-category-icon"></i>
             <span class="post-category-text">
-                恶意代码
+                windows逆向/编程
             </span>
         </span>
     
     
-        <a class="post-tag" href="javascript:void(0);" data-tags="恶意代码">恶意代码</a>
-    
         <a class="post-tag" href="javascript:void(0);" data-tags="二进制">二进制</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="windows">windows</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="windows编程">windows编程</a>
     
 </div>
 
@@ -484,6 +477,10 @@
         <div class="index-post-divider"></div>
     
     <!-- paginator  -->
+    
+        <nav class="page-nav">
+            <a class="extend prev" rel="prev" href="/archives/">&lt; PREV</a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span>
+        </nav>
     
 </main>
 

@@ -430,6 +430,58 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2023/04/04/linux%E9%AB%98%E7%AB%AF%E4%BD%8E%E7%AB%AF%E5%86%85%E5%AD%98/">
+                
+                <span class="abstract-title-text">linux高端内存/低端内存及相关api</span>
+            </a>
+            <div class="abstract-content">
+                网上大神整理的linux内存管理图镇楼
+
+起因是面试中面试官提到linux高端内存以及低端内存，对linux内核内存管理这方面了解较少。因此本文全面阐述linux内存，就是上图
+Linux内核地址空间划分通常32位Linux内核虚拟地址空间划分03G为用户空间，34G为内核空间(注意，内核可以使用的线性地址只有1G)。注意这里是32位内核地址空间划分，64位内核地址空间划分是不同的。
+
+高端内存以及低端内存计算机内存寻址过程中我们将页框作为内存分配的基本单元，一般现代32位计算机页框大小为4kb，此外内核必须记录每个页框的状态，如记录该页框保存的是内核代码还是用户代码，因此linux用p...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/04/04">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/04/04</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+        
+        
+            
+        
+        
+        <span class="post-category" data-categories="内核"">
+            <i class="fas fa-folder post-category-icon"></i>
+            <span class="post-category-text">
+                内核
+            </span>
+        </span>
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2022/10/20/tls%E5%8F%8D%E8%B0%83%E8%AF%95/">
                 
                 <span class="abstract-title-text">TLS反调试</span>
@@ -955,60 +1007,11 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
         </article>
         <div class="index-post-divider"></div>
     
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2022/07/31/windows%E4%B8%8Bsocket%E9%80%9A%E4%BF%A1/">
-                
-                <span class="abstract-title-text">windows下socket通信</span>
-            </a>
-            <div class="abstract-content">
-                123456789101112131415161718192021222324252627282930313233343536373839404142server.c#include &lt;stdio.h&gt;#include &lt;winsock2.h&gt;#pragma comment (lib, &quot;ws2_32.lib&quot;)  //加载 ws2_32.dll int main()&#123;	//初始化 DLL	WSADATA wsaData;	WSAStartup(MAKEWORD(2, 2), &amp;wsaData); 	//创建套接字	SOCKE...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2022/09/01">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/07/31</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-            
-        
-        
-        <span class="post-category" data-categories="windows逆向/编程"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                windows逆向/编程
-            </span>
-        </span>
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="二进制">二进制</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="windows">windows</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="windows编程">windows编程</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
     <!-- paginator  -->
+    
+        <nav class="page-nav">
+            <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="extend next" rel="next" href="/archives/page/2/">NEXT &gt;</a>
+        </nav>
     
 </main>
 
@@ -1168,7 +1171,18 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1223,7 +1237,7 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 10
+        Total : 11
         </div>
         <!-- search  -->
         
@@ -1233,6 +1247,21 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
     
         
             
+            
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/04</span>
+            <a class="archive-post-title" href="/2023/04/04/linux%E9%AB%98%E7%AB%AF%E4%BD%8E%E7%AB%AF%E5%86%85%E5%AD%98/">linux高端内存/低端内存及相关api</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
             
             <div class="archive-year"> 2022 </div>
             <ul class="year-list">
@@ -1308,19 +1337,14 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
                 docker
             </span>
         
-            <span class="sidebar-tag-name" data-tags="黑科技">
-                <span class="iconfont-archer">&#xe606;</span>
-                黑科技
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="攻防">
-                <span class="iconfont-archer">&#xe606;</span>
-                攻防
-            </span>
-        
             <span class="sidebar-tag-name" data-tags="java安全">
                 <span class="iconfont-archer">&#xe606;</span>
                 java安全
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="黑科技">
+                <span class="iconfont-archer">&#xe606;</span>
+                黑科技
             </span>
         
             <span class="sidebar-tag-name" data-tags="恶意代码">
@@ -1333,9 +1357,24 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
                 二进制
             </span>
         
+            <span class="sidebar-tag-name" data-tags="linux">
+                <span class="iconfont-archer">&#xe606;</span>
+                linux
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="攻防">
+                <span class="iconfont-archer">&#xe606;</span>
+                攻防
+            </span>
+        
             <span class="sidebar-tag-name" data-tags="java框架">
                 <span class="iconfont-archer">&#xe606;</span>
                 java框架
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="windows,windows安全,反调试">
+                <span class="iconfont-archer">&#xe606;</span>
+                windows,windows安全,反调试
             </span>
         
             <span class="sidebar-tag-name" data-tags="windows">
@@ -1351,11 +1390,6 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
             <span class="sidebar-tag-name" data-tags="web安全">
                 <span class="iconfont-archer">&#xe606;</span>
                 web安全
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="windows,windows安全,反调试">
-                <span class="iconfont-archer">&#xe606;</span>
-                windows,windows安全,反调试
             </span>
         
     </div>
@@ -1374,19 +1408,14 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
             docker
         </span>
     
-        <span class="sidebar-category-name" data-categories="黑科技">
-            <span class="iconfont-archer">&#xe60a;</span>
-            黑科技
-        </span>
-    
-        <span class="sidebar-category-name" data-categories="红蓝攻防">
-            <span class="iconfont-archer">&#xe60a;</span>
-            红蓝攻防
-        </span>
-    
         <span class="sidebar-category-name" data-categories="java安全">
             <span class="iconfont-archer">&#xe60a;</span>
             java安全
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="黑科技">
+            <span class="iconfont-archer">&#xe60a;</span>
+            黑科技
         </span>
     
         <span class="sidebar-category-name" data-categories="恶意代码">
@@ -1394,14 +1423,24 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
             恶意代码
         </span>
     
+        <span class="sidebar-category-name" data-categories="内核">
+            <span class="iconfont-archer">&#xe60a;</span>
+            内核
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="红蓝攻防">
+            <span class="iconfont-archer">&#xe60a;</span>
+            红蓝攻防
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="windows逆向，内核安全">
+            <span class="iconfont-archer">&#xe60a;</span>
+            windows逆向，内核安全
+        </span>
+    
         <span class="sidebar-category-name" data-categories="windows逆向">
             <span class="iconfont-archer">&#xe60a;</span>
             windows逆向
-        </span>
-    
-        <span class="sidebar-category-name" data-categories="web安全">
-            <span class="iconfont-archer">&#xe60a;</span>
-            web安全
         </span>
     
         <span class="sidebar-category-name" data-categories="编程">
@@ -1409,9 +1448,9 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
             编程
         </span>
     
-        <span class="sidebar-category-name" data-categories="windows逆向，内核安全">
+        <span class="sidebar-category-name" data-categories="web安全">
             <span class="iconfont-archer">&#xe60a;</span>
-            windows逆向，内核安全
+            web安全
         </span>
     
     </div>

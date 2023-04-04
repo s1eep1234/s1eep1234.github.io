@@ -22,7 +22,7 @@
     <meta name="description" content="">
     <meta property="og:type" content="website">
 <meta property="og:title" content="s1eep123のblog">
-<meta property="og:url" content="http://example.com/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/index.html">
+<meta property="og:url" content="http://example.com/tags/linux/index.html">
 <meta property="og:site_name" content="s1eep123のblog">
 <meta property="og:locale" content="en_US">
 <meta property="article:author" content="John Doe">
@@ -430,30 +430,24 @@
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2022/08/06/lab9-1/">
+            <a class="abstract-title" href="/2023/04/04/linux%E9%AB%98%E7%AB%AF%E4%BD%8E%E7%AB%AF%E5%86%85%E5%AD%98/">
                 
-                <span class="abstract-title-text">恶意代码分析lab9-1</span>
+                <span class="abstract-title-text">linux高端内存/低端内存及相关api</span>
             </a>
             <div class="abstract-content">
-                纵观详细分析
-打开程序观察堆栈发现并不是main函数入口点 
+                网上大神整理的linux内存管理图镇楼
 
-利用ida分析main函数地址，并在od中断点  
+起因是面试中面试官提到linux高端内存以及低端内存，对linux内核内存管理这方面了解较少。因此本文全面阐述linux内存，就是上图
+Linux内核地址空间划分通常32位Linux内核虚拟地址空间划分03G为用户空间，34G为内核空间(注意，内核可以使用的线性地址只有1G)。注意这里是32位内核地址空间划分，64位内核地址空间划分是不同的。
 
-一步一步跟进调试 
-
-查看参数个数是否为1，继续向下直接call 401000
- 
-
-代码太长不好截图，直接放代码
-1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283.text:00402410         ...
+高端内存以及低端内存计算机内存寻址过程中我们将页框作为内存分配的基本单元，一般现代32位计算机页框大小为4kb，此外内核必须记录每个页框的状态，如记录该页框保存的是内核代码还是用户代码，因此linux用p...
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2022/09/01">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/08/06</span>
+                <div class="abstract-date" title="Last updated: 2023/04/04">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/04/04</span>
                 </div>
                 <!-- tags -->
                 
@@ -464,17 +458,15 @@
             
         
         
-        <span class="post-category" data-categories="恶意代码"">
+        <span class="post-category" data-categories="内核"">
             <i class="fas fa-folder post-category-icon"></i>
             <span class="post-category-text">
-                恶意代码
+                内核
             </span>
         </span>
     
     
-        <a class="post-tag" href="javascript:void(0);" data-tags="恶意代码">恶意代码</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="二进制">二进制</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
     
 </div>
 
