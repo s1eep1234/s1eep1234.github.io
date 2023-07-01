@@ -22,7 +22,7 @@
     <meta name="description" content="">
     <meta property="og:type" content="website">
 <meta property="og:title" content="s1eep123のblog">
-<meta property="og:url" content="http://example.com/archives/page/2/index.html">
+<meta property="og:url" content="http://example.com/archives/2023/07/index.html">
 <meta property="og:site_name" content="s1eep123のblog">
 <meta property="og:locale" content="en_US">
 <meta property="article:author" content="John Doe">
@@ -430,25 +430,24 @@
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2022/07/31/fastjson%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86/">
+            <a class="abstract-title" href="/2023/07/01/kvm%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86-cpu%E8%99%9A%E6%8B%9F%E5%8C%96/">
                 
-                <span class="abstract-title-text">Fastjson 反序列化漏洞</span>
+                <span class="abstract-title-text">KVM架构原理-CPU虚拟化</span>
             </a>
             <div class="abstract-content">
-                fastjson 反序列化漏洞fastjson介绍
-在前后端数据传输交互中,经常会遇到字符串(String)与json,XML等格式相互转换与解析，其中json以跨语言，跨前后端的优点在开发中被频繁使用，基本上可以说是标准的数据交换格式。fastjson 是一个java语言编写的高性能且功能完善的JSON库，它采用一种“假定有序快速匹配”的算法，把JSON Parse 的性能提升到了极致。它的接口简单易用，已经被广泛使用在缓存序列化，协议交互，Web输出等各种应用场景中。
-
-FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解析和打包。
-
-
-漏洞介绍fastjson在序列...
+                KVM架构原理-CPU虚拟化目前多数云厂商云服务器是采用xen和kvm进行虚拟化实现。且由于kvm的性能可以和pv媲美，天生支持硬件虚拟化，且在linux2.6.20被合并到linux kernel主流分支，维护成本较低等原因，所以大部分都是由kvm实现的。
+学习kvm需理解基本术语如下：
+KVM：Kernel-based Virtual Machine 基于Linux内核的虚拟机，位于ring 0
+VMM:  Virtual Machine Monitor 虚拟机监控层，也就是KVM的内核模块
+VM:  Virtual Machine 由VMM创建的虚拟化硬件平台
+Guest OS： ...
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2022/09/01">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/07/31</span>
+                <div class="abstract-date" title="Last updated: 2023/07/01">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/01</span>
                 </div>
                 <!-- tags -->
                 
@@ -459,68 +458,15 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
             
         
         
-        <span class="post-category" data-categories="java安全"">
+        <span class="post-category" data-categories="虚拟化"">
             <i class="fas fa-folder post-category-icon"></i>
             <span class="post-category-text">
-                java安全
+                虚拟化
             </span>
         </span>
     
     
-        <a class="post-tag" href="javascript:void(0);" data-tags="java安全">java安全</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2022/07/31/windows%E4%B8%8Bsocket%E9%80%9A%E4%BF%A1/">
-                
-                <span class="abstract-title-text">windows下socket通信</span>
-            </a>
-            <div class="abstract-content">
-                123456789101112131415161718192021222324252627282930313233343536373839404142server.c#include &lt;stdio.h&gt;#include &lt;winsock2.h&gt;#pragma comment (lib, &quot;ws2_32.lib&quot;)  //加载 ws2_32.dll int main()&#123;	//初始化 DLL	WSADATA wsaData;	WSAStartup(MAKEWORD(2, 2), &amp;wsaData); 	//创建套接字	SOCKE...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2022/09/08">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/07/31</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-            
-        
-        
-        <span class="post-category" data-categories="windows逆向/编程"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                windows逆向/编程
-            </span>
-        </span>
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="二进制">二进制</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="windows">windows</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="windows编程">windows编程</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="虚拟化">虚拟化</a>
     
 </div>
 
@@ -530,10 +476,6 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
         <div class="index-post-divider"></div>
     
     <!-- paginator  -->
-    
-        <nav class="page-nav">
-            <a class="extend prev" rel="prev" href="/archives/">&lt; PREV</a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span>
-        </nav>
     
 </main>
 

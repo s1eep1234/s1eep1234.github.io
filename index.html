@@ -445,6 +445,58 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2023/07/01/kvm%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86-cpu%E8%99%9A%E6%8B%9F%E5%8C%96/">
+                
+                <span class="abstract-title-text">KVM架构原理-CPU虚拟化</span>
+            </a>
+            <div class="abstract-content">
+                KVM架构原理-CPU虚拟化目前多数云厂商云服务器是采用xen和kvm进行虚拟化实现。且由于kvm的性能可以和pv媲美，天生支持硬件虚拟化，且在linux2.6.20被合并到linux kernel主流分支，维护成本较低等原因，所以大部分都是由kvm实现的。
+学习kvm需理解基本术语如下：
+KVM：Kernel-based Virtual Machine 基于Linux内核的虚拟机，位于ring 0
+VMM:  Virtual Machine Monitor 虚拟机监控层，也就是KVM的内核模块
+VM:  Virtual Machine 由VMM创建的虚拟化硬件平台
+Guest OS： ...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/07/01">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/01</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+        
+        
+            
+        
+        
+        <span class="post-category" data-categories="虚拟化"">
+            <i class="fas fa-folder post-category-icon"></i>
+            <span class="post-category-text">
+                虚拟化
+            </span>
+        </span>
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="虚拟化">虚拟化</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2023/04/04/linux%E9%AB%98%E7%AB%AF%E4%BD%8E%E7%AB%AF%E5%86%85%E5%AD%98/">
                 
                 <span class="abstract-title-text">linux高端内存/低端内存及相关api</span>
@@ -969,59 +1021,6 @@ Shiro550分析漏洞原理
         </article>
         <div class="index-post-divider"></div>
     
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2022/07/31/fastjson%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86/">
-                
-                <span class="abstract-title-text">Fastjson 反序列化漏洞</span>
-            </a>
-            <div class="abstract-content">
-                fastjson 反序列化漏洞fastjson介绍
-在前后端数据传输交互中,经常会遇到字符串(String)与json,XML等格式相互转换与解析，其中json以跨语言，跨前后端的优点在开发中被频繁使用，基本上可以说是标准的数据交换格式。fastjson 是一个java语言编写的高性能且功能完善的JSON库，它采用一种“假定有序快速匹配”的算法，把JSON Parse 的性能提升到了极致。它的接口简单易用，已经被广泛使用在缓存序列化，协议交互，Web输出等各种应用场景中。
-
-FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解析和打包。
-
-
-漏洞介绍fastjson在序列...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2022/09/01">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/07/31</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="java安全"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                java安全
-            </span>
-        </span>
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="java安全">java安全</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
     <!-- paginator  -->
     
         <nav class="page-nav">
@@ -1320,7 +1319,20 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1377,7 +1389,7 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 11
+        Total : 12
         </div>
         <!-- search  -->
         
@@ -1391,6 +1403,12 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/01</span>
+            <a class="archive-post-title" href="/2023/07/01/kvm%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86-cpu%E8%99%9A%E6%8B%9F%E5%8C%96/">KVM架构原理-CPU虚拟化</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">04/04</span>
@@ -1532,6 +1550,11 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
                 windows编程
             </span>
         
+            <span class="sidebar-tag-name" data-tags="虚拟化">
+                <span class="iconfont-archer">&#xe606;</span>
+                虚拟化
+            </span>
+        
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
@@ -1591,6 +1614,11 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
         <span class="sidebar-category-name" data-categories="编程">
             <span class="iconfont-archer">&#xe60a;</span>
             编程
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="虚拟化">
+            <span class="iconfont-archer">&#xe60a;</span>
+            虚拟化
         </span>
     
     </div>
