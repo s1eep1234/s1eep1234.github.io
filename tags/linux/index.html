@@ -430,6 +430,68 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2023/07/19/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%B0%83%E8%AF%95/">
+                
+                <span class="abstract-title-text">记一次虚拟机启动失败调试过程</span>
+            </a>
+            <div class="abstract-content">
+                记一次虚拟机启动失败调试过程实习过程中分配了个小任务，替换iso镜像中的sqfs文件并重新打包为iso。其中在测试iso是否打包成功过程中，要vmware发现无法启动报panic，具体输出如下图。后用centos7镜像做同样测试发现也会报错。深入centos7内核代码查看调试。最终发现是由于虚拟机配置初始化时默认硬盘空间太小导致无法挂载系统盘导致。
+
+
+linux kernel源代码和iso镜像的关系梳理一下如何从linux kernel代码来制作iso的过程
+
+下载kernel代码 
+修改配置文件
+编译内核
+安装内核
+将文件系统打包为iso镜像
+
+在安装好的系统下执行sudo cp -...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/07/19">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/19</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+        
+        
+            
+        
+            
+        
+        
+        <span class="post-category" data-categories="内核/虚拟化"">
+            <i class="fas fa-folder post-category-icon"></i>
+            <span class="post-category-text">
+                内核/虚拟化
+            </span>
+        </span>
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="虚拟化">虚拟化</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2023/04/04/linux%E9%AB%98%E7%AB%AF%E4%BD%8E%E7%AB%AF%E5%86%85%E5%AD%98/">
                 
                 <span class="abstract-title-text">linux高端内存/低端内存及相关api</span>
@@ -645,7 +707,29 @@ Linux内核地址空间划分通常32位Linux内核虚拟地址空间划分03G�
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -710,7 +794,7 @@ Linux内核地址空间划分通常32位Linux内核虚拟地址空间划分03G�
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 12
+        Total : 14
         </div>
         <!-- search  -->
         
@@ -803,6 +887,36 @@ Linux内核地址空间划分通常32位Linux内核虚拟地址空间划分03G�
         <li class="archive-post-item">
             <span class="archive-post-date">07/31</span>
             <a class="archive-post-title" href="/2022/07/31/windows%E4%B8%8Bsocket%E9%80%9A%E4%BF%A1/">windows下socket通信</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> Invalid date </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span>
+            <a class="archive-post-title" href="/2023/07/19/serverless/">Serverless及其安全风险</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> Invalid date </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span>
+            <a class="archive-post-title" href="/2023/07/19/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%B0%83%E8%AF%95/">记一次虚拟机启动失败调试过程</a>
         </li>
     
     </div>
@@ -935,6 +1049,11 @@ Linux内核地址空间划分通常32位Linux内核虚拟地址空间划分03G�
         <span class="sidebar-category-name" data-categories="编程">
             <span class="iconfont-archer">&#xe60a;</span>
             编程
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="虚拟化">
+            <span class="iconfont-archer">&#xe60a;</span>
+            虚拟化
         </span>
     
         <span class="sidebar-category-name" data-categories="虚拟化">

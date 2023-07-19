@@ -430,6 +430,129 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2022/08/06/lab9-1/">
+                
+                <span class="abstract-title-text">恶意代码分析lab9-1</span>
+            </a>
+            <div class="abstract-content">
+                纵观详细分析
+打开程序观察堆栈发现并不是main函数入口点 
+
+利用ida分析main函数地址，并在od中断点  
+
+一步一步跟进调试 
+
+查看参数个数是否为1，继续向下直接call 401000
+ 
+
+代码太长不好截图，直接放代码
+1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283.text:00402410         ...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/09/01">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/08/06</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+        
+        
+            
+        
+        
+        <span class="post-category" data-categories="恶意代码"">
+            <i class="fas fa-folder post-category-icon"></i>
+            <span class="post-category-text">
+                恶意代码
+            </span>
+        </span>
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="恶意代码">恶意代码</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="二进制">二进制</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2022/08/06/shiro/">
+                
+                <span class="abstract-title-text">Shiro反序列化漏洞</span>
+            </a>
+            <div class="abstract-content">
+                Shiro环境搭建
+所需环境
+123jdk8u65 Tomcat8shiro 1.2.4
+
+shiro环境直接clone p神的github地址
+
+启动tomcat，即可看到
+
+
+
+Shiro550分析漏洞原理
+勾选 RememberMe 字段，登陆成功的话，返回包 set-Cookie 会有 rememberMe&#x3D;deleteMe 字
+段，还会有 rememberMe 字段，之后的所有请求中 Cookie 都会有 rememberMe 字段，那么就
+可以利用这个 rememberMe 进行反序列化，从而 getshell。
+12345678910111213141516171...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/09/01">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/08/06</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+        
+        
+            
+        
+        
+        <span class="post-category" data-categories="java安全"">
+            <i class="fas fa-folder post-category-icon"></i>
+            <span class="post-category-text">
+                java安全
+            </span>
+        </span>
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="java安全">java安全</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="java框架">java框架</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2022/07/31/fastjson%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86/">
                 
                 <span class="abstract-title-text">Fastjson 反序列化漏洞</span>
@@ -703,7 +826,29 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -768,7 +913,7 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 12
+        Total : 14
         </div>
         <!-- search  -->
         
@@ -861,6 +1006,36 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
         <li class="archive-post-item">
             <span class="archive-post-date">07/31</span>
             <a class="archive-post-title" href="/2022/07/31/windows%E4%B8%8Bsocket%E9%80%9A%E4%BF%A1/">windows下socket通信</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> Invalid date </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span>
+            <a class="archive-post-title" href="/2023/07/19/serverless/">Serverless及其安全风险</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> Invalid date </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span>
+            <a class="archive-post-title" href="/2023/07/19/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%B0%83%E8%AF%95/">记一次虚拟机启动失败调试过程</a>
         </li>
     
     </div>
@@ -993,6 +1168,11 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
         <span class="sidebar-category-name" data-categories="编程">
             <span class="iconfont-archer">&#xe60a;</span>
             编程
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="虚拟化">
+            <span class="iconfont-archer">&#xe60a;</span>
+            虚拟化
         </span>
     
         <span class="sidebar-category-name" data-categories="虚拟化">

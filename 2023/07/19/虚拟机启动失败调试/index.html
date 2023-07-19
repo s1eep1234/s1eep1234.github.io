@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="John Doe">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="John Doe">
+	<meta name="referrer" content="no-referrer">
+    
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta name="description" content="记一次虚拟机启动失败调试过程实习过程中分配了个小任务，替换iso镜像中的sqfs文件并重新打包为iso。其中在测试iso是否打包成功过程中，要vmware发现无法启动报panic，具体输出如下图。后用centos7镜像做同样测试发现也会报错。深入centos7内核代码查看调试。最终发现是由于虚拟机配置初始化时默认硬盘空间太小导致无法挂载系统盘导致。   linux kernel源代码和iso镜像的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记一次虚拟机启动失败调试过程">
+<meta property="og:url" content="http://example.com/2023/07/19/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%B0%83%E8%AF%95/index.html">
+<meta property="og:site_name" content="s1eep123のblog">
+<meta property="og:description" content="记一次虚拟机启动失败调试过程实习过程中分配了个小任务，替换iso镜像中的sqfs文件并重新打包为iso。其中在测试iso是否打包成功过程中，要vmware发现无法启动报panic，具体输出如下图。后用centos7镜像做同样测试发现也会报错。深入centos7内核代码查看调试。最终发现是由于虚拟机配置初始化时默认硬盘空间太小导致无法挂载系统盘导致。   linux kernel源代码和iso镜像的">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719225511210.png">
+<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719225531527.png">
+<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719225552391.png">
+<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719225611925.png">
+<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719225626653.png">
+<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719225639644.png">
+<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719225653745.png">
+<meta property="article:published_time" content="2023-07-19T14:52:44.777Z">
+<meta property="article:modified_time" content="2023-07-19T15:01:06.430Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="虚拟化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719225511210.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>记一次虚拟机启动失败调试过程 · s1eep123&#39;s blog</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="s1eep123のblog" type="application/atom+xml">
+</head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="post-body">
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>s1eep123's blog.</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">s1eep123&#39;s blog.</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">记一次虚拟机启动失败调试过程</a>
+            </div>
+        </div>
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:30vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                记一次虚拟机启动失败调试过程
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        
+        
+            
+        
+            
+        
+        
+        <span class="post-category" data-categories="内核/虚拟化"">
+            <i class="fas fa-folder post-category-icon"></i>
+            <span class="post-category-text">
+                内核/虚拟化
+            </span>
+        </span>
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="虚拟化">虚拟化</a>
+    
+</div>
+
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count word-count">2.2k</span>Reading time: <span class="post-count reading-time">11 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2023/07/19</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="记一次虚拟机启动失败调试过程"><a href="#记一次虚拟机启动失败调试过程" class="headerlink" title="记一次虚拟机启动失败调试过程"></a>记一次虚拟机启动失败调试过程</h1><p>实习过程中分配了个小任务，替换iso镜像中的sqfs文件并重新打包为iso。其中在测试iso是否打包成功过程中，要vmware发现无法启动报panic，具体输出如下图。后用centos7镜像做同样测试发现也会报错。深入centos7内核代码查看调试。最终发现是由于虚拟机配置初始化时默认硬盘空间太小导致无法挂载系统盘导致。</p>
+<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719225511210.png" alt="image-20230719225511210"></p>
+<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719225531527.png" alt="image-20230719225531527"></p>
+<h2 id="linux-kernel源代码和iso镜像的关系"><a href="#linux-kernel源代码和iso镜像的关系" class="headerlink" title="linux kernel源代码和iso镜像的关系"></a>linux kernel源代码和iso镜像的关系</h2><p>梳理一下如何从linux kernel代码来制作iso的过程</p>
+<ol>
+<li>下载kernel代码 </li>
+<li>修改配置文件</li>
+<li>编译内核</li>
+<li>安装内核</li>
+<li>将文件系统打包为iso镜像</li>
+</ol>
+<p>在安装好的系统下执行sudo cp -r &#x2F;boot iso 创建isolinux.cfg配置文件。之后使用mkisofs工具即可将文件系统打包为iso即完成</p>
+<p>解压原本的iso文件可以看到一下目录，可以理解为iso是包含了系统的文件系统信息，如目录结构、文件属性和引导代码的一个压缩文件</p>
+<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719225552391.png" alt="image-20230719225552391"></p>
+<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719225611925.png" alt="image-20230719225611925"></p>
+<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719225626653.png" alt="image-20230719225626653"></p>
+<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719225639644.png" alt="image-20230719225639644"></p>
+<h2 id="虚拟机启动panic过程"><a href="#虚拟机启动panic过程" class="headerlink" title="虚拟机启动panic过程"></a>虚拟机启动panic过程</h2><p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719225653745.png" alt="image-20230719225653745"></p>
+<p>其中能想到调试方法有两种，一种是通过qemu模拟虚拟机+外部串口链接通过kgdb进行调试。但此方法需要对linux代码添加相关调试信息且需要重新编译源码，较为麻烦。</p>
+<p>因此通过一种报错字符串定位内核代码向上回朔调用栈来进行debug</p>
+<p>下载该linux发行版对应内核版本，根据屏幕显示的debug信息全局搜索Decomporessing Linux…关键字定位具体函数。（linux内核中包含了不同架构实现的代码，由于centos7使用的是x86架构。因此后续分析如不说明皆为x86下）</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Users/s1eep/kernel/linux/arch/x86/boot/compressed/misc.c</span></span><br><span class="line"></span><br><span class="line"><span class="function">asmlinkage <span class="type">void</span> <span class="title">decompress_kernel</span><span class="params">(<span class="type">void</span> *rmode, memptr heap,</span></span></span><br><span class="line"><span class="params"><span class="function">				  <span class="type">unsigned</span> <span class="type">char</span> *input_data,</span></span></span><br><span class="line"><span class="params"><span class="function">				  <span class="type">unsigned</span> <span class="type">long</span> input_len,</span></span></span><br><span class="line"><span class="params"><span class="function">				  <span class="type">unsigned</span> <span class="type">char</span> *output)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 设置os模式为实模式并且memset相关内存</span></span><br><span class="line">	real_mode = rmode;</span><br><span class="line">	<span class="built_in">sanitize_boot_params</span>(real_mode);</span><br><span class="line"></span><br><span class="line">	<span class="comment">//初始化控制台打印信息相关设置，如设置字符输出端口，具体输出到屏幕的那个像素，颜色等</span></span><br><span class="line">	<span class="keyword">if</span> (real_mode-&gt;screen_info.orig_video_mode == <span class="number">7</span>) &#123;</span><br><span class="line">		vidmem = (<span class="type">char</span> *) <span class="number">0xb0000</span>;</span><br><span class="line">		vidport = <span class="number">0x3b4</span>;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		vidmem = (<span class="type">char</span> *) <span class="number">0xb8000</span>;</span><br><span class="line">		vidport = <span class="number">0x3d4</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	lines = real_mode-&gt;screen_info.orig_video_lines;</span><br><span class="line">	cols = real_mode-&gt;screen_info.orig_video_cols;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">console_init</span>();</span><br><span class="line">    <span class="comment">//在/x86/boot/compressed/misc.c/ __putstr(const char *s) 中可看到字符输出的屏幕的具体实现</span></span><br><span class="line">	<span class="built_in">debug_putstr</span>(<span class="string">&quot;early console in decompress_kernel\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//分配的空闲内存，至于为什么是堆，因为栈空间还未分配</span></span><br><span class="line">	free_mem_ptr     = heap;	<span class="comment">/* Heap */</span></span><br><span class="line">	free_mem_end_ptr = heap + BOOT_HEAP_SIZE;</span><br><span class="line"></span><br><span class="line">	...内存区间是否越界相关判断</span><br><span class="line"></span><br><span class="line">    <span class="comment">//接下来就是kernel启动过程中看到的字符串</span></span><br><span class="line">	<span class="built_in">debug_putstr</span>(<span class="string">&quot;\nDecompressing Linux... &quot;</span>);</span><br><span class="line">	<span class="built_in">decompress</span>(input_data, input_len, <span class="literal">NULL</span>, <span class="literal">NULL</span>, output, <span class="literal">NULL</span>, error);</span><br><span class="line">	<span class="built_in">parse_elf</span>(output);</span><br><span class="line">	<span class="built_in">debug_putstr</span>(<span class="string">&quot;done.\nBooting the kernel.\n&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>分析函数看到</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//linux/boot/head.S</span></span><br><span class="line"></span><br><span class="line">	.code32</span><br><span class="line">	.text</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/init.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/linkage.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;asm/segment.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;asm/pgtable_types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;asm/page_types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;asm/boot.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;asm/msr.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;asm/processor-flags.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;asm/asm-offsets.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//删除32位处理逻辑，只关注64位</span></span><br><span class="line">	.code64</span><br><span class="line">	.org <span class="number">0x200</span></span><br><span class="line"><span class="built_in">ENTRY</span>(startup_64)</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> CONFIG_EFI_STUB</span></span><br><span class="line">	<span class="function">jmp	preferred_addr</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="title">ENTRY</span><span class="params">(efi_pe_entry)</span></span></span><br><span class="line"><span class="function">	mov	%rcx, %rdi</span></span><br><span class="line"><span class="function">	mov	%rdx, %rsi</span></span><br><span class="line"><span class="function">	pushq	%rdi</span></span><br><span class="line"><span class="function">	pushq	%rsi</span></span><br><span class="line"><span class="function">	call	make_boot_params</span></span><br><span class="line"><span class="function">	cmpq	$0,%rax</span></span><br><span class="line"><span class="function">	je	1f</span></span><br><span class="line"><span class="function">	mov	%rax, %rdx</span></span><br><span class="line"><span class="function">	popq	%rsi</span></span><br><span class="line"><span class="function">	popq	%rdi</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="title">ENTRY</span><span class="params">(efi_stub_entry)</span></span></span><br><span class="line"><span class="function">	call	efi_main</span></span><br><span class="line"><span class="function">	movq	%rax,%rsi</span></span><br><span class="line"><span class="function">	cmpq	$0,%rax</span></span><br><span class="line"><span class="function">	jne	2f</span></span><br><span class="line"><span class="function">1:</span></span><br><span class="line"><span class="function">	/* EFI init failed, so hang. */</span></span><br><span class="line"><span class="function">	hlt</span></span><br><span class="line"><span class="function">	jmp	<span class="number">1b</span></span></span><br><span class="line"><span class="function"><span class="number">2</span>:</span></span><br><span class="line"><span class="function">	call	<span class="number">3f</span></span></span><br><span class="line"><span class="function"><span class="number">3</span>:</span></span><br><span class="line"><span class="function">	popq	%rax</span></span><br><span class="line"><span class="function">	subq	$<span class="number">3b</span>, %rax</span></span><br><span class="line"><span class="function">	subq	BP_pref_address(%rsi), %rax</span></span><br><span class="line"><span class="function">	add	BP_code32_start(%esi), %eax</span></span><br><span class="line"><span class="function">	leaq	preferred_addr(%rax), %rax</span></span><br><span class="line"><span class="function">	jmp	*%rax</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">preferred_addr:</span></span><br><span class="line"><span class="function">#endif</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">	//段寄存器清零</span></span><br><span class="line"><span class="function">	xorl	%eax, %eax</span></span><br><span class="line"><span class="function">	movl	%eax, %ds</span></span><br><span class="line"><span class="function">	movl	%eax, %es</span></span><br><span class="line"><span class="function">	movl	%eax, %ss</span></span><br><span class="line"><span class="function">	movl	%eax, %fs</span></span><br><span class="line"><span class="function">	movl	%eax, %gs</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">	/*</span></span><br><span class="line"><span class="function">	* 如果kernel是可重定向的，则从<span class="number">2</span>MB addr 对齐的加载地址解压并运行内核，</span></span><br><span class="line"><span class="function">	* 否则从 LOAD_PHYSICAL_ADDR 解压并运行内核</span></span><br><span class="line"><span class="function">	*/</span></span><br><span class="line"><span class="function">#ifdef CONFIG_RELOCATABLE</span></span><br><span class="line"><span class="function">	leaq	startup_32(%rip) /* - $startup_32 */, %rbp</span></span><br><span class="line"><span class="function">	movl	BP_kernel_alignment(%rsi), %eax</span></span><br><span class="line"><span class="function">	decl	%eax</span></span><br><span class="line"><span class="function">	addq	%rax, %rbp</span></span><br><span class="line"><span class="function">	notq	%rax</span></span><br><span class="line"><span class="function">	andq	%rax, %rbp</span></span><br><span class="line"><span class="function">#else</span></span><br><span class="line"><span class="function">	movq	$LOAD_PHYSICAL_ADDR, %rbp</span></span><br><span class="line"><span class="function">#endif</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">	/*</span></span><br><span class="line"><span class="function">     * 读取 boot_params.init_size ，得到 kernel initialization size</span></span><br><span class="line"><span class="function">     * 减去 _end ，得到起始地址，再加上实际的起始偏移量，得到：</span></span><br><span class="line"><span class="function">     * 内核重定位后的起始地址，保存到 rbx</span></span><br><span class="line"><span class="function">     */</span></span><br><span class="line"><span class="function">	leaq	z_extract_offset(%rbp), %rbx</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">	/* Set up the stack */</span></span><br><span class="line"><span class="function">	leaq	boot_stack_end(%rbx), %rsp</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">	/* Zero EFLAGS */</span></span><br><span class="line"><span class="function">	pushq	$<span class="number">0</span></span></span><br><span class="line"><span class="function">	popfq</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">/*</span></span><br><span class="line"><span class="function"> * Copy the compressed kernel to the end of our buffer</span></span><br><span class="line"><span class="function"> * where decompression in place becomes safe.</span></span><br><span class="line"><span class="function"> */</span></span><br><span class="line"><span class="function">	pushq	%rsi</span></span><br><span class="line"><span class="function">	leaq	(_bss<span class="number">-8</span>)(%rip), %rsi</span></span><br><span class="line"><span class="function">	leaq	(_bss<span class="number">-8</span>)(%rbx), %rdi</span></span><br><span class="line"><span class="function">	movq	$_bss /* - $startup_32 */, %rcx</span></span><br><span class="line"><span class="function">	shrq	$<span class="number">3</span>, %rcx</span></span><br><span class="line"><span class="function">	std</span></span><br><span class="line"><span class="function">	rep	movsq</span></span><br><span class="line"><span class="function">	cld</span></span><br><span class="line"><span class="function">	popq	%rsi</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">/*</span></span><br><span class="line"><span class="function"> * Jump to the relocated address.</span></span><br><span class="line"><span class="function"> */</span></span><br><span class="line"><span class="function">	leaq	relocated(%rbx), %rax</span></span><br><span class="line"><span class="function">	jmp	*%rax</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">	.text</span></span><br><span class="line"><span class="function">relocated:</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">/*</span></span><br><span class="line"><span class="function"> * Clear BSS (stack is currently empty)</span></span><br><span class="line"><span class="function"> */</span></span><br><span class="line"><span class="function">	xorl	%eax, %eax</span></span><br><span class="line"><span class="function">	leaq    _bss(%rip), %rdi</span></span><br><span class="line"><span class="function">	leaq    _ebss(%rip), %rcx</span></span><br><span class="line"><span class="function">	subq	%rdi, %rcx</span></span><br><span class="line"><span class="function">	shrq	$<span class="number">3</span>, %rcx</span></span><br><span class="line"><span class="function">	rep	stosq</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">/*</span></span><br><span class="line"><span class="function"> * Adjust our own GOT</span></span><br><span class="line"><span class="function"> */</span></span><br><span class="line"><span class="function">	leaq	_got(%rip), %rdx</span></span><br><span class="line"><span class="function">	leaq	_egot(%rip), %rcx</span></span><br><span class="line"><span class="function"><span class="number">1</span>:</span></span><br><span class="line"><span class="function">	cmpq	%rcx, %rdx</span></span><br><span class="line"><span class="function">	jae	<span class="number">2f</span></span></span><br><span class="line"><span class="function">	addq	%rbx, (%rdx)</span></span><br><span class="line"><span class="function">	addq	$<span class="number">8</span>, %rdx</span></span><br><span class="line"><span class="function">	jmp	<span class="number">1b</span></span></span><br><span class="line"><span class="function"><span class="number">2</span>:</span></span><br><span class="line"><span class="function">	</span></span><br><span class="line"><span class="function">/*</span></span><br><span class="line"><span class="function"> * Do the decompression, and jump to the new kernel..</span></span><br><span class="line"><span class="function"> */</span></span><br><span class="line"><span class="function">	pushq	%rsi			/* Save the real mode argument */</span></span><br><span class="line"><span class="function">	movq	%rsi, %rdi		/* real mode address */</span></span><br><span class="line"><span class="function">	leaq	boot_heap(%rip), %rsi	/* malloc area for uncompression */</span></span><br><span class="line"><span class="function">	leaq	input_data(%rip), %rdx  /* input_data */</span></span><br><span class="line"><span class="function">	movl	$z_input_len, %ecx	/* input_len */</span></span><br><span class="line"><span class="function">	movq	%rbp, %r8		/* output target address */</span></span><br><span class="line"><span class="function">    //调用函数</span></span><br><span class="line"><span class="function">	call	decompress_kernel   </span></span><br><span class="line"><span class="function">	popq	%rsi</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">/*</span></span><br><span class="line"><span class="function"> * Jump to the decompressed kernel.</span></span><br><span class="line"><span class="function"> */</span></span><br><span class="line"><span class="function">	jmp	*%rbp</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">	.code32</span></span><br><span class="line"><span class="function">no_longmode:</span></span><br><span class="line"><span class="function">	/* This isn<span class="string">&#x27;t an x86-64 CPU so hang */</span></span></span><br><span class="line"><span class="string"><span class="function">1:</span></span></span><br><span class="line"><span class="string"><span class="function">	hlt</span></span></span><br><span class="line"><span class="string"><span class="function">	jmp     1b</span></span></span><br><span class="line"><span class="string"><span class="function"></span></span></span><br><span class="line"><span class="string"><span class="function">#include &quot;../../kernel/verify_cpu.S&quot;</span></span></span><br><span class="line"><span class="string"><span class="function"></span></span></span><br><span class="line"><span class="string"><span class="function">	.data</span></span></span><br><span class="line"><span class="string"><span class="function">gdt:</span></span></span><br><span class="line"><span class="string"><span class="function">	.word	gdt_end - gdt</span></span></span><br><span class="line"><span class="string"><span class="function">	.long	gdt</span></span></span><br><span class="line"><span class="string"><span class="function">	.word	0</span></span></span><br><span class="line"><span class="string"><span class="function">	.quad	0x0000000000000000	/* NULL descriptor */</span></span></span><br><span class="line"><span class="string"><span class="function">	.quad	0x00af9a000000ffff	/* __KERNEL_CS */</span></span></span><br><span class="line"><span class="string"><span class="function">	.quad	0x00cf92000000ffff	/* __KERNEL_DS */</span></span></span><br><span class="line"><span class="string"><span class="function">	.quad	0x0080890000000000	/* TS descriptor */</span></span></span><br><span class="line"><span class="string"><span class="function">	.quad   0x0000000000000000	/* TS continued */</span></span></span><br><span class="line"><span class="string"><span class="function">gdt_end:</span></span></span><br><span class="line"><span class="string"><span class="function"></span></span></span><br><span class="line"><span class="string"><span class="function">/*</span></span></span><br><span class="line"><span class="string"><span class="function"> * Stack and heap for uncompression</span></span></span><br><span class="line"><span class="string"><span class="function"> */</span></span></span><br><span class="line"><span class="string"><span class="function">	.bss</span></span></span><br><span class="line"><span class="string"><span class="function">	.balign 4</span></span></span><br><span class="line"><span class="string"><span class="function">boot_heap:</span></span></span><br><span class="line"><span class="string"><span class="function">	.fill BOOT_HEAP_SIZE, 1, 0</span></span></span><br><span class="line"><span class="string"><span class="function">boot_stack:</span></span></span><br><span class="line"><span class="string"><span class="function">	.fill BOOT_STACK_SIZE, 1, 0</span></span></span><br><span class="line"><span class="string"><span class="function">boot_stack_end:</span></span></span><br><span class="line"><span class="string"><span class="function"></span></span></span><br><span class="line"><span class="string"><span class="function">/*</span></span></span><br><span class="line"><span class="string"><span class="function"> * Space for page tables (not in .bss so not zeroed)</span></span></span><br><span class="line"><span class="string"><span class="function"> */</span></span></span><br><span class="line"><span class="string"><span class="function">	.section &quot;.pgtable&quot;,&quot;a&quot;,@nobits</span></span></span><br><span class="line"><span class="string"><span class="function">	.balign 4096</span></span></span><br><span class="line"><span class="string"><span class="function">pgtable:</span></span></span><br><span class="line"><span class="string"><span class="function">	.fill 6*4096, 1, 0</span></span></span><br></pre></td></tr></table></figure>
+
+<p>接着启动虚拟机报错信息在内核代码中向上朔源</p>
+<p>&#x2F;initrd.image: incomplete write (-28!&#x3D;xxxx)</p>
+<p>找到一下函数</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">///Users/s1eep/kernel/linux/init/do_mounts_rd.c</span></span><br><span class="line"><span class="function">tatic <span class="type">int</span> __init <span class="title">compr_flush</span><span class="params">(<span class="type">void</span> *window, <span class="type">unsigned</span> <span class="type">int</span> outcnt)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> written = <span class="built_in">sys_write</span>(crd_outfd, window, outcnt);</span><br><span class="line">	<span class="keyword">if</span> (written != outcnt) &#123;</span><br><span class="line">		<span class="keyword">if</span> (decompress_error == <span class="number">0</span>)</span><br><span class="line">			<span class="built_in">printk</span>(KERN_ERR</span><br><span class="line">			       <span class="string">&quot;RAMDISK: incomplete write (%d != %d)\n&quot;</span>,</span><br><span class="line">			       written, outcnt);</span><br><span class="line">		decompress_error = <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> outcnt;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>向上查看函数调用链</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br></pre></td><td class="code"><pre><span class="line">/Users/s1eep/kernel/linux/init/do_mounts_rd.<span class="function">c</span></span><br><span class="line"><span class="function"><span class="type">static</span> <span class="type">int</span> __init <span class="title">crd_load</span><span class="params">(<span class="type">int</span> in_fd, <span class="type">int</span> out_fd, decompress_fn deco)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">/Users/s1eep/kernel/linux/init/do_mounts_rd.c</span></span><br><span class="line"><span class="function"><span class="type">int</span> __init <span class="title">rd_load_image</span><span class="params">(<span class="type">char</span> *from)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">/Users/s1eep/kernel/linux/init/do_mounts_initrd.c</span></span><br><span class="line"><span class="function"><span class="type">int</span> __init <span class="title">initrd_load</span><span class="params">(<span class="type">void</span>)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">/Users/s1eep/kernel/linux/init/do_mounts.c</span></span><br><span class="line"><span class="function"><span class="type">void</span> __init <span class="title">prepare_namespace</span><span class="params">(<span class="type">void</span>)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">/Users/s1eep/kernel/linux/init/main.c</span></span><br><span class="line"><span class="function"><span class="type">static</span> noinline <span class="type">void</span> __init <span class="title">kernel_init_freeable</span><span class="params">(<span class="type">void</span>)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">/Users/s1eep/kernel/linux/init/main.c</span></span><br><span class="line"><span class="function"><span class="type">static</span> <span class="type">int</span> __ref <span class="title">kernel_init</span><span class="params">(<span class="type">void</span> *unused)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">/Users/s1eep/kernel/linux/init/main.c</span></span><br><span class="line"><span class="function"><span class="type">static</span> noinline <span class="type">void</span> __init_refok <span class="title">rest_init</span><span class="params">(<span class="type">void</span>)</span></span></span><br><span class="line"><span class="function">asmlinkage <span class="type">void</span> __init <span class="title">start_kernel</span><span class="params">(<span class="type">void</span>)</span></span></span><br><span class="line"><span class="function">asmlinkage <span class="type">void</span> __init <span class="title">start_kernel</span><span class="params">(<span class="type">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">char</span> * command_line;</span><br><span class="line">	<span class="keyword">extern</span> <span class="type">const</span> <span class="keyword">struct</span> <span class="title class_">kernel_param</span> __start___param[], __stop___param[];</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * Need to run as early as possible, to initialize the</span></span><br><span class="line"><span class="comment">	 * lockdep hash:</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="built_in">lockdep_init</span>();</span><br><span class="line">	<span class="built_in">smp_setup_processor_id</span>();</span><br><span class="line">	<span class="built_in">debug_objects_early_init</span>();</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * Set up the the initial canary ASAP:</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="built_in">boot_init_stack_canary</span>();</span><br><span class="line"></span><br><span class="line">	<span class="built_in">cgroup_init_early</span>();</span><br><span class="line"></span><br><span class="line">	<span class="built_in">local_irq_disable</span>();</span><br><span class="line">	early_boot_irqs_disabled = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Interrupts are still disabled. Do necessary setups, then</span></span><br><span class="line"><span class="comment"> * enable them</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">	<span class="built_in">boot_cpu_init</span>();</span><br><span class="line">	<span class="built_in">page_address_init</span>();</span><br><span class="line">	<span class="built_in">pr_notice</span>(<span class="string">&quot;%s&quot;</span>, linux_banner);</span><br><span class="line">	<span class="built_in">setup_arch</span>(&amp;command_line);</span><br><span class="line">	<span class="built_in">mm_init_owner</span>(&amp;init_mm, &amp;init_task);</span><br><span class="line">	<span class="built_in">mm_init_cpumask</span>(&amp;init_mm);</span><br><span class="line">	<span class="built_in">setup_command_line</span>(command_line);</span><br><span class="line">	<span class="built_in">setup_nr_cpu_ids</span>();</span><br><span class="line">	<span class="built_in">setup_per_cpu_areas</span>();</span><br><span class="line">	<span class="built_in">smp_prepare_boot_cpu</span>();	<span class="comment">/* arch-specific boot-cpu hooks */</span></span><br><span class="line"></span><br><span class="line">	<span class="built_in">build_all_zonelists</span>(<span class="literal">NULL</span>, <span class="literal">NULL</span>);</span><br><span class="line">	<span class="built_in">page_alloc_init</span>();</span><br><span class="line"></span><br><span class="line">	<span class="built_in">pr_notice</span>(<span class="string">&quot;Kernel command line: %s\n&quot;</span>, boot_command_line);</span><br><span class="line">	<span class="built_in">parse_early_param</span>();</span><br><span class="line">	<span class="built_in">parse_args</span>(<span class="string">&quot;Booting kernel&quot;</span>, static_command_line, __start___param,</span><br><span class="line">		   __stop___param - __start___param,</span><br><span class="line">		   <span class="number">-1</span>, <span class="number">-1</span>, &amp;unknown_bootoption);</span><br><span class="line"></span><br><span class="line">	<span class="built_in">jump_label_init</span>();</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * These use large bootmem allocations and must precede</span></span><br><span class="line"><span class="comment">	 * kmem_cache_init()</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="built_in">setup_log_buf</span>(<span class="number">0</span>);</span><br><span class="line">	<span class="built_in">pidhash_init</span>();</span><br><span class="line">	<span class="built_in">vfs_caches_init_early</span>();</span><br><span class="line">	<span class="built_in">sort_main_extable</span>();</span><br><span class="line">	<span class="built_in">trap_init</span>();</span><br><span class="line">	<span class="built_in">mm_init</span>();</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * Set up the scheduler prior starting any interrupts (such as the</span></span><br><span class="line"><span class="comment">	 * timer interrupt). Full topology setup happens at smp_init()</span></span><br><span class="line"><span class="comment">	 * time - but meanwhile we still have a functioning scheduler.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="built_in">sched_init</span>();</span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * Disable preemption - early bootup scheduling is extremely</span></span><br><span class="line"><span class="comment">	 * fragile until we cpu_idle() for the first time.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="built_in">preempt_disable</span>();</span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">WARN</span>(!<span class="built_in">irqs_disabled</span>(), <span class="string">&quot;Interrupts were enabled *very* early, fixing it\n&quot;</span>))</span><br><span class="line">		<span class="built_in">local_irq_disable</span>();</span><br><span class="line">	<span class="built_in">idr_init_cache</span>();</span><br><span class="line">	<span class="built_in">perf_event_init</span>();</span><br><span class="line">	<span class="built_in">rcu_init</span>();</span><br><span class="line">	<span class="built_in">tick_nohz_init</span>();</span><br><span class="line">	<span class="built_in">radix_tree_init</span>();</span><br><span class="line">	<span class="comment">/* init some links before init_ISA_irqs() */</span></span><br><span class="line">	<span class="built_in">early_irq_init</span>();</span><br><span class="line">	<span class="built_in">init_IRQ</span>();</span><br><span class="line">	<span class="built_in">tick_init</span>();</span><br><span class="line">	<span class="built_in">init_timers</span>();</span><br><span class="line">	<span class="built_in">hrtimers_init</span>();</span><br><span class="line">	<span class="built_in">softirq_init</span>();</span><br><span class="line">	<span class="built_in">timekeeping_init</span>();</span><br><span class="line">	<span class="built_in">time_init</span>();</span><br><span class="line">	<span class="built_in">profile_init</span>();</span><br><span class="line">	<span class="built_in">call_function_init</span>();</span><br><span class="line">	<span class="built_in">WARN</span>(!<span class="built_in">irqs_disabled</span>(), <span class="string">&quot;Interrupts were enabled early\n&quot;</span>);</span><br><span class="line">	early_boot_irqs_disabled = <span class="literal">false</span>;</span><br><span class="line">	<span class="built_in">local_irq_enable</span>();</span><br><span class="line"></span><br><span class="line">	<span class="built_in">kmem_cache_init_late</span>();</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * HACK ALERT! This is early. We&#x27;re enabling the console before</span></span><br><span class="line"><span class="comment">	 * we&#x27;ve done PCI setups etc, and console_init() must be aware of</span></span><br><span class="line"><span class="comment">	 * this. But we do want output early, in case something goes wrong.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="built_in">console_init</span>();</span><br><span class="line">	<span class="keyword">if</span> (panic_later)</span><br><span class="line">		<span class="built_in">panic</span>(panic_later, panic_param);</span><br><span class="line"></span><br><span class="line">	<span class="built_in">lockdep_info</span>();</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * Need to run this when irqs are enabled, because it wants</span></span><br><span class="line"><span class="comment">	 * to self-test [hard/soft]-irqs on/off lock inversion bugs</span></span><br><span class="line"><span class="comment">	 * too:</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="built_in">locking_selftest</span>();</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> CONFIG_BLK_DEV_INITRD</span></span><br><span class="line">	<span class="keyword">if</span> (initrd_start &amp;&amp; !initrd_below_start_ok &amp;&amp;</span><br><span class="line">	    <span class="built_in">page_to_pfn</span>(<span class="built_in">virt_to_page</span>((<span class="type">void</span> *)initrd_start)) &lt; min_low_pfn) &#123;</span><br><span class="line">		<span class="built_in">pr_crit</span>(<span class="string">&quot;initrd overwritten (0x%08lx &lt; 0x%08lx) - disabling it.\n&quot;</span>,</span><br><span class="line">		    <span class="built_in">page_to_pfn</span>(<span class="built_in">virt_to_page</span>((<span class="type">void</span> *)initrd_start)),</span><br><span class="line">		    min_low_pfn);</span><br><span class="line">		initrd_start = <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">	<span class="built_in">page_cgroup_init</span>();</span><br><span class="line">	<span class="built_in">debug_objects_mem_init</span>();</span><br><span class="line">	<span class="built_in">kmemleak_init</span>();</span><br><span class="line">	<span class="built_in">setup_per_cpu_pageset</span>();</span><br><span class="line">	<span class="built_in">numa_policy_init</span>();</span><br><span class="line">	<span class="keyword">if</span> (late_time_init)</span><br><span class="line">		<span class="built_in">late_time_init</span>();</span><br><span class="line">	<span class="built_in">sched_clock_init</span>();</span><br><span class="line">	<span class="built_in">calibrate_delay</span>();</span><br><span class="line">	<span class="built_in">pidmap_init</span>();</span><br><span class="line">	<span class="built_in">anon_vma_init</span>();</span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> CONFIG_X86</span></span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">efi_enabled</span>(EFI_RUNTIME_SERVICES))</span><br><span class="line">		<span class="built_in">efi_enter_virtual_mode</span>();</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">	<span class="built_in">thread_info_cache_init</span>();</span><br><span class="line">	<span class="built_in">cred_init</span>();</span><br><span class="line">	fork_init(totalram_pages);</span><br><span class="line">	<span class="built_in">proc_caches_init</span>();</span><br><span class="line">	<span class="built_in">buffer_init</span>();</span><br><span class="line">	<span class="built_in">key_init</span>();</span><br><span class="line">	<span class="built_in">security_init</span>();</span><br><span class="line">	<span class="built_in">dbg_late_init</span>();</span><br><span class="line">	<span class="built_in">vfs_caches_init</span>(totalram_pages);</span><br><span class="line">	<span class="built_in">signals_init</span>();</span><br><span class="line">	<span class="comment">/* rootfs populating might need page-writeback */</span></span><br><span class="line">	<span class="built_in">page_writeback_init</span>();</span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> CONFIG_PROC_FS</span></span><br><span class="line">	<span class="built_in">proc_root_init</span>();</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">	<span class="built_in">cgroup_init</span>();</span><br><span class="line">	<span class="built_in">cpuset_init</span>();</span><br><span class="line">	<span class="built_in">taskstats_init_early</span>();</span><br><span class="line">	<span class="built_in">delayacct_init</span>();</span><br><span class="line"></span><br><span class="line">	<span class="built_in">check_bugs</span>();</span><br><span class="line"></span><br><span class="line">	<span class="built_in">acpi_early_init</span>(); <span class="comment">/* before LAPIC and SMP init */</span></span><br><span class="line">	<span class="built_in">sfi_init_late</span>();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">efi_enabled</span>(EFI_RUNTIME_SERVICES)) &#123;</span><br><span class="line">		<span class="built_in">efi_late_init</span>();</span><br><span class="line">		<span class="built_in">efi_free_boot_services</span>();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">ftrace_init</span>();</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* Do the rest non-__init&#x27;ed, we&#x27;re now alive */</span></span><br><span class="line">	<span class="built_in">rest_init</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>分析第二行报错信息</p>
+<p>Assuming drive cache: write through</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">defaults:</span><br><span class="line">	<span class="keyword">if</span> (sdp-&gt;wce_default_on) &#123;</span><br><span class="line">		<span class="built_in">sd_printk</span>(KERN_NOTICE, sdkp, <span class="string">&quot;Assuming drive cache: write back\n&quot;</span>);</span><br><span class="line">		sdkp-&gt;WCE = <span class="number">1</span>;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="built_in">sd_printk</span>(KERN_ERR, sdkp, <span class="string">&quot;Assuming drive cache: write through\n&quot;</span>);</span><br><span class="line">		sdkp-&gt;WCE = <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	sdkp-&gt;RCD = <span class="number">0</span>;</span><br><span class="line">	sdkp-&gt;DPOFUA = <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>分析第三行报错信息，</p>
+<p>VFS: Unable to mount root fs on unknown-block</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">///Users/s1eep/kernel/linux/init/do_mounts.c</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> __init <span class="title">mount_block_root</span><span class="params">(<span class="type">char</span> *name, <span class="type">int</span> flags)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">struct</span> <span class="title class_">page</span> *page = <span class="built_in">alloc_page</span>(GFP_KERNEL |</span><br><span class="line">					__GFP_NOTRACK_FALSE_POSITIVE);</span><br><span class="line">	<span class="type">char</span> *fs_names = <span class="built_in">page_address</span>(page);</span><br><span class="line">	<span class="type">char</span> *p;</span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> CONFIG_BLOCK</span></span><br><span class="line">	<span class="type">char</span> b[BDEVNAME_SIZE];</span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line">	<span class="type">const</span> <span class="type">char</span> *b = name;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line">	<span class="built_in">get_fs_names</span>(fs_names);</span><br><span class="line">retry:</span><br><span class="line">	<span class="keyword">for</span> (p = fs_names; *p; p += <span class="built_in">strlen</span>(p)+<span class="number">1</span>) &#123;</span><br><span class="line">		<span class="type">int</span> err = <span class="built_in">do_mount_root</span>(name, p, flags, root_mount_data);</span><br><span class="line">		<span class="keyword">switch</span> (err) &#123;</span><br><span class="line">			<span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">				<span class="keyword">goto</span> out;</span><br><span class="line">			<span class="keyword">case</span> -EACCES:</span><br><span class="line">				flags |= MS_RDONLY;</span><br><span class="line">				<span class="keyword">goto</span> retry;</span><br><span class="line">			<span class="keyword">case</span> -EINVAL:</span><br><span class="line">				<span class="keyword">continue</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	        <span class="comment">/*</span></span><br><span class="line"><span class="comment">		 * Allow the user to distinguish between failed sys_open</span></span><br><span class="line"><span class="comment">		 * and bad superblock on root device.</span></span><br><span class="line"><span class="comment">		 * and give them a list of the available devices</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> CONFIG_BLOCK</span></span><br><span class="line">		__bdevname(ROOT_DEV, b);</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">		<span class="built_in">printk</span>(<span class="string">&quot;VFS: Cannot open root device \&quot;%s\&quot; or %s: error %d\n&quot;</span>,</span><br><span class="line">				root_device_name, b, err);</span><br><span class="line">		<span class="built_in">printk</span>(<span class="string">&quot;Please append a correct \&quot;root=\&quot; boot option; here are the available partitions:\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">		<span class="built_in">printk_all_partitions</span>();</span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> CONFIG_DEBUG_BLOCK_EXT_DEVT</span></span><br><span class="line">		<span class="built_in">printk</span>(<span class="string">&quot;DEBUG_BLOCK_EXT_DEVT is enabled, you need to specify &quot;</span></span><br><span class="line">		       <span class="string">&quot;explicit textual name for \&quot;root=\&quot; boot option.\n&quot;</span>);</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">		<span class="built_in">panic</span>(<span class="string">&quot;VFS: Unable to mount root fs on %s&quot;</span>, b);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">printk</span>(<span class="string">&quot;List of all partitions:\n&quot;</span>);</span><br><span class="line">	<span class="built_in">printk_all_partitions</span>();</span><br><span class="line">	<span class="built_in">printk</span>(<span class="string">&quot;No filesystem could mount root, tried: &quot;</span>);</span><br><span class="line">	<span class="keyword">for</span> (p = fs_names; *p; p += <span class="built_in">strlen</span>(p)+<span class="number">1</span>)</span><br><span class="line">		<span class="built_in">printk</span>(<span class="string">&quot; %s&quot;</span>, p);</span><br><span class="line">	<span class="built_in">printk</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> CONFIG_BLOCK</span></span><br><span class="line">	__bdevname(ROOT_DEV, b);</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">	<span class="built_in">panic</span>(<span class="string">&quot;VFS: Unable to mount root fs on %s&quot;</span>, b);</span><br><span class="line">out:</span><br><span class="line">	<span class="built_in">put_page</span>(page);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+    </article>
+    <!-- license -->
+    
+        <div class="license-wrapper">
+            <p>Publish date：<a href="http://example.com/2023/07/19/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%B0%83%E8%AF%95/">July 19th 2023, 10:52:44 pm</a>
+            <p>Update date：<a href="http://example.com/2023/07/19/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%B0%83%E8%AF%95/">July 19th 2023, 11:01:06 pm</a>
+            <p>License：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2023/07/19/serverless/" title="Serverless及其安全风险">
+                    <div class="prevTitle">Serverless及其安全风险</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:1611249603@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/s1eep1234" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="/assets/wechat.png" />
+                </span>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer qq" title=qq>
+                    
+                    <img class="profile-qr" src="/assets/qq.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:30vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%B0%E4%B8%80%E6%AC%A1%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">记一次虚拟机启动失败调试过程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#linux-kernel%E6%BA%90%E4%BB%A3%E7%A0%81%E5%92%8Ciso%E9%95%9C%E5%83%8F%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-number">1.1.</span> <span class="toc-text">linux kernel源代码和iso镜像的关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8panic%E8%BF%87%E7%A8%8B"><span class="toc-number">1.2.</span> <span class="toc-text">虚拟机启动panic过程</span></a></li></ol></li></ol>
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 14
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/01</span>
+            <a class="archive-post-title" href="/2023/07/01/kvm%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86-cpu%E8%99%9A%E6%8B%9F%E5%8C%96/">KVM架构原理-CPU虚拟化</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/04</span>
+            <a class="archive-post-title" href="/2023/04/04/linux%E9%AB%98%E7%AB%AF%E4%BD%8E%E7%AB%AF%E5%86%85%E5%AD%98/">linux高端内存/低端内存及相关api</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2022 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span>
+            <a class="archive-post-title" href="/2022/10/20/tls%E5%8F%8D%E8%B0%83%E8%AF%95/">TLS反调试</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/08</span>
+            <a class="archive-post-title" href="/2022/09/08/%E5%86%B0%E8%9D%8E%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90/">常见Webshell连接工具流量分析</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/01</span>
+            <a class="archive-post-title" href="/2022/09/01/arm%20u%20chrome/">Arm U Chrome</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/11</span>
+            <a class="archive-post-title" href="/2022/08/11/urldns/">URLDNS链</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span>
+            <a class="archive-post-title" href="/2022/08/09/docker%E4%BD%BF%E7%94%A8/">docker使用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span>
+            <a class="archive-post-title" href="/2022/08/09/mysql%E8%9C%9C%E7%BD%90%E5%8F%8D%E5%88%B6/">Mysql蜜罐反制</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/06</span>
+            <a class="archive-post-title" href="/2022/08/06/lab9-1/">恶意代码分析lab9-1</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/06</span>
+            <a class="archive-post-title" href="/2022/08/06/shiro/">Shiro反序列化漏洞</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/31</span>
+            <a class="archive-post-title" href="/2022/07/31/fastjson%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86/">Fastjson 反序列化漏洞</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/31</span>
+            <a class="archive-post-title" href="/2022/07/31/windows%E4%B8%8Bsocket%E9%80%9A%E4%BF%A1/">windows下socket通信</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> Invalid date </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span>
+            <a class="archive-post-title" href="/2023/07/19/serverless/">Serverless及其安全风险</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> Invalid date </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span>
+            <a class="archive-post-title" href="/2023/07/19/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%B0%83%E8%AF%95/">记一次虚拟机启动失败调试过程</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+            <span class="sidebar-tag-name" data-tags="黑科技">
+                <span class="iconfont-archer">&#xe606;</span>
+                黑科技
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="docker">
+                <span class="iconfont-archer">&#xe606;</span>
+                docker
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="java安全">
+                <span class="iconfont-archer">&#xe606;</span>
+                java安全
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="linux">
+                <span class="iconfont-archer">&#xe606;</span>
+                linux
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="恶意代码">
+                <span class="iconfont-archer">&#xe606;</span>
+                恶意代码
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="二进制">
+                <span class="iconfont-archer">&#xe606;</span>
+                二进制
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="攻防">
+                <span class="iconfont-archer">&#xe606;</span>
+                攻防
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="java框架">
+                <span class="iconfont-archer">&#xe606;</span>
+                java框架
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="windows,windows安全,反调试">
+                <span class="iconfont-archer">&#xe606;</span>
+                windows,windows安全,反调试
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="web安全">
+                <span class="iconfont-archer">&#xe606;</span>
+                web安全
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="windows">
+                <span class="iconfont-archer">&#xe606;</span>
+                windows
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="windows编程">
+                <span class="iconfont-archer">&#xe606;</span>
+                windows编程
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="虚拟化">
+                <span class="iconfont-archer">&#xe606;</span>
+                虚拟化
+            </span>
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="黑科技">
+            <span class="iconfont-archer">&#xe60a;</span>
+            黑科技
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="docker">
+            <span class="iconfont-archer">&#xe60a;</span>
+            docker
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="java安全">
+            <span class="iconfont-archer">&#xe60a;</span>
+            java安全
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="内核">
+            <span class="iconfont-archer">&#xe60a;</span>
+            内核
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="恶意代码">
+            <span class="iconfont-archer">&#xe60a;</span>
+            恶意代码
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="红蓝攻防">
+            <span class="iconfont-archer">&#xe60a;</span>
+            红蓝攻防
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="windows逆向，内核安全">
+            <span class="iconfont-archer">&#xe60a;</span>
+            windows逆向，内核安全
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="windows逆向">
+            <span class="iconfont-archer">&#xe60a;</span>
+            windows逆向
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="web安全">
+            <span class="iconfont-archer">&#xe60a;</span>
+            web安全
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="编程">
+            <span class="iconfont-archer">&#xe60a;</span>
+            编程
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="虚拟化">
+            <span class="iconfont-archer">&#xe60a;</span>
+            虚拟化
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="虚拟化">
+            <span class="iconfont-archer">&#xe60a;</span>
+            虚拟化
+        </span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "http://example.com",
+        root: siteMetaRoot,
+        author: "John Doe"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>

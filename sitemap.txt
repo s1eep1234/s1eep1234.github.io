@@ -1,3 +1,5 @@
+http://example.com/2023/07/19/serverless/
+http://example.com/2023/07/19/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%B0%83%E8%AF%95/
 http://example.com/2023/07/01/kvm%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86-cpu%E8%99%9A%E6%8B%9F%E5%8C%96/
 http://example.com/2023/04/04/linux%E9%AB%98%E7%AB%AF%E4%BD%8E%E7%AB%AF%E5%86%85%E5%AD%98/
 http://example.com/2022/10/20/tls%E5%8F%8D%E8%B0%83%E8%AF%95/
@@ -38,3 +40,4 @@ http://example.com/categories/windows%E9%80%86%E5%90%91/
 http://example.com/categories/%E7%BA%A2%E8%93%9D%E6%94%BB%E9%98%B2/web%E5%AE%89%E5%85%A8/
 http://example.com/categories/windows%E9%80%86%E5%90%91/%E7%BC%96%E7%A8%8B/
 http://example.com/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/
+http://example.com/categories/%E5%86%85%E6%A0%B8/%E8%99%9A%E6%8B%9F%E5%8C%96/

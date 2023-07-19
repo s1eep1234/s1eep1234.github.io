@@ -430,6 +430,119 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2023/07/19/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%B0%83%E8%AF%95/">
+                
+                <span class="abstract-title-text">记一次虚拟机启动失败调试过程</span>
+            </a>
+            <div class="abstract-content">
+                记一次虚拟机启动失败调试过程实习过程中分配了个小任务，替换iso镜像中的sqfs文件并重新打包为iso。其中在测试iso是否打包成功过程中，要vmware发现无法启动报panic，具体输出如下图。后用centos7镜像做同样测试发现也会报错。深入centos7内核代码查看调试。最终发现是由于虚拟机配置初始化时默认硬盘空间太小导致无法挂载系统盘导致。
+
+
+linux kernel源代码和iso镜像的关系梳理一下如何从linux kernel代码来制作iso的过程
+
+下载kernel代码 
+修改配置文件
+编译内核
+安装内核
+将文件系统打包为iso镜像
+
+在安装好的系统下执行sudo cp -...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/07/19">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/19</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+        
+        
+            
+        
+            
+        
+        
+        <span class="post-category" data-categories="内核/虚拟化"">
+            <i class="fas fa-folder post-category-icon"></i>
+            <span class="post-category-text">
+                内核/虚拟化
+            </span>
+        </span>
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="虚拟化">虚拟化</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2023/07/19/serverless/">
+                
+                <span class="abstract-title-text">Serverless及其安全风险</span>
+            </a>
+            <div class="abstract-content">
+                这篇文章是对学习云原生及实习中做的一些工作的阶段性总结。
+何为Iaas，Paas，Saas,引用知乎的一个高赞回答，可以理解为iaas作为云服务的第一个阶段，由云计算厂商统筹管理硬件资源，由客户来进行使用。用户需购买服务器并自己安装软件配置环境上传代码等开发运维工作
+而PaaS由云厂商封装好应用的环境变量等配置信息由用户上传代码使用即可，这种和容器有异曲同工之处。SaaS即厂商软件也给你封装好，直接进行使用即可。
+
+而serverless提供了一种更简洁更方便的云服务方式，无服务器即用户不需要再像往常一样考虑服务器方面的问题，比如服务器的维护，漏洞更新，网络带宽，缩扩容，软件环境配置等。...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/07/19">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/19</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+        
+        
+            
+        
+        
+        <span class="post-category" data-categories="虚拟化"">
+            <i class="fas fa-folder post-category-icon"></i>
+            <span class="post-category-text">
+                虚拟化
+            </span>
+        </span>
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="虚拟化">虚拟化</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2023/07/01/kvm%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86-cpu%E8%99%9A%E6%8B%9F%E5%8C%96/">
                 
                 <span class="abstract-title-text">KVM架构原理-CPU虚拟化</span>
@@ -697,7 +810,29 @@ Linux内核地址空间划分通常32位Linux内核虚拟地址空间划分03G�
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -762,7 +897,7 @@ Linux内核地址空间划分通常32位Linux内核虚拟地址空间划分03G�
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 12
+        Total : 14
         </div>
         <!-- search  -->
         
@@ -855,6 +990,36 @@ Linux内核地址空间划分通常32位Linux内核虚拟地址空间划分03G�
         <li class="archive-post-item">
             <span class="archive-post-date">07/31</span>
             <a class="archive-post-title" href="/2022/07/31/windows%E4%B8%8Bsocket%E9%80%9A%E4%BF%A1/">windows下socket通信</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> Invalid date </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span>
+            <a class="archive-post-title" href="/2023/07/19/serverless/">Serverless及其安全风险</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> Invalid date </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span>
+            <a class="archive-post-title" href="/2023/07/19/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%B0%83%E8%AF%95/">记一次虚拟机启动失败调试过程</a>
         </li>
     
     </div>
@@ -987,6 +1152,11 @@ Linux内核地址空间划分通常32位Linux内核虚拟地址空间划分03G�
         <span class="sidebar-category-name" data-categories="编程">
             <span class="iconfont-archer">&#xe60a;</span>
             编程
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="虚拟化">
+            <span class="iconfont-archer">&#xe60a;</span>
+            虚拟化
         </span>
     
         <span class="sidebar-category-name" data-categories="虚拟化">

