@@ -23,7 +23,7 @@
     <meta name="description" content="记一次虚拟机启动失败调试过程实习过程中分配了个小任务，替换iso镜像中的sqfs文件并重新打包为iso。其中在测试iso是否打包成功过程中，要vmware发现无法启动报panic，具体输出如下图。后用centos7镜像做同样测试发现也会报错。深入centos7内核代码查看调试。最终发现是由于虚拟机配置初始化时默认硬盘空间太小导致无法挂载系统盘导致。   linux kernel源代码和iso镜像的">
 <meta property="og:type" content="article">
 <meta property="og:title" content="记一次虚拟机启动失败调试过程">
-<meta property="og:url" content="http://example.com/2023/07/19/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%B0%83%E8%AF%95/index.html">
+<meta property="og:url" content="http://example.com/2023/06/07/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%B0%83%E8%AF%95/index.html">
 <meta property="og:site_name" content="s1eep123のblog">
 <meta property="og:description" content="记一次虚拟机启动失败调试过程实习过程中分配了个小任务，替换iso镜像中的sqfs文件并重新打包为iso。其中在测试iso是否打包成功过程中，要vmware发现无法启动报panic，具体输出如下图。后用centos7镜像做同样测试发现也会报错。深入centos7内核代码查看调试。最终发现是由于虚拟机配置初始化时默认硬盘空间太小导致无法挂载系统盘导致。   linux kernel源代码和iso镜像的">
 <meta property="og:locale" content="en_US">
@@ -34,8 +34,8 @@
 <meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719225626653.png">
 <meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719225639644.png">
 <meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719225653745.png">
-<meta property="article:published_time" content="2023-07-19T14:52:44.777Z">
-<meta property="article:modified_time" content="2023-07-19T15:01:06.430Z">
+<meta property="article:published_time" content="2023-06-07T13:16:50.000Z">
+<meta property="article:modified_time" content="2023-07-29T04:06:50.931Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="linux">
 <meta property="article:tag" content="虚拟化">
@@ -366,7 +366,7 @@
                 <div class="post-intro-meta">
                     <!-- 撰写日期 -->
                     <span class="iconfont-archer post-intro-calander">&#xe676;</span>
-                    <span class="post-intro-time">2023/07/19</span>
+                    <span class="post-intro-time">2023/06/07</span>
                     <!-- busuanzi -->
                     
                         <span id="busuanzi_container_page_pv" class="busuanzi-pv">
@@ -570,8 +570,8 @@
     <!-- license -->
     
         <div class="license-wrapper">
-            <p>Publish date：<a href="http://example.com/2023/07/19/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%B0%83%E8%AF%95/">July 19th 2023, 10:52:44 pm</a>
-            <p>Update date：<a href="http://example.com/2023/07/19/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%B0%83%E8%AF%95/">July 19th 2023, 11:01:06 pm</a>
+            <p>Publish date：<a href="http://example.com/2023/06/07/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%B0%83%E8%AF%95/">June 7th 2023, 9:16:50 pm</a>
+            <p>Update date：<a href="http://example.com/2023/06/07/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%B0%83%E8%AF%95/">July 29th 2023, 12:06:50 pm</a>
             <p>License：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -579,12 +579,17 @@
     <ul class="post-paginator">
         <li class="next">
             
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2023/06/21/serverless/" title="Serverless及其安全风险">
+                    <div class="nextTitle">Serverless及其安全风险</div>
+                </a>
+            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href="/2023/07/19/serverless/" title="Serverless及其安全风险">
-                    <div class="prevTitle">Serverless及其安全风险</div>
+                <a href="/2023/04/04/linux%E9%AB%98%E7%AB%AF%E4%BD%8E%E7%AB%AF%E5%86%85%E5%AD%98/" title="linux高端内存/低端内存及相关api">
+                    <div class="prevTitle">linux高端内存/低端内存及相关api</div>
                 </a>
             
         </li>
@@ -815,7 +820,24 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -892,7 +914,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 14
+        Total : 15
         </div>
         <!-- search  -->
         
@@ -908,8 +930,26 @@
             
         
         <li class="archive-post-item">
+            <span class="archive-post-date">07/04</span>
+            <a class="archive-post-title" href="/2023/07/04/kdump%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8/">Kdump无法启动调试及其原理</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">07/01</span>
             <a class="archive-post-title" href="/2023/07/01/kvm%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86-cpu%E8%99%9A%E6%8B%9F%E5%8C%96/">KVM架构原理-CPU虚拟化</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/21</span>
+            <a class="archive-post-title" href="/2023/06/21/serverless/">Serverless及其安全风险</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/07</span>
+            <a class="archive-post-title" href="/2023/06/07/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%B0%83%E8%AF%95/">记一次虚拟机启动失败调试过程</a>
         </li>
     
         
@@ -987,36 +1027,6 @@
             <a class="archive-post-title" href="/2022/07/31/windows%E4%B8%8Bsocket%E9%80%9A%E4%BF%A1/">windows下socket通信</a>
         </li>
     
-        
-            
-            
-                
-                </ul>
-            
-            <div class="archive-year"> Invalid date </div>
-            <ul class="year-list">
-            
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">Invalid date</span>
-            <a class="archive-post-title" href="/2023/07/19/serverless/">Serverless及其安全风险</a>
-        </li>
-    
-        
-            
-            
-                
-                </ul>
-            
-            <div class="archive-year"> Invalid date </div>
-            <ul class="year-list">
-            
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">Invalid date</span>
-            <a class="archive-post-title" href="/2023/07/19/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%B0%83%E8%AF%95/">记一次虚拟机启动失败调试过程</a>
-        </li>
-    
     </div>
 </div>
 
@@ -1063,11 +1073,6 @@
                 java框架
             </span>
         
-            <span class="sidebar-tag-name" data-tags="windows,windows安全,反调试">
-                <span class="iconfont-archer">&#xe606;</span>
-                windows,windows安全,反调试
-            </span>
-        
             <span class="sidebar-tag-name" data-tags="web安全">
                 <span class="iconfont-archer">&#xe606;</span>
                 web安全
@@ -1086,6 +1091,16 @@
             <span class="sidebar-tag-name" data-tags="虚拟化">
                 <span class="iconfont-archer">&#xe606;</span>
                 虚拟化
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="windows安全">
+                <span class="iconfont-archer">&#xe606;</span>
+                windows安全
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="反调试">
+                <span class="iconfont-archer">&#xe606;</span>
+                反调试
             </span>
         
     </div>
@@ -1129,11 +1144,6 @@
             红蓝攻防
         </span>
     
-        <span class="sidebar-category-name" data-categories="windows逆向，内核安全">
-            <span class="iconfont-archer">&#xe60a;</span>
-            windows逆向，内核安全
-        </span>
-    
         <span class="sidebar-category-name" data-categories="windows逆向">
             <span class="iconfont-archer">&#xe60a;</span>
             windows逆向
@@ -1157,6 +1167,21 @@
         <span class="sidebar-category-name" data-categories="虚拟化">
             <span class="iconfont-archer">&#xe60a;</span>
             虚拟化
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="内核安全">
+            <span class="iconfont-archer">&#xe60a;</span>
+            内核安全
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="内核">
+            <span class="iconfont-archer">&#xe60a;</span>
+            内核
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="内核">
+            <span class="iconfont-archer">&#xe60a;</span>
+            内核
         </span>
     
     </div>

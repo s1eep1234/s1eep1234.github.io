@@ -22,7 +22,7 @@
     <meta name="description" content="">
     <meta property="og:type" content="website">
 <meta property="og:title" content="s1eep123のblog">
-<meta property="og:url" content="http://example.com/categories/windows%E9%80%86%E5%90%91%EF%BC%8C%E5%86%85%E6%A0%B8%E5%AE%89%E5%85%A8/index.html">
+<meta property="og:url" content="http://example.com/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/%E5%86%85%E6%A0%B8/index.html">
 <meta property="og:site_name" content="s1eep123のblog">
 <meta property="og:locale" content="en_US">
 <meta property="article:author" content="John Doe">
@@ -430,20 +430,25 @@
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2022/10/20/tls%E5%8F%8D%E8%B0%83%E8%AF%95/">
+            <a class="abstract-title" href="/2023/07/04/kdump%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8/">
                 
-                <span class="abstract-title-text">TLS反调试</span>
+                <span class="abstract-title-text">Kdump无法启动调试及其原理</span>
             </a>
             <div class="abstract-content">
-                TLSwhat is TLSThread Local Storage(TLS)，在Windows多线程编程中，访问全局变量时由于CPU时间片调度可能会导致出现意想不到的结果。最常见的方法就是对全局变量访问加锁。Windows为解决一个进程中多个线程同时访问全局变量。设计了TLS机制。TLS可以简单地由操作系统代为完成整个互斥过程，也可以由用户自己编写控制信号量的函数。当进程中的线程访问预先制定的内存空间时，操作系统会调用系统默认的或用户自定义的信号量函数，保证数据的完整性与正确性。
-在执行含有TLS的程序时，首先依次加载用户编写的TLS回调函数数组（指针函数数组），接着转到OEP执行。因...
+                针对Tencent OS kdump服务无法运行及其原理分析
+感谢同事及导师对此问题分析定位过程中的帮助。
+客户提出母机crashkernel没有预留成功，导致kdump服务无法正常运行，这样会存在一个隐患，母机如果panic的话是无法成功生成crashcore的。
+首先看看kdump的工作原理
+内核运行过程中遇到致命错误会导致panic，此时kdump会将处于panic状态的内核数据现场进行保留，存储到硬盘中等外部设备，以便后续分析定位问题
+kdump的设计是将物理内存的一部分划分出来专门留给kdump使用，如在redhat8中默认位168m，redhat9中默认位192m
+kdump...
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2022/10/20">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/10/20</span>
+                <div class="abstract-date" title="Last updated: 2023/07/29">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/04</span>
                 </div>
                 <!-- tags -->
                 
@@ -453,16 +458,18 @@
         
             
         
+            
         
-        <span class="post-category" data-categories="windows逆向，内核安全"">
+        
+        <span class="post-category" data-categories="虚拟化/内核"">
             <i class="fas fa-folder post-category-icon"></i>
             <span class="post-category-text">
-                windows逆向，内核安全
+                虚拟化/内核
             </span>
         </span>
     
     
-        <a class="post-tag" href="javascript:void(0);" data-tags="windows,windows安全,反调试">windows,windows安全,反调试</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="虚拟化">虚拟化</a>
     
 </div>
 
@@ -651,7 +658,24 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -728,7 +752,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 14
+        Total : 15
         </div>
         <!-- search  -->
         
@@ -744,8 +768,26 @@
             
         
         <li class="archive-post-item">
+            <span class="archive-post-date">07/04</span>
+            <a class="archive-post-title" href="/2023/07/04/kdump%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8/">Kdump无法启动调试及其原理</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">07/01</span>
             <a class="archive-post-title" href="/2023/07/01/kvm%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86-cpu%E8%99%9A%E6%8B%9F%E5%8C%96/">KVM架构原理-CPU虚拟化</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/21</span>
+            <a class="archive-post-title" href="/2023/06/21/serverless/">Serverless及其安全风险</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/07</span>
+            <a class="archive-post-title" href="/2023/06/07/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%B0%83%E8%AF%95/">记一次虚拟机启动失败调试过程</a>
         </li>
     
         
@@ -823,36 +865,6 @@
             <a class="archive-post-title" href="/2022/07/31/windows%E4%B8%8Bsocket%E9%80%9A%E4%BF%A1/">windows下socket通信</a>
         </li>
     
-        
-            
-            
-                
-                </ul>
-            
-            <div class="archive-year"> Invalid date </div>
-            <ul class="year-list">
-            
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">Invalid date</span>
-            <a class="archive-post-title" href="/2023/07/19/serverless/">Serverless及其安全风险</a>
-        </li>
-    
-        
-            
-            
-                
-                </ul>
-            
-            <div class="archive-year"> Invalid date </div>
-            <ul class="year-list">
-            
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">Invalid date</span>
-            <a class="archive-post-title" href="/2023/07/19/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%B0%83%E8%AF%95/">记一次虚拟机启动失败调试过程</a>
-        </li>
-    
     </div>
 </div>
 
@@ -899,11 +911,6 @@
                 java框架
             </span>
         
-            <span class="sidebar-tag-name" data-tags="windows,windows安全,反调试">
-                <span class="iconfont-archer">&#xe606;</span>
-                windows,windows安全,反调试
-            </span>
-        
             <span class="sidebar-tag-name" data-tags="web安全">
                 <span class="iconfont-archer">&#xe606;</span>
                 web安全
@@ -922,6 +929,16 @@
             <span class="sidebar-tag-name" data-tags="虚拟化">
                 <span class="iconfont-archer">&#xe606;</span>
                 虚拟化
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="windows安全">
+                <span class="iconfont-archer">&#xe606;</span>
+                windows安全
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="反调试">
+                <span class="iconfont-archer">&#xe606;</span>
+                反调试
             </span>
         
     </div>
@@ -965,11 +982,6 @@
             红蓝攻防
         </span>
     
-        <span class="sidebar-category-name" data-categories="windows逆向，内核安全">
-            <span class="iconfont-archer">&#xe60a;</span>
-            windows逆向，内核安全
-        </span>
-    
         <span class="sidebar-category-name" data-categories="windows逆向">
             <span class="iconfont-archer">&#xe60a;</span>
             windows逆向
@@ -993,6 +1005,21 @@
         <span class="sidebar-category-name" data-categories="虚拟化">
             <span class="iconfont-archer">&#xe60a;</span>
             虚拟化
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="内核安全">
+            <span class="iconfont-archer">&#xe60a;</span>
+            内核安全
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="内核">
+            <span class="iconfont-archer">&#xe60a;</span>
+            内核
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="内核">
+            <span class="iconfont-archer">&#xe60a;</span>
+            内核
         </span>
     
     </div>

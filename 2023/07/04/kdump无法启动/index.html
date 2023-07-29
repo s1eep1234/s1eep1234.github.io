@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="John Doe">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="John Doe">
+	<meta name="referrer" content="no-referrer">
+    
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta name="description" content="针对Tencent OS kdump服务无法运行及其原理分析 感谢同事及导师对此问题分析定位过程中的帮助。 客户提出母机crashkernel没有预留成功，导致kdump服务无法正常运行，这样会存在一个隐患，母机如果panic的话是无法成功生成crashcore的。 首先看看kdump的工作原理 内核运行过程中遇到致命错误会导致panic，此时kdump会将处于panic状态的内核数据现场进行保留">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kdump无法启动调试及其原理">
+<meta property="og:url" content="http://example.com/2023/07/04/kdump%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8/index.html">
+<meta property="og:site_name" content="s1eep123のblog">
+<meta property="og:description" content="针对Tencent OS kdump服务无法运行及其原理分析 感谢同事及导师对此问题分析定位过程中的帮助。 客户提出母机crashkernel没有预留成功，导致kdump服务无法正常运行，这样会存在一个隐患，母机如果panic的话是无法成功生成crashcore的。 首先看看kdump的工作原理 内核运行过程中遇到致命错误会导致panic，此时kdump会将处于panic状态的内核数据现场进行保留">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230729115851956.png">
+<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230729115913072.png">
+<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230729120217000.png">
+<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230729120233011.png">
+<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230729120248154.png">
+<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230729120304353.png">
+<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230729120317050.png">
+<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230729120328230.png">
+<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230729120343039.png">
+<meta property="article:published_time" content="2023-07-04T13:16:50.000Z">
+<meta property="article:modified_time" content="2023-07-29T04:05:31.052Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="虚拟化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230729115851956.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>Kdump无法启动调试及其原理 · s1eep123&#39;s blog</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="s1eep123のblog" type="application/atom+xml">
+</head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="post-body">
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>s1eep123's blog.</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">s1eep123&#39;s blog.</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">Kdump无法启动调试及其原理</a>
+            </div>
+        </div>
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:30vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                Kdump无法启动调试及其原理
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        
+        
+            
+        
+            
+        
+        
+        <span class="post-category" data-categories="虚拟化/内核"">
+            <i class="fas fa-folder post-category-icon"></i>
+            <span class="post-category-text">
+                虚拟化/内核
+            </span>
+        </span>
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="虚拟化">虚拟化</a>
+    
+</div>
+
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count word-count">2.8k</span>Reading time: <span class="post-count reading-time">12 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2023/07/04</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <p>针对Tencent OS kdump服务无法运行及其原理分析</p>
+<p>感谢同事及导师对此问题分析定位过程中的帮助。</p>
+<p>客户提出母机crashkernel没有预留成功，导致kdump服务无法正常运行，这样会存在一个隐患，母机如果panic的话是无法成功生成crashcore的。</p>
+<p>首先看看kdump的工作原理</p>
+<p>内核运行过程中遇到致命错误会导致panic，此时kdump会将处于panic状态的内核数据现场进行保留，存储到硬盘中等外部设备，以便后续分析定位问题</p>
+<p>kdump的设计是将物理内存的一部分划分出来专门留给kdump使用，如在redhat8中默认位168m，redhat9中默认位192m</p>
+<p>kdump依赖于“双内核”设计，或者可以理解为只保留部分功能的微内核（个人猜测，为深入代码具体考证），在系统正常运行时，kdump会加载一个备用内核到kdump预留内存，系统崩溃时，通过kexec机制（一种通过硬件固件快速重启初始化系统机制）跳转至kdump内核进行数据dump</p>
+<p>带来一个问题就是，系统正常运行过程中，kdump预留内存是完全空闲浪费的，应该越小越好。但随着内核功能增加以及kdump转储过程中需要相应工具驱动支持。kdump所需内存也越来越多。（这里存在一个优化kdump预留内存的点，后边有简单介绍）</p>
+<p>一图流解释kdump运行机制</p>
+<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230729115851956.png" alt="image-20230729115851956"></p>
+<p>其中最重要的一个环节就是kdump initramfs，即为kdump的用户态，也就是真正执行dump逻辑过程的部分，kdump内核启动后，会执行用户态init，通过对已崩溃的内存读写接口以及硬件操作接口来实现dump工作</p>
+<p>而kdump用户态复用了普通内核的用户态initramfs生成工具：Dracut</p>
+<p>在普通内核，Dracut生成的initramfs目的是给内核提供基本引导环境，挂载各种设备等。以便执行init进程</p>
+<p>而在kdump内核中，则是挂在各种各样的crash dump存储设备，以便将数据存储到外部设备中，然后就是和普通内核一样启动init进程进行dump</p>
+<p>针对kdump内核占用内存过大问题优化方法（从同事wiki中得知，具体实现以待考证）</p>
+<ol>
+<li>对kdump initramfs进行裁剪</li>
+<li>更改initramfs压缩算法，目前为了适配大多数采用gzip压缩</li>
+<li>修改kdump内核参数，针对boot文件以及相关配置进行内存限制，cpu使用限制（个人感觉还是docker限制资源的那一套）</li>
+<li>修改elf文件</li>
+</ol>
+<h3 id="真正的问题来了"><a href="#真正的问题来了" class="headerlink" title="真正的问题来了"></a>真正的问题来了</h3><p>在kernel中 kdump内存是怎么预留的呢，为什么客户的kdump会无法启动呢（首先猜测客户机器内存太小了，导致kdump无法找到对应大小内存无法预留成功）</p>
+<p>要搞清楚是如何预留内存的，需要了解三个点（也就是kernel内存分配过程）</p>
+<ol>
+<li>e820表的解析</li>
+<li>memblock接管e820数据</li>
+<li>kdump从memblock寻找合适内存进行预留</li>
+</ol>
+<p>从腾讯云官网购买32g的服务器，那么操作系统如何获取32g内存信息呢</p>
+<p>查看系统开机日志，会发现这样log</p>
+<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230729115913072.png" alt="image-20230729115913072"></p>
+<p>也就是说，系统刚刚开机初始化过程中，是通过e820表来进行物理内存管理的</p>
+<p>e820（<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/E820%EF%BC%89%E5%A4%A7%E6%A6%82%E6%84%8F%E6%80%9D%E5%B0%B1%E6%98%AF%E9%80%9A%E8%BF%87int15h%E6%9D%A5%E8%BF%9B%E8%A1%8C%E6%8E%A2%E6%B5%8B%E5%86%85%E5%AD%98%EF%BC%8C%E7%9C%8B%E4%B8%80%E7%9C%8B%E5%93%AA%E4%BA%9B%E5%86%85%E5%AD%98%E6%98%AF%E4%BF%9D%E7%95%99%E7%BB%99BIOS%E4%BD%BF%E7%94%A8%E7%9A%84%EF%BC%8C%E6%8E%A2%E6%B5%8B%E7%BB%93%E6%9E%9C%E5%B0%B1%E6%98%AF%E4%B8%8A%E5%9B%BEdmesg%E6%98%BE%E7%A4%BA%E7%9A%84">https://en.wikipedia.org/wiki/E820）大概意思就是通过int15h来进行探测内存，看一看哪些内存是保留给BIOS使用的，探测结果就是上图dmesg显示的</a></p>
+<p>e820这还有一个坑就是探测返回结果是无序的，至于为什么会这样设计，需深入kernel代码进行考证，主要是三个过程</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">main.c → detect_memory → <span class="function">detect_memory_e820</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="type">static</span> <span class="type">int</span> <span class="title">detect_memory_e820</span><span class="params">(<span class="type">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> count = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">biosregs</span> ireg, oreg;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">e820entry</span> *desc = boot_params.e820_map;</span><br><span class="line">    <span class="type">static</span> <span class="keyword">struct</span> <span class="title class_">e820entry</span> buf; <span class="comment">/* static so it is zeroed */</span></span><br><span class="line"> </span><br><span class="line">    <span class="built_in">initregs</span>(&amp;ireg);</span><br><span class="line">    ireg.ax  = <span class="number">0xe820</span>;</span><br><span class="line">    ireg.cx  = <span class="keyword">sizeof</span> buf;</span><br><span class="line">    ireg.edx = SMAP;</span><br><span class="line">    ireg.di  = (<span class="type">size_t</span>)&amp;buf;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">do</span> &#123;</span><br><span class="line">        <span class="built_in">intcall</span>(<span class="number">0x15</span>, &amp;ireg, &amp;oreg);</span><br><span class="line">        ireg.ebx = oreg.ebx; <span class="comment">/* for next iteration... */</span></span><br><span class="line"> </span><br><span class="line">        <span class="comment">/* BIOSes which terminate the chain with CF = 1 as opposed</span></span><br><span class="line"><span class="comment">           to %ebx = 0 don&#x27;t always report the SMAP signature on</span></span><br><span class="line"><span class="comment">           the final, failing, probe. */</span></span><br><span class="line">        <span class="keyword">if</span> (oreg.eflags &amp; X86_EFLAGS_CF)</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line"> </span><br><span class="line">        <span class="comment">/* Some BIOSes stop returning SMAP in the middle of</span></span><br><span class="line"><span class="comment">           the search loop.  We don&#x27;t know exactly how the BIOS</span></span><br><span class="line"><span class="comment">           screwed up the map at that point, we might have a</span></span><br><span class="line"><span class="comment">           partial map, the full map, or complete garbage, so</span></span><br><span class="line"><span class="comment">           just return failure. */</span></span><br><span class="line">        <span class="keyword">if</span> (oreg.eax != SMAP) &#123;</span><br><span class="line">            count = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        *desc++ = buf;</span><br><span class="line">        count++;</span><br><span class="line">    &#125; <span class="keyword">while</span> (ireg.ebx &amp;&amp; count &lt; <span class="built_in">ARRAY_SIZE</span>(boot_params.e820_map));</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">return</span> boot_params.e820_entries = count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>探测信息放到boot_params.e820_map这个全局变量中</p>
+<p>接着内核会调用setup_memory_map函数将探测到的内存信息打印出来</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> __init <span class="title">setup_memory_map</span><span class="params">(<span class="type">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">char</span> *who;</span><br><span class="line"> </span><br><span class="line">    who = x86_init.resources.<span class="built_in">memory_setup</span>();</span><br><span class="line">    <span class="built_in">memcpy</span>(&amp;e820_saved, &amp;e820, <span class="built_in">sizeof</span>(<span class="keyword">struct</span> e820map));</span><br><span class="line">    <span class="built_in">printk</span>(KERN_INFO <span class="string">&quot;e820: BIOS-provided physical RAM map:\n&quot;</span>);</span><br><span class="line">    <span class="built_in">e820_print_map</span>(who);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再之后会有一个排序重新拷贝的过程，因为是结果是无序的</p>
+<p>这部分代码过于抽象，水平有限，留置后续分析</p>
+<p>最终调用到函数e820_print_map将其打印到log中</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> __init <span class="title">e820_print_map</span><span class="params">(<span class="type">char</span> *who)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> i;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; e820.nr_map; i++) &#123;</span><br><span class="line">        <span class="built_in">printk</span>(KERN_INFO <span class="string">&quot;%s: [mem %#018Lx-%#018Lx] &quot;</span>, who,</span><br><span class="line">               (<span class="type">unsigned</span> <span class="type">long</span> <span class="type">long</span>) e820.map[i].addr,</span><br><span class="line">               (<span class="type">unsigned</span> <span class="type">long</span> <span class="type">long</span>)</span><br><span class="line">               (e820.map[i].addr + e820.map[i].size - <span class="number">1</span>));</span><br><span class="line">        <span class="built_in">e820_print_type</span>(e820.map[i].type);</span><br><span class="line">        <span class="built_in">printk</span>(KERN_CONT <span class="string">&quot;\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对应的结果就是：</p>
+<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230729120217000.png" alt="image-20230729120217000"></p>
+<p>其中usable就是代表是内核可以使用的物理内存大小，将这三块usable加起来的大小就是32G物理内存。</p>
+<p>当然了从这里探测物理内存就算结束了</p>
+<p>memblock是如何接管e820数据</p>
+<p>在e820表探测完毕系统的物理内存之后，会将物理内存交接给memblock管理。memblock主要作用是在buddy系统没启动之前管理系统的物理内存。</p>
+<p>memblock使用的数据结构</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">struct memblock &#123;</span><br><span class="line">    bool bottom_up;  /* is bottom up direction? */</span><br><span class="line">    phys_addr_t current_limit;</span><br><span class="line">    struct memblock_type memory;</span><br><span class="line">    struct memblock_type reserved;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>bootom_up是一个bool变量，True代表底部（bottom）到顶部（up）分配内存，flase就是反方向分配内存。默认是flase的值。</p>
+<p>memory和reserved是代表的struct memblock_type的结构，memory代表的是e820表中used这部分，reserved就代表的是e820表reserved这部分内存</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">struct memblock_type &#123;</span><br><span class="line">    unsigned long cnt;  /* number of regions */</span><br><span class="line">    unsigned long max;  /* size of the allocated array */</span><br><span class="line">    phys_addr_t total_size; /* size of all regions */</span><br><span class="line">    struct memblock_region *regions;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>系统在启动过程中会将memblock_x86_fill函数中填充e820表的数据到memblock中，在高版本的内核中函数名为：<a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/latest/C/ident/e820__memblock_setup">e820__memblock_setup</a>();</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">void __init memblock_x86_fill(void)</span><br><span class="line">&#123;</span><br><span class="line">    int i;</span><br><span class="line">    u64 end;</span><br><span class="line"> </span><br><span class="line">    /*</span><br><span class="line">     * EFI may have more than 128 entries</span><br><span class="line">     * We are safe to enable resizing, beause memblock_x86_fill()</span><br><span class="line">     * is rather later for x86</span><br><span class="line">     */</span><br><span class="line">    memblock_allow_resize();</span><br><span class="line"> </span><br><span class="line">    for (i = 0; i &lt; e820.nr_map; i++) &#123;</span><br><span class="line">        struct e820entry *ei = &amp;e820.map[i];</span><br><span class="line"> </span><br><span class="line">        end = ei-&gt;addr + ei-&gt;size;</span><br><span class="line">        if (end != (resource_size_t)end)</span><br><span class="line">            continue;</span><br><span class="line"> </span><br><span class="line">        if (ei-&gt;type != E820_RAM &amp;&amp; ei-&gt;type != E820_RESERVED_KERN)</span><br><span class="line">            continue;</span><br><span class="line"> </span><br><span class="line">        memblock_add(ei-&gt;addr, ei-&gt;size);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    /* throw away partial pages */</span><br><span class="line">    memblock_trim_memory(PAGE_SIZE);</span><br><span class="line"> </span><br><span class="line">    memblock_dump_all();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过crash可以dump出memblock数据，因为是个全局变量，或者修改启动参数也可以</p>
+<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230729120233011.png" alt="image-20230729120233011"></p>
+<p>memory中的total_size就是我们虚拟机的物理内存大小了。</p>
+<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230729120248154.png" alt="image-20230729120248154"></p>
+<p>那么kdump是如何预留内存的呢</p>
+<p>假设kdump cmdline配置的参数是crashkernel&#x3D;768M，通过代码看看crashkernel是如何预留内存的。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">static</span> <span class="type">void</span> __init <span class="title">reserve_crashkernel</span><span class="params">(<span class="type">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">long</span> <span class="type">long</span> crash_size, crash_base, total_mem;</span><br><span class="line">    <span class="type">bool</span> high = <span class="literal">false</span>;</span><br><span class="line">    <span class="type">int</span> ret;</span><br><span class="line"></span><br><span class="line">    total_mem = <span class="built_in">memblock_phys_mem_size</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* crashkernel=XM */</span></span><br><span class="line">    ret = <span class="built_in">parse_crashkernel</span>(boot_command_line, total_mem, &amp;crash_size, &amp;crash_base);</span><br><span class="line">    <span class="keyword">if</span> (ret != <span class="number">0</span> || crash_size &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">/* crashkernel=X,high */</span></span><br><span class="line">        ret = <span class="built_in">parse_crashkernel_high</span>(boot_command_line, total_mem,</span><br><span class="line">            &amp;crash_size, &amp;crash_base);</span><br><span class="line">        <span class="keyword">if</span> (ret != <span class="number">0</span> || crash_size &lt;= <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        high = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 0 means: find the address automatically */</span></span><br><span class="line">    <span class="keyword">if</span> (crash_base &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">*  kexec want bzImage is below CRASH_KERNEL_ADDR_MAX</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">        crash_base = <span class="built_in">memblock_find_in_range</span>(CRASH_ALIGN,</span><br><span class="line">            high ? CRASH_ADDR_HIGH_MAX</span><br><span class="line">            : CRASH_ADDR_LOW_MAX,</span><br><span class="line">            crash_size, CRASH_ALIGN);</span><br><span class="line">        <span class="meta">#<span class="keyword">ifdef</span> CONFIG_X86_64</span></span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">* crashkernel=X reserve below 896M fails? Try below 4G</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">        <span class="keyword">if</span> (!high &amp;&amp; !crash_base)</span><br><span class="line">            crash_base = <span class="built_in">memblock_find_in_range</span>(CRASH_ALIGN,</span><br><span class="line">                (<span class="number">1ULL</span> &lt;&lt; <span class="number">32</span>),</span><br><span class="line">                crash_size, CRASH_ALIGN);</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">* crashkernel=X reserve below 4G fails? Try MAXMEM</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">        <span class="keyword">if</span> (!high &amp;&amp; !crash_base)</span><br><span class="line">            crash_base = <span class="built_in">memblock_find_in_range</span>(CRASH_ALIGN,</span><br><span class="line">                CRASH_ADDR_HIGH_MAX,</span><br><span class="line">                crash_size, CRASH_ALIGN);</span><br><span class="line">        <span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">        <span class="keyword">if</span> (!crash_base) &#123;</span><br><span class="line">            <span class="built_in">pr_info</span>(<span class="string">&quot;crashkernel reservation failed - No suitable area found.\n&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="type">unsigned</span> <span class="type">long</span> <span class="type">long</span> start;</span><br><span class="line"></span><br><span class="line">        start = <span class="built_in">memblock_find_in_range</span>(crash_base,</span><br><span class="line">            crash_base + crash_size,</span><br><span class="line">            crash_size, <span class="number">1</span> &lt;&lt; <span class="number">20</span>);</span><br><span class="line">        <span class="keyword">if</span> (start != crash_base) &#123;</span><br><span class="line">            <span class="built_in">pr_info</span>(<span class="string">&quot;crashkernel reservation failed - memory is in use.\n&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    ret = <span class="built_in">memblock_reserve</span>(crash_base, crash_size);</span><br><span class="line">    <span class="keyword">if</span> (ret) &#123;</span><br><span class="line">        <span class="built_in">pr_err</span>(<span class="string">&quot;%s: Error reserving crashkernel memblock.\n&quot;</span>, __func__);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (crash_base &gt;= (<span class="number">1ULL</span> &lt;&lt; <span class="number">32</span>) &amp;&amp; <span class="built_in">reserve_crashkernel_low</span>()) &#123;</span><br><span class="line">        <span class="built_in">memblock_free</span>(crash_base, crash_size);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">pr_info</span>(<span class="string">&quot;Reserving %ldMB of memory at %ldMB for crashkernel (System RAM: %ldMB)\n&quot;</span>,</span><br><span class="line">        (<span class="type">unsigned</span> <span class="type">long</span>)(crash_size &gt;&gt; <span class="number">20</span>),</span><br><span class="line">        (<span class="type">unsigned</span> <span class="type">long</span>)(crash_base &gt;&gt; <span class="number">20</span>),</span><br><span class="line">        (<span class="type">unsigned</span> <span class="type">long</span>)(total_mem &gt;&gt; <span class="number">20</span>));</span><br><span class="line"></span><br><span class="line">    crashk_res.start = crash_base;</span><br><span class="line">    crashk_res.end   = crash_base + crash_size - <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">insert_resource</span>(&amp;iomem_resource, &amp;crashk_res);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>memblock_phys_mem_size函数是获取memblock flag等于memory的物理内存大小总和，这个totalmem就等于33822329856</p>
+<p>通过parse_crashkernel会解析出crash_size&#x3D;768M, crash_base&#x3D;0。 </p>
+<p>当crash_base等于0时，调用这个函数memblock_find_in_range， 因为high是等于0的，所有参数分别是CRASH_ALIGN, CRASH_ADDR_LOW_MAX, crash_size, CRASH_ALIGN</p>
+<p>其中CRASH_ALIGN&#x3D;16&lt;&lt;20，代表的16M对齐，CRASH_ADDR_LOW_MAX在x86_64下是896M。 翻译过来就从MEMBLOCK分配器中查找开始地址是16M，结束地址是896M区间中，寻找大小为768M的区域。</p>
+<p>通过一个例子来分析。这个例子是现网的母机无法成功保留crashkernel大小</p>
+<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230729120304353.png" alt="image-20230729120304353"></p>
+<p>可以看到是没有保留256M大小的区间的。接着从从896M下面寻找空闲区间</p>
+<p>空闲区间：0x2a661000 - 0x2a65c057 &#x3D; 0x4FA9<br>空闲区间：0x2a654018 - 0x2a653057 &#x3D; 0xFC1<br>空闲区间：0x2a642018 - 0x2a641057 &#x3D; 0xFC1<br>空闲区间：0x2a630018 - 0x2a40eFFF &#x3D; 0x221019<br>空闲区间：0x2a30F000 - 0x1e2c6FFF &#x3D; 0xC048001<br>空闲区间：0x1d208000 - 0x244FFFF &#x3D; 0x1 ADB8 001<br>空闲区间：0x1000000 - 0xFFFFF &#x3D; 0xF00001</p>
+<p>还是没能找到合适空间，尝试到4G下面去找，如果4G下面也没有就尝试最大的空间去找</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifdef</span> CONFIG_X86_64</span></span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">         * crashkernel=X reserve below 896M fails? Try below 4G</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">if</span> (!high &amp;&amp; !crash_base)</span><br><span class="line">            crash_base = <span class="built_in">memblock_find_in_range</span>(CRASH_ALIGN,</span><br><span class="line">                        (<span class="number">1ULL</span> &lt;&lt; <span class="number">32</span>),</span><br><span class="line">                        crash_size, CRASH_ALIGN);</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">         * crashkernel=X reserve below 4G fails? Try MAXMEM</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">if</span> (!high &amp;&amp; !crash_base)</span><br><span class="line">            crash_base = <span class="built_in">memblock_find_in_range</span>(CRASH_ALIGN,</span><br><span class="line">                        CRASH_ADDR_HIGH_MAX,</span><br><span class="line">                        crash_size, CRASH_ALIGN);</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<h3 id="从4G下面寻找空闲-区间"><a href="#从4G下面寻找空闲-区间" class="headerlink" title="从4G下面寻找空闲 区间"></a>从4G下面寻找空闲 区间</h3><p>0x4a15f000 - 0x4758eFFF &#x3D; 0x2BD0 001<br>0x427e7000 - 0x427e3FFF &#x3D; 0x3001<br>0x4249e000 - 0x3f38c797 &#x3D; 0x3 111 869<br>0x3f38c018 - 0x3f38bFFF &#x3D; 0x19</p>
+<p>从4G下面也是没有找到空闲区间，只能去MAXMEM下面寻找</p>
+<h3 id="从MAXMEM下面寻找空闲区间"><a href="#从MAXMEM下面寻找空闲区间" class="headerlink" title="从MAXMEM下面寻找空闲区间"></a>从MAXMEM下面寻找空闲区间</h3><p>空闲区间：0x603fffe000 - 0x603fffd003 &#x3D; 0xxFFD<br>空闲区间：0x603fffd000 - 0x603FFFCFFF &#x3D; 0x1<br>空闲区间：0x603ffd6000 - 0x3040000000 &#x3D; 0x2FFFFD6000</p>
+<p>看起来这个区间0x3040000000 - 0x603ffd6000区间是符合要求的，但是因为16M对齐，所以是0x603f000000 - 768M &#x3D; 0x600F000000</p>
+<p>所以最终寻找的区间是：0x600F000000 到 0x0000603effffff， 从demsg中也是可以看到的</p>
+<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230729120317050.png" alt="image-20230729120317050"></p>
+<p>当crash_base的大小大于4G的时候，还需要去lowmemory去reserve下</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (crash_base &gt;= (<span class="number">1ULL</span> &lt;&lt; <span class="number">32</span>) &amp;&amp; <span class="built_in">reserve_crashkernel_low</span>()) &#123;</span><br><span class="line">    <span class="built_in">memblock_free</span>(crash_base, crash_size);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里在这台机器上就出现了失败</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">static</span> <span class="type">int</span> __init <span class="title">reserve_crashkernel_low</span><span class="params">(<span class="type">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> CONFIG_X86_64</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">long</span> <span class="type">long</span> base, low_base = <span class="number">0</span>, low_size = <span class="number">0</span>;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">long</span> total_low_mem;</span><br><span class="line">    <span class="type">int</span> ret;</span><br><span class="line"> </span><br><span class="line">    total_low_mem = <span class="built_in">memblock_mem_size</span>(<span class="number">1UL</span> &lt;&lt; (<span class="number">32</span> - PAGE_SHIFT));</span><br><span class="line"> </span><br><span class="line">    <span class="comment">/* crashkernel=Y,low */</span></span><br><span class="line">    ret = <span class="built_in">parse_crashkernel_low</span>(boot_command_line, total_low_mem, &amp;low_size, &amp;base);</span><br><span class="line">    <span class="keyword">if</span> (ret) &#123;</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">         * two parts from lib/swiotlb.c:</span></span><br><span class="line"><span class="comment">         * -swiotlb size: user-specified with swiotlb= or default.</span></span><br><span class="line"><span class="comment">         *</span></span><br><span class="line"><span class="comment">         * -swiotlb overflow buffer: now hardcoded to 32k. We round it</span></span><br><span class="line"><span class="comment">         * to 8M for other buffers that may need to stay low too. Also</span></span><br><span class="line"><span class="comment">         * make sure we allocate enough extra low memory so that we</span></span><br><span class="line"><span class="comment">         * don&#x27;t run out of DMA buffers for 32-bit devices.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        low_size = <span class="built_in">max</span>(<span class="built_in">swiotlb_size_or_default</span>() + (<span class="number">8UL</span> &lt;&lt; <span class="number">20</span>), <span class="number">256UL</span> &lt;&lt; <span class="number">20</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">/* passed with crashkernel=0,low ? */</span></span><br><span class="line">        <span class="keyword">if</span> (!low_size)</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    low_base = <span class="built_in">memblock_find_in_range</span>(low_size, <span class="number">1ULL</span> &lt;&lt; <span class="number">32</span>, low_size, CRASH_ALIGN);</span><br><span class="line">    <span class="keyword">if</span> (!low_base) &#123;</span><br><span class="line">        <span class="built_in">pr_err</span>(<span class="string">&quot;Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n&quot;</span>,</span><br><span class="line">               (<span class="type">unsigned</span> <span class="type">long</span>)(low_size &gt;&gt; <span class="number">20</span>));</span><br><span class="line">        <span class="keyword">return</span> -ENOMEM;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里会记着从Low_size&#x3D;256M开始的地址，结束地址是4G，大小是256M的区域去寻找。结果失败了，导致crash无法预留成功</p>
+<p>最后通过升级BIOS来进行解决该问题</p>
+<p>升级前</p>
+<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230729120328230.png" alt="image-20230729120328230"></p>
+<p>升级后</p>
+<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230729120343039.png" alt="image-20230729120343039"></p>
+<p>可以看到升级了BIOS之后连续的低端地址变大了，从而可以有效的提升crashkernel的预留成功机会。</p>
+<p>结</p>
+
+    </article>
+    <!-- license -->
+    
+        <div class="license-wrapper">
+            <p>Publish date：<a href="http://example.com/2023/07/04/kdump%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8/">July 4th 2023, 9:16:50 pm</a>
+            <p>Update date：<a href="http://example.com/2023/07/04/kdump%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8/">July 29th 2023, 12:05:31 pm</a>
+            <p>License：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2023/07/01/kvm%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86-cpu%E8%99%9A%E6%8B%9F%E5%8C%96/" title="KVM架构原理-CPU虚拟化">
+                    <div class="prevTitle">KVM架构原理-CPU虚拟化</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:1611249603@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/s1eep1234" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="/assets/wechat.png" />
+                </span>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer qq" title=qq>
+                    
+                    <img class="profile-qr" src="/assets/qq.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:30vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9C%9F%E6%AD%A3%E7%9A%84%E9%97%AE%E9%A2%98%E6%9D%A5%E4%BA%86"><span class="toc-number">1.</span> <span class="toc-text">真正的问题来了</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E4G%E4%B8%8B%E9%9D%A2%E5%AF%BB%E6%89%BE%E7%A9%BA%E9%97%B2-%E5%8C%BA%E9%97%B4"><span class="toc-number">2.</span> <span class="toc-text">从4G下面寻找空闲 区间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8EMAXMEM%E4%B8%8B%E9%9D%A2%E5%AF%BB%E6%89%BE%E7%A9%BA%E9%97%B2%E5%8C%BA%E9%97%B4"><span class="toc-number">3.</span> <span class="toc-text">从MAXMEM下面寻找空闲区间</span></a></li></ol>
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 15
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/04</span>
+            <a class="archive-post-title" href="/2023/07/04/kdump%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8/">Kdump无法启动调试及其原理</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/01</span>
+            <a class="archive-post-title" href="/2023/07/01/kvm%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86-cpu%E8%99%9A%E6%8B%9F%E5%8C%96/">KVM架构原理-CPU虚拟化</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/21</span>
+            <a class="archive-post-title" href="/2023/06/21/serverless/">Serverless及其安全风险</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/07</span>
+            <a class="archive-post-title" href="/2023/06/07/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%B0%83%E8%AF%95/">记一次虚拟机启动失败调试过程</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/04</span>
+            <a class="archive-post-title" href="/2023/04/04/linux%E9%AB%98%E7%AB%AF%E4%BD%8E%E7%AB%AF%E5%86%85%E5%AD%98/">linux高端内存/低端内存及相关api</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2022 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span>
+            <a class="archive-post-title" href="/2022/10/20/tls%E5%8F%8D%E8%B0%83%E8%AF%95/">TLS反调试</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/08</span>
+            <a class="archive-post-title" href="/2022/09/08/%E5%86%B0%E8%9D%8E%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90/">常见Webshell连接工具流量分析</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/01</span>
+            <a class="archive-post-title" href="/2022/09/01/arm%20u%20chrome/">Arm U Chrome</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/11</span>
+            <a class="archive-post-title" href="/2022/08/11/urldns/">URLDNS链</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span>
+            <a class="archive-post-title" href="/2022/08/09/docker%E4%BD%BF%E7%94%A8/">docker使用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span>
+            <a class="archive-post-title" href="/2022/08/09/mysql%E8%9C%9C%E7%BD%90%E5%8F%8D%E5%88%B6/">Mysql蜜罐反制</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/06</span>
+            <a class="archive-post-title" href="/2022/08/06/lab9-1/">恶意代码分析lab9-1</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/06</span>
+            <a class="archive-post-title" href="/2022/08/06/shiro/">Shiro反序列化漏洞</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/31</span>
+            <a class="archive-post-title" href="/2022/07/31/fastjson%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86/">Fastjson 反序列化漏洞</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/31</span>
+            <a class="archive-post-title" href="/2022/07/31/windows%E4%B8%8Bsocket%E9%80%9A%E4%BF%A1/">windows下socket通信</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+            <span class="sidebar-tag-name" data-tags="黑科技">
+                <span class="iconfont-archer">&#xe606;</span>
+                黑科技
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="docker">
+                <span class="iconfont-archer">&#xe606;</span>
+                docker
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="java安全">
+                <span class="iconfont-archer">&#xe606;</span>
+                java安全
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="linux">
+                <span class="iconfont-archer">&#xe606;</span>
+                linux
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="恶意代码">
+                <span class="iconfont-archer">&#xe606;</span>
+                恶意代码
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="二进制">
+                <span class="iconfont-archer">&#xe606;</span>
+                二进制
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="攻防">
+                <span class="iconfont-archer">&#xe606;</span>
+                攻防
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="java框架">
+                <span class="iconfont-archer">&#xe606;</span>
+                java框架
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="web安全">
+                <span class="iconfont-archer">&#xe606;</span>
+                web安全
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="windows">
+                <span class="iconfont-archer">&#xe606;</span>
+                windows
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="windows编程">
+                <span class="iconfont-archer">&#xe606;</span>
+                windows编程
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="虚拟化">
+                <span class="iconfont-archer">&#xe606;</span>
+                虚拟化
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="windows安全">
+                <span class="iconfont-archer">&#xe606;</span>
+                windows安全
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="反调试">
+                <span class="iconfont-archer">&#xe606;</span>
+                反调试
+            </span>
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="黑科技">
+            <span class="iconfont-archer">&#xe60a;</span>
+            黑科技
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="docker">
+            <span class="iconfont-archer">&#xe60a;</span>
+            docker
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="java安全">
+            <span class="iconfont-archer">&#xe60a;</span>
+            java安全
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="内核">
+            <span class="iconfont-archer">&#xe60a;</span>
+            内核
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="恶意代码">
+            <span class="iconfont-archer">&#xe60a;</span>
+            恶意代码
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="红蓝攻防">
+            <span class="iconfont-archer">&#xe60a;</span>
+            红蓝攻防
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="windows逆向">
+            <span class="iconfont-archer">&#xe60a;</span>
+            windows逆向
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="web安全">
+            <span class="iconfont-archer">&#xe60a;</span>
+            web安全
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="编程">
+            <span class="iconfont-archer">&#xe60a;</span>
+            编程
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="虚拟化">
+            <span class="iconfont-archer">&#xe60a;</span>
+            虚拟化
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="虚拟化">
+            <span class="iconfont-archer">&#xe60a;</span>
+            虚拟化
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="内核安全">
+            <span class="iconfont-archer">&#xe60a;</span>
+            内核安全
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="内核">
+            <span class="iconfont-archer">&#xe60a;</span>
+            内核
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="内核">
+            <span class="iconfont-archer">&#xe60a;</span>
+            内核
+        </span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "http://example.com",
+        root: siteMetaRoot,
+        author: "John Doe"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>

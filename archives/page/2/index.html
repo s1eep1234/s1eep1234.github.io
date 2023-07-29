@@ -430,6 +430,85 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2022/08/09/mysql%E8%9C%9C%E7%BD%90%E5%8F%8D%E5%88%B6/">
+                
+                <span class="abstract-title-text">Mysql蜜罐反制</span>
+            </a>
+            <div class="abstract-content">
+                Mysql登录分析
+命令行登录Mysql，并抓包，可以看到
+
+
+首先对Mysql版本进行验证
+
+
+接着Request login，传输用户名和密码hash
+
+
+登录成功，返回OK
+
+查询版本号并返回
+
+
+当执行一条语句时，抓包如下，可以看到查询语句明文传输
+ 
+
+
+
+Navicat登录分析
+登录流程和命令行登录差不多，多了几次Query
+ 
+
+
+流程如下
+
+
+
+Mysql特性
+Mysql 默认打开local_infile，如为打开可执行下列命令
+show global variables like&#39;local_infile&#39;;
+set global local_infil...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/09/01">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/08/09</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+        
+        
+            
+        
+        
+        <span class="post-category" data-categories="红蓝攻防"">
+            <i class="fas fa-folder post-category-icon"></i>
+            <span class="post-category-text">
+                红蓝攻防
+            </span>
+        </span>
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="攻防">攻防</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2022/08/06/lab9-1/">
                 
                 <span class="abstract-title-text">恶意代码分析lab9-1</span>
@@ -836,7 +915,24 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -913,7 +1009,7 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 14
+        Total : 15
         </div>
         <!-- search  -->
         
@@ -929,8 +1025,26 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
             
         
         <li class="archive-post-item">
+            <span class="archive-post-date">07/04</span>
+            <a class="archive-post-title" href="/2023/07/04/kdump%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8/">Kdump无法启动调试及其原理</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">07/01</span>
             <a class="archive-post-title" href="/2023/07/01/kvm%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86-cpu%E8%99%9A%E6%8B%9F%E5%8C%96/">KVM架构原理-CPU虚拟化</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/21</span>
+            <a class="archive-post-title" href="/2023/06/21/serverless/">Serverless及其安全风险</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/07</span>
+            <a class="archive-post-title" href="/2023/06/07/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%B0%83%E8%AF%95/">记一次虚拟机启动失败调试过程</a>
         </li>
     
         
@@ -1008,36 +1122,6 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
             <a class="archive-post-title" href="/2022/07/31/windows%E4%B8%8Bsocket%E9%80%9A%E4%BF%A1/">windows下socket通信</a>
         </li>
     
-        
-            
-            
-                
-                </ul>
-            
-            <div class="archive-year"> Invalid date </div>
-            <ul class="year-list">
-            
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">Invalid date</span>
-            <a class="archive-post-title" href="/2023/07/19/serverless/">Serverless及其安全风险</a>
-        </li>
-    
-        
-            
-            
-                
-                </ul>
-            
-            <div class="archive-year"> Invalid date </div>
-            <ul class="year-list">
-            
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">Invalid date</span>
-            <a class="archive-post-title" href="/2023/07/19/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%B0%83%E8%AF%95/">记一次虚拟机启动失败调试过程</a>
-        </li>
-    
     </div>
 </div>
 
@@ -1084,11 +1168,6 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
                 java框架
             </span>
         
-            <span class="sidebar-tag-name" data-tags="windows,windows安全,反调试">
-                <span class="iconfont-archer">&#xe606;</span>
-                windows,windows安全,反调试
-            </span>
-        
             <span class="sidebar-tag-name" data-tags="web安全">
                 <span class="iconfont-archer">&#xe606;</span>
                 web安全
@@ -1107,6 +1186,16 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
             <span class="sidebar-tag-name" data-tags="虚拟化">
                 <span class="iconfont-archer">&#xe606;</span>
                 虚拟化
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="windows安全">
+                <span class="iconfont-archer">&#xe606;</span>
+                windows安全
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="反调试">
+                <span class="iconfont-archer">&#xe606;</span>
+                反调试
             </span>
         
     </div>
@@ -1150,11 +1239,6 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
             红蓝攻防
         </span>
     
-        <span class="sidebar-category-name" data-categories="windows逆向，内核安全">
-            <span class="iconfont-archer">&#xe60a;</span>
-            windows逆向，内核安全
-        </span>
-    
         <span class="sidebar-category-name" data-categories="windows逆向">
             <span class="iconfont-archer">&#xe60a;</span>
             windows逆向
@@ -1178,6 +1262,21 @@ FastJson是啊里巴巴的的开源库，用于对JSON格式的数据进行解�
         <span class="sidebar-category-name" data-categories="虚拟化">
             <span class="iconfont-archer">&#xe60a;</span>
             虚拟化
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="内核安全">
+            <span class="iconfont-archer">&#xe60a;</span>
+            内核安全
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="内核">
+            <span class="iconfont-archer">&#xe60a;</span>
+            内核
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="内核">
+            <span class="iconfont-archer">&#xe60a;</span>
+            内核
         </span>
     
     </div>

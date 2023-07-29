@@ -20,28 +20,18 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="">
-    <meta name="description" content="这篇文章是对学习云原生及实习中做的一些工作的阶段性总结。 何为Iaas，Paas，Saas,引用知乎的一个高赞回答，可以理解为iaas作为云服务的第一个阶段，由云计算厂商统筹管理硬件资源，由客户来进行使用。用户需购买服务器并自己安装软件配置环境上传代码等开发运维工作 而PaaS由云厂商封装好应用的环境变量等配置信息由用户上传代码使用即可，这种和容器有异曲同工之处。SaaS即厂商软件也给你封装好，直">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Serverless及其安全风险">
-<meta property="og:url" content="http://example.com/2023/07/19/serverless/index.html">
+    <meta property="og:type" content="website">
+<meta property="og:title" content="s1eep123のblog">
+<meta property="og:url" content="http://example.com/archives/2023/06/index.html">
 <meta property="og:site_name" content="s1eep123のblog">
-<meta property="og:description" content="这篇文章是对学习云原生及实习中做的一些工作的阶段性总结。 何为Iaas，Paas，Saas,引用知乎的一个高赞回答，可以理解为iaas作为云服务的第一个阶段，由云计算厂商统筹管理硬件资源，由客户来进行使用。用户需购买服务器并自己安装软件配置环境上传代码等开发运维工作 而PaaS由云厂商封装好应用的环境变量等配置信息由用户上传代码使用即可，这种和容器有异曲同工之处。SaaS即厂商软件也给你封装好，直">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719230154123.png">
-<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719230208266.png">
-<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719230222246.png">
-<meta property="og:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719230236027.png">
-<meta property="article:published_time" content="2023-07-19T14:52:06.714Z">
-<meta property="article:modified_time" content="2023-07-19T15:03:47.531Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="虚拟化">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719230154123.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/favicon.ico">
     
-    <title>Serverless及其安全风险 · s1eep123&#39;s blog</title>
+    <title>s1eep123&#39;s blog</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -229,8 +219,6 @@
         }
     </script>
     
-        <body class="post-body">
-    
         <!-- header -->
         <header class="header header-mobile">
     <!-- top read progress line -->
@@ -260,17 +248,6 @@
     </div>
     <!-- toggle banner for post layout -->
     
-        
-            <div class="banner">
-        
-            <div class="blog-title header-element">
-                <a href="/">s1eep123&#39;s blog.</a>
-            </div>
-            <div class="post-title header-element">
-                <a href="#" class="post-name">Serverless及其安全风险</a>
-            </div>
-        </div>
-    
 </header>
 
         <!-- fixed footer -->
@@ -297,91 +274,24 @@
 
 
 
-    height:30vh;
-
 ">
     
     <!-- 主页  -->
-    
-        
-    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-img" style="background-image: url(/)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
-            
-                Serverless及其安全风险
-            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
-                
-            <!-- 404 -->
-            
         </p>
         <!-- 文章页 meta -->
-        
-            <div class="post-intros">
-                <!-- 文章页标签  -->
-                
-                    <div class= post-intro-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="虚拟化"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                虚拟化
-            </span>
-        </span>
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="虚拟化">虚拟化</a>
-    
-</div>
-
-                
-                
-                    <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">1.7k</span>Reading time: <span class="post-count reading-time">6 min</span></span>
-                    </div>
-                
-                <div class="post-intro-meta">
-                    <!-- 撰写日期 -->
-                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
-                    <span class="post-intro-time">2023/07/19</span>
-                    <!-- busuanzi -->
-                    
-                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
-                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
-                            <span id="busuanzi_value_page_pv"></span>
-                        </span>
-                    
-                    <!-- 文章分享 -->
-                    <span class="share-wrapper">
-                        <span class="iconfont-archer share-icon">&#xe71d;</span>
-                        <span class="share-text">Share</span>
-                        <ul class="share-list">
-                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
-                                <div class="share-qrcode"></div>
-                            </li>
-                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
-                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
-                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
-                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
-                        </ul>
-                    </span>
-                </div>
-            </div>
         
     </div>
 </div>
@@ -511,93 +421,122 @@
 
             <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
             <div class="container container-unloaded">
-                <main class="main post-page">
-    <article class="article-entry">
-        <p>这篇文章是对学习云原生及实习中做的一些工作的阶段性总结。</p>
-<p>何为Iaas，Paas，Saas,引用知乎的一个高赞回答，可以理解为iaas作为云服务的第一个阶段，由云计算厂商统筹管理硬件资源，由客户来进行使用。用户需购买服务器并自己安装软件配置环境上传代码等开发运维工作</p>
-<p>而PaaS由云厂商封装好应用的环境变量等配置信息由用户上传代码使用即可，这种和容器有异曲同工之处。SaaS即厂商软件也给你封装好，直接进行使用即可。</p>
-<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719230154123.png" alt="image-20230719230154123"></p>
-<p>而serverless提供了一种更简洁更方便的云服务方式，无服务器即用户不需要再像往常一样考虑服务器方面的问题，比如服务器的维护，漏洞更新，网络带宽，缩扩容，软件环境配置等。而是提供了FaaS（Function as a Service）函数即服务，Baas（Backend as a Service）后端即服务的概念。实现各类 Web 框架快速创建、迁移上云，可以实现Express、Next.js、Python Flask、PHP Laravel、Koa、Egg.js、Nuxt.js等框架应用的快速部署（从腾讯云官网可以看到）。</p>
-<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719230208266.png" alt="image-20230719230208266"></p>
-<p>FaaS本质上是一种事件驱动并由消息触发的服务，事件类型可以是一个HTTP请求，也可以是一次用户操作，函数可以看作是完成某个功能或任务的代码片段。相比传统应用运行模式，Serverless业务代码被拆分成了函数粒度，不同函数表示不同的功能，函数之间调用关系也更加复杂。以下是腾讯云提供的函数服务</p>
-<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719230222246.png" alt="image-20230719230222246"></p>
-<p><img src="https://gitee.com/chuchuxingchen/blog-gallery/raw/master/img/image-20230719230236027.png" alt="image-20230719230236027"></p>
-<p>可以看到Faas类似于云api的功能，用户只需调用api接口即可实现相关服务。</p>
-<p>BaaS可以理解为是一个整合和开放各种在应用开发中需要的服务能力的平台，它通过创建大量重复的代码功能，方便应用基于服务的快速开发和构建。这里的后端，指的就是各种云产品和云服务，例如对象存储COS，消息队列CMQ，云数据库CDB、TDSQL，云缓存CRedis等。这些产品或服务，用户直接开通即可使用。</p>
-<p>serverless的安全风险</p>
-<p>由于后端及基础设施是由云厂商进行维护的。对于云厂商来说，首先需要保障云基础环境安全，包括所有的底层基础设施和后端服务软件的安全性。同时云厂商也担负着Serverless平台应用整体安全防护责任，借助API网关、云防护等优势来保障Serverless应用安全。对于用户来说，需要保证上传到服务端的代码是安全的、同时确保应用策略配置安全，避免代码中存在漏洞或策略配置不当导致安全风险。所以从本质上来说，Serverless的安全性是需要云厂商和用户双方共同承担的</p>
-<p>对于用户方面，SQL注入，XSS，命令执行等传统攻击方式在serverless中依旧存在，因此更多关注云厂商所需的安全工作</p>
-<p>拒绝钱包攻击</p>
-<p>DoW（Denial of Wallet,拒绝钱包攻击）是针对云平台账户的DoS方式，其目的是通过高并发来耗尽用户账户可用余额。DoW攻击与传统拒绝服务(DoS)攻击方式类似，恶意攻击者向通过构造大量并发请求来触发函数调用，由于Serverless是按照资源使用量和函数调用次数来收费的，当有大量调用产生时，服务会自动扩展，这将导致用户账户可用余额快速被消耗。DoW攻击的一个典型的场景是在用户订阅web程序上生成大量虚假用户，通过大量用户访问API端点造成大量资源消耗导致账户金额耗尽。</p>
-<p>资源滥用风险</p>
-<p>近年来，随着Severless的快速发展，各种服务滥用现象也相继出现，主要体现在云函数滥用和Serverless基础设施滥用。云函数常被恶意人员用作构建代理池、隐藏C2和构建webshell，恶意人员通过构建此类应用来达到隐藏其客户端真实IP的目的。Serverless应用也常被用于构建扫描、钓鱼等攻击平台，攻击者通过构建此类应用来实现对外部系统的扫描探测、钓鱼窃取用户数据等目的。这些滥用行为导致云基础设施资源被恶意利用和消耗，给云服务的正常使用和监测带来了极大的困扰。</p>
-<p>第三方API和组件不安全接入</p>
-<p>由于Serverless服务一般会接入多个云服务组件，包括云API、API网关、事件触发器等。若云服务或组件在接入Serverless服务时未对组件身份或接收数据进行校验，则可能导致安全风险的发生。接入数据源的增加会导致攻击面扩大，传统应用只能从单一服务器上获取敏感数据，而Serverless应用通常会接入大量数据源，若攻击者针对各数据源进行攻击，则可能获取到大量敏感数据。</p>
-<p>运行时安全风险</p>
-<p>若攻击者已经通过某种方式获得了Serverless服务器权限后，则可能通过替换引导程序的方式攻击Serverless应用服务，从而导致Serverless应用实例被接管。如果攻击者可以修改Serverless ACL策略，则可以通过修改函数超时时间，增加服务冷启动时间，或者通过Serverless预热插件增加运行时时长等方式实现持久化控制。</p>
-<p>日志和监控不足</p>
-<p>传统的应用已经有比较成熟的日志管理和分析工具，而Serverless函数级别的日志分析工具还未被广泛采用。由于Serverless应用函数数量多、生命周期短，各函数间调用关系复杂，因此任何一个点都可能成为攻击突破口。对于云厂商来说，需要具备完备的安全防护和应用监测体系，才能更好的保障Serverless应用和服务的安全。</p>
-<p>云环境网络攻击风险</p>
-<p>攻击者可利用漏洞或错误的云平台架构配置，从公有云环境横向移动到云管理内部网络(如公有云到IDC网络)；或者从公有云网络横向移动到客户构建的网络环境中，导致严重的攻击事件产生。</p>
-
-    </article>
-    <!-- license -->
+                <main class="main index-page">
     
-        <div class="license-wrapper">
-            <p>Publish date：<a href="http://example.com/2023/07/19/serverless/">July 19th 2023, 10:52:06 pm</a>
-            <p>Update date：<a href="http://example.com/2023/07/19/serverless/">July 19th 2023, 11:03:47 pm</a>
-            <p>License：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
-        </div>
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2023/06/21/serverless/">
+                
+                <span class="abstract-title-text">Serverless及其安全风险</span>
+            </a>
+            <div class="abstract-content">
+                这篇文章是对学习云原生及实习中做的一些工作的阶段性总结。
+何为Iaas，Paas，Saas,引用知乎的一个高赞回答，可以理解为iaas作为云服务的第一个阶段，由云计算厂商统筹管理硬件资源，由客户来进行使用。用户需购买服务器并自己安装软件配置环境上传代码等开发运维工作
+而PaaS由云厂商封装好应用的环境变量等配置信息由用户上传代码使用即可，这种和容器有异曲同工之处。SaaS即厂商软件也给你封装好，直接进行使用即可。
+
+而serverless提供了一种更简洁更方便的云服务方式，无服务器即用户不需要再像往常一样考虑服务器方面的问题，比如服务器的维护，漏洞更新，网络带宽，缩扩容，软件环境配置等。...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/07/29">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/06/21</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
     
-    <!-- paginator -->
-    <ul class="post-paginator">
-        <li class="next">
+        
+        
             
-                <div class="nextSlogan">Next Post</div>
-                <a href="/2023/07/19/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%B0%83%E8%AF%95/" title="记一次虚拟机启动失败调试过程">
-                    <div class="nextTitle">记一次虚拟机启动失败调试过程</div>
-                </a>
-            
-        </li>
-        <li class="previous">
-            
-                <div class="prevSlogan">Previous Post</div>
-                <a href="/2023/07/01/kvm%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86-cpu%E8%99%9A%E6%8B%9F%E5%8C%96/" title="KVM架构原理-CPU虚拟化">
-                    <div class="prevTitle">KVM架构原理-CPU虚拟化</div>
-                </a>
-            
-        </li>
-    </ul>
-    <!-- comment -->
+        
+        
+        <span class="post-category" data-categories="虚拟化"">
+            <i class="fas fa-folder post-category-icon"></i>
+            <span class="post-category-text">
+                虚拟化
+            </span>
+        </span>
     
-        <div class="post-comment">
-            <!-- 来必力 City 版安装代码 -->
-
-
-            
-
-            
-
-            
-
-            <!-- utteranc评论 -->
-
-
-            <!-- partial('_partial/comment/changyan') -->
-            <!--PC版-->
-
-
-            
-            
-
-            
-
-        </div>
     
-    <!-- timeliness note -->
-    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+        <a class="post-tag" href="javascript:void(0);" data-tags="虚拟化">虚拟化</a>
     
-    <!-- Mathjax -->
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2023/06/07/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%B0%83%E8%AF%95/">
+                
+                <span class="abstract-title-text">记一次虚拟机启动失败调试过程</span>
+            </a>
+            <div class="abstract-content">
+                记一次虚拟机启动失败调试过程实习过程中分配了个小任务，替换iso镜像中的sqfs文件并重新打包为iso。其中在测试iso是否打包成功过程中，要vmware发现无法启动报panic，具体输出如下图。后用centos7镜像做同样测试发现也会报错。深入centos7内核代码查看调试。最终发现是由于虚拟机配置初始化时默认硬盘空间太小导致无法挂载系统盘导致。
+
+
+linux kernel源代码和iso镜像的关系梳理一下如何从linux kernel代码来制作iso的过程
+
+下载kernel代码 
+修改配置文件
+编译内核
+安装内核
+将文件系统打包为iso镜像
+
+在安装好的系统下执行sudo cp -...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/07/29">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/06/07</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+        
+        
+            
+        
+            
+        
+        
+        <span class="post-category" data-categories="内核/虚拟化"">
+            <i class="fas fa-folder post-category-icon"></i>
+            <span class="post-category-text">
+                内核/虚拟化
+            </span>
+        </span>
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="虚拟化">虚拟化</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+    <!-- paginator  -->
     
 </main>
 
@@ -696,23 +635,6 @@
         </div>
         <!-- toc -->
         
-            <div class="toc-wrapper toc-wrapper-loding" style=
-
-
-
-
-
-
-
-    top:30vh;
-
->
-                <div class="toc-catalog">
-                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
-                </div>
-                
-            </div>
-        
         <!-- sidebar -->
         <div class="sidebar sidebar-hide">
     <ul class="sidebar-tabs sidebar-tabs-active-0">
@@ -794,7 +716,24 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -871,7 +810,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 14
+        Total : 15
         </div>
         <!-- search  -->
         
@@ -887,8 +826,26 @@
             
         
         <li class="archive-post-item">
+            <span class="archive-post-date">07/04</span>
+            <a class="archive-post-title" href="/2023/07/04/kdump%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8/">Kdump无法启动调试及其原理</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">07/01</span>
             <a class="archive-post-title" href="/2023/07/01/kvm%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86-cpu%E8%99%9A%E6%8B%9F%E5%8C%96/">KVM架构原理-CPU虚拟化</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/21</span>
+            <a class="archive-post-title" href="/2023/06/21/serverless/">Serverless及其安全风险</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/07</span>
+            <a class="archive-post-title" href="/2023/06/07/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%B0%83%E8%AF%95/">记一次虚拟机启动失败调试过程</a>
         </li>
     
         
@@ -966,36 +923,6 @@
             <a class="archive-post-title" href="/2022/07/31/windows%E4%B8%8Bsocket%E9%80%9A%E4%BF%A1/">windows下socket通信</a>
         </li>
     
-        
-            
-            
-                
-                </ul>
-            
-            <div class="archive-year"> Invalid date </div>
-            <ul class="year-list">
-            
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">Invalid date</span>
-            <a class="archive-post-title" href="/2023/07/19/serverless/">Serverless及其安全风险</a>
-        </li>
-    
-        
-            
-            
-                
-                </ul>
-            
-            <div class="archive-year"> Invalid date </div>
-            <ul class="year-list">
-            
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">Invalid date</span>
-            <a class="archive-post-title" href="/2023/07/19/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%B0%83%E8%AF%95/">记一次虚拟机启动失败调试过程</a>
-        </li>
-    
     </div>
 </div>
 
@@ -1042,11 +969,6 @@
                 java框架
             </span>
         
-            <span class="sidebar-tag-name" data-tags="windows,windows安全,反调试">
-                <span class="iconfont-archer">&#xe606;</span>
-                windows,windows安全,反调试
-            </span>
-        
             <span class="sidebar-tag-name" data-tags="web安全">
                 <span class="iconfont-archer">&#xe606;</span>
                 web安全
@@ -1065,6 +987,16 @@
             <span class="sidebar-tag-name" data-tags="虚拟化">
                 <span class="iconfont-archer">&#xe606;</span>
                 虚拟化
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="windows安全">
+                <span class="iconfont-archer">&#xe606;</span>
+                windows安全
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="反调试">
+                <span class="iconfont-archer">&#xe606;</span>
+                反调试
             </span>
         
     </div>
@@ -1108,11 +1040,6 @@
             红蓝攻防
         </span>
     
-        <span class="sidebar-category-name" data-categories="windows逆向，内核安全">
-            <span class="iconfont-archer">&#xe60a;</span>
-            windows逆向，内核安全
-        </span>
-    
         <span class="sidebar-category-name" data-categories="windows逆向">
             <span class="iconfont-archer">&#xe60a;</span>
             windows逆向
@@ -1136,6 +1063,21 @@
         <span class="sidebar-category-name" data-categories="虚拟化">
             <span class="iconfont-archer">&#xe60a;</span>
             虚拟化
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="内核安全">
+            <span class="iconfont-archer">&#xe60a;</span>
+            内核安全
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="内核">
+            <span class="iconfont-archer">&#xe60a;</span>
+            内核
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="内核">
+            <span class="iconfont-archer">&#xe60a;</span>
+            内核
         </span>
     
     </div>
@@ -1178,8 +1120,6 @@
         <!-- CNZZ -->
         
         <!-- async load share.js -->
-        
-            <script src="/scripts/share.js?v=20211217" async></script>
         
         <!-- mermaid -->
         
